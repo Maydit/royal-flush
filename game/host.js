@@ -1,10 +1,11 @@
 var socket = io();
 
+// Alerts the host that a new player has joined their room
 socket.on('updatePlayers', function() {
-    // Adds a 1 to the document (temporary)
     document.getElementById("players").innerHTML = document.getElementById("players").innerHTML + " 1";
 });
 
+// Moves to the game with the room name being transferred over
 socket.on('startHost', function(room) {
     window.location.href = "host_game.html?room="+room;
 });

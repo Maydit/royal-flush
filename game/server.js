@@ -7,6 +7,7 @@ const ObjectId = require("mongodb").ObjectID;
 const CONNECTION_URL = "mongodb+srv://admin:adminpassword@cluster0-f0kkf.mongodb.net/test?retryWrites=true";
 const DATABASE_NAME = "rawData";
 
+// Set of rooms: sets allow for quick finding and unique values
 var rooms = new Set();
 
 MongoClient.connect(CONNECTION_URL, { useNewUrlParser: true }, (error, client) => {
@@ -14,12 +15,13 @@ MongoClient.connect(CONNECTION_URL, { useNewUrlParser: true }, (error, client) =
         throw error;
     }
 
+    // Connect to the database within the cluster
     database = client.db(DATABASE_NAME);
     console.log("Connected to `" + DATABASE_NAME + "`!");
 
-    // handle connections
+    // Socket code goes within here
     io.on('connection', function(socket) {
-
+        // Creates a room and joins it: invoked by the host
         socket.on('createRoom', function(code) {
             socket.room = code;
             socket.join(code);
@@ -27,6 +29,7 @@ MongoClient.connect(CONNECTION_URL, { useNewUrlParser: true }, (error, client) =
             console.log("Created room " + code);
         });
 
+        // Joins a room if the room exists: invoked by a player
         socket.on('joinRoom', function(code) {
             if (rooms.has(code)) {
                 socket.room = code;
@@ -39,11 +42,14 @@ MongoClient.connect(CONNECTION_URL, { useNewUrlParser: true }, (error, client) =
             }
         });
 
+        // Tells everyone in the room to start: invoked by the host
         socket.on('beginGame', function(code) {
             socket.broadcast.to(code).emit('startGame', code);
             socket.emit('startHost', code);
         });
 
+        // Joins the room: invoked by everyone moving from the waiting room to
+        // the game room
         socket.on('gameJoin', function(code) {
             socket.room = code;
             socket.join(code);
@@ -53,6 +59,7 @@ MongoClient.connect(CONNECTION_URL, { useNewUrlParser: true }, (error, client) =
     });
 });
 
+// Loading local files
 app.get('/player_game.js', function(req, res) {
     res.sendFile(__dirname + '/player_game.js');
 });
@@ -89,7 +96,7 @@ app.get('/', function(req, res) {
     res.sendFile(__dirname + '/pick_action.html');
 });
 
-// Puts it on the correct port
+// Puts it on a port
 http.listen(3000, function(){
-  console.log('Server up on :3000');
+  console.log('Server up on 3000');
 });
