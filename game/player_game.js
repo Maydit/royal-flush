@@ -5,6 +5,17 @@ const App = new Vue({
     data: {
     },
     methods: {
+        sendCards() {
+            var card1Select = document.getElementById("card1");
+            var card1 = card1Select.options[card1Select.selectedIndex].value;
+            var suit1Select = document.getElementById("suit1");
+            var suit1 = suit1Select.options[suit1Select.selectedIndex].value;
+            var card2Select = document.getElementById("card2");
+            var card2 = card2Select.options[card2Select.selectedIndex].value;
+            var suit2Select = document.getElementById("suit2");
+            var suit2 = suit2Select.options[suit2Select.selectedIndex].value;
+            
+        }
     },
     beforeMount() {
         // Obtains the code and joins that room
