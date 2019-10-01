@@ -34,8 +34,8 @@ var User = mongoose.model("User", nameSchema);
 
 
 
-app.get("/first.html", (req, res) => {
-    res.sendFile(__dirname + "/first.html");
+app.get("/", (req, res) => {
+    res.sendFile(__dirname + "/index.html");
 });
 
 
@@ -48,8 +48,8 @@ app.get("/first.html", (req, res) => {
 
 
 
-app.get("/login.html", (req, res) => {
-    res.sendFile(__dirname + "/login.html");
+app.get("/login/login.html", (req, res) => {
+    res.sendFile(__dirname + "/login/login.html");
 });
 
 
@@ -81,7 +81,7 @@ app.post('/add_acc',(req, res) =>
 				if(count==0)
 		    	{
 		    		res.status(400).send("Account not found");
-		    	};
+		    	}
 			}
 
 
@@ -117,8 +117,8 @@ app.post('/add_acc',(req, res) =>
 ////////////////////////////////   LOGIN     //////////////////////////////////
 
 
-app.get("/sign_in.html", (req, res) => {
-    res.sendFile(__dirname + "/sign_in.html");
+app.get("/login/sign_in.html", (req, res) => {
+    res.sendFile(__dirname + "/login/sign_in.html");
 });
 
 app.post("/valid", (req, res) => {
