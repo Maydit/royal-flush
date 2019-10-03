@@ -12,6 +12,9 @@ socket.on('startGame', function(room) {
 
 const App = new Vue({
     el: '#app',
+    data: {
+        inputCode: "asdf"
+    },
     methods: {
         join() {
             socket.emit('joinRoom', this.inputCode);
