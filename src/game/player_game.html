@@ -1,66 +1,123 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <link rel= "stylesheet" type="text/css" href = "player_game.css" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+
     <title>Player Game</title>
   </head>
 
-  <body>
+  <body style = "background-color: #E2D4B7">
     <div id="app">
-        PLAYER GAME
+        <div class = "header">
+            <div class = "jumbotron-fluid">
+                <h1>Royal Flush</h1>
+                <p>"Stats don't bluff"</p>
+            </div>
+        </div>
 
-        <button v-on:click="sendCards">Submit</button>
 
-        <br>
 
-        <select id="card1">
-            <option value="A">A</option>
-            <option value="K">K</option>
-            <option value="Q">Q</option>
-            <option value="J">J</option>
-            <option value="T">10</option>
-            <option value="9">9</option>
-            <option value="8">8</option>
-            <option value="7">7</option>
-            <option value="6">6</option>
-            <option value="5">5</option>
-            <option value="4">4</option>
-            <option value="3">3</option>
-            <option value="2">2</option>
-        </select>
-        <select id="suit1">
-            <option value="C">Clubs</option>
-            <option value="D">Diamonds</option>
-            <option value="H">Hearts</option>
-            <option value="S">Spades</option>
-        </select>
+        <div class="container" >
+        <div class="row">
+            <div class="col-md-6">
 
-        <br>
+                <div class = "info">
+                    <h1>Information</h1>
+                    <p>To begin tracking stats, as a player, you must first enter in the two cards you have
+                    using the dropdown menus! Simply choose the number and the suit for both of your cards
+                    and hit submit. The host will be tracking each of your actions as we go in order to calculate
+                    your stats!</p>
 
-        <select id="card2">
-            <option value="A">A</option>
-            <option value="K">K</option>
-            <option value="Q">Q</option>
-            <option value="J">J</option>
-            <option value="T">10</option>
-            <option value="9">9</option>
-            <option value="8">8</option>
-            <option value="7">7</option>
-            <option value="6">6</option>
-            <option value="5">5</option>
-            <option value="4">4</option>
-            <option value="3">3</option>
-            <option value="2">2</option>
-        </select>
-        <select id="suit2">
-            <option value="C">Clubs</option>
-            <option value="D">Diamonds</option>
-            <option value="H">Hearts</option>
-            <option value="S">Spades</option>
-        </select>
+                    <p><a href="https://github.com/Maydit/royal-flush">Check out our Github!</a></p>
+                    <img class = "image" src = "../assets/cards.webp" alt = "Logo">
+
+
+                    <p>Using the drop down menus, select the two cards you have!
+                    Using the drop down menus, select the two cards you have!
+                    Using the drop down menus, select the two cards you have!
+                    Using the drop down menus, select the two cards you have!
+                    Using the drop down menus, select the two cards you have!</p>
+
+                    <p>Using the drop down menus, select the two cards you have!
+                    Using the drop down menus, select the two cards you have!
+                    Using the drop down menus, select the two cards you have!
+                    Using the drop down menus, select the two cards you have!
+                    Using the drop down menus, select the two cards you have!</p>
+
+                </div>
+            </div>
+
+
+
+        <div class = "rightText">
+
+            <div class = "select1">
+                <h1>Card Select</h1>
+                <h2>Card 1</h2>
+                <select id="card1">
+                    <option value="A">A</option>
+                    <option value="K">K</option>
+                    <option value="Q">Q</option>
+                    <option value="J">J</option>
+                    <option value="T">10</option>
+                    <option value="9">9</option>
+                    <option value="8">8</option>
+                    <option value="7">7</option>
+                    <option value="6">6</option>
+                    <option value="5">5</option>
+                    <option value="4">4</option>
+                    <option value="3">3</option>
+                    <option value="2">2</option>
+                </select>
+                <select id="suit1">
+                    <option value="C">Clubs</option>
+                    <option value="D">Diamonds</option>
+                    <option value="H">Hearts</option>
+                    <option value="S">Spades</option>
+                </select>
+            </div>
+
+            <br>
+
+            <div class = "select2">
+                <h2>Card 2</h2>
+                <select id="card2">
+                    <option value="A">A</option>
+                    <option value="K">K</option>
+                    <option value="Q">Q</option>
+                    <option value="J">J</option>
+                    <option value="T">10</option>
+                    <option value="9">9</option>
+                    <option value="8">8</option>
+                    <option value="7">7</option>
+                    <option value="6">6</option>
+                    <option value="5">5</option>
+                    <option value="4">4</option>
+                    <option value="3">3</option>
+                    <option value="2">2</option>
+                </select>
+                <select id="suit2">
+                    <option value="C">Clubs</option>
+                    <option value="D">Diamonds</option>
+                    <option value="H">Hearts</option>
+                    <option value="S">Spades</option>
+                </select>
+            </div>
+            <!-- <button class = "butt" v-on:click="sendCards">Submit</button> -->
+            <input class="btn btn-success" type="submit" name="submit_reg" value="Submit">
+        </div>
+
+
     </div>
 
     <script src="player_game.js"></script>
