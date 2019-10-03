@@ -1,40 +1,72 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<title>Login</title>
-	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>	
+    <meta charset="utf-8">
+    <title>Login</title>
+    <link rel= "stylesheet" type="text/css" href = "login.css" />
+    <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+
 </head>
-<body>
 
-<div id="app">
-	<h1>Login</h1>
-	<form method="post" action="/add_acc">
-		Email:<br>
-  		<input type="text" name="email" required><br>
-  		Password:<br>
-  		<input type="text" name="password" required><br>
-
-  		<input type="submit" value="Add Name">
-	</form>
-</div>
+<body style = "background-color: #E2D4B7">
+    <div class = "header">
+        <div class = "jumbotron-fluid">
+            <h1>Royal Flush</h1>
+            <p>"Stats don't bluff"</p>
+        </div>
+    </div>
 
 
-
-<!-- 
-
-<script>
-	new Vue({
-		el: '#app',
-
-		data: {
-			username:"".
-			password:""
-		}
-	});
+    <div class="container" >
+        <div class="row">
+            <div class="col-md-6">
+                <form action="" method="post" id="fileForm" role="form">
+                <fieldset><legend class="text-center">Login<span class="req"></span></legend>
 
 
-</script> -->
+                <div class="form-group">
+                    <label for="email"> Email Address: </label>
+                        <input class="form-control" required type="text" name="email" id = "email"  onchange="email_validate(this.value);" />
+                            <div class="status" id="status"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="username">   User name:   </label>
+                        <input class="form-control" type="text" name="username" id = "txt" onkeyup = "Validate(this)" required />
+                            <div id="errLast"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" > Password: </label>
+                        <input required name="password" type="password" class="form-control inputpass" minlength="4" maxlength="16"  id="pass1" /> </p>
+
+                </div>
+                </fieldset>
+                </form><!-- ends register form -->
+
+                <div class="form-group" style = "margin-top: 20px;">
+                    <input class="btn btn-success" type="submit" name="submit_reg" value="Login">
+                </div>
+
+            </div>
+
+
+
+            <div class="rightText">
+                <h1 class="page-header">Info</h1>
+                <p>A live poker tracking app to optimize your playstyle</p>
+                <p>"Stats don't bluff"</p>
+                <p><a href="https://github.com/Maydit/royal-flush">Check out our Github!</a></p>
+                <img class = "image" src = "../assets/cards.webp" alt = "Logo">
+
+            </div>
+        </div>
+    </div>
 
 
 </body>
