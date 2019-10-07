@@ -55,7 +55,7 @@ app.use((req, res, next) => {
 // not used
 var sessionChecker = (req, res, next) => {
     if (req.session.user && req.cookies.user_sid) {
-        res.redirect('http://localhost:3000/game/pick_action.html');
+        res.redirect(req.protocol + '://' + req.get('host') + '/game/pick_action.html');
     } else {
         next();
     }
@@ -83,8 +83,7 @@ app
     		    		         count=1;
                          //This sets the cookie to user id
                          req.session.user = item._id.toString();
-                         res.redirect('http://localhost:3000/game/pick_action.html');
-                         //res.redirect('http://localhost:3000/login/test.html');
+                         res.redirect(req.protocol + '://' + req.get('host') + '/game/pick_action.html');
     		    	     }
              }
            },function(err)
@@ -107,7 +106,7 @@ app.post("/valid", (req, res) => {
     myData.save()
         .then(item => {
             //res.send("Name saved to database");
-            res.redirect('http://localhost:3000')
+            res.redirect(req.protocol + '://' + req.get('host'));
         })
         .catch(err => {
             res.status(400).send("Unable to save to database");
