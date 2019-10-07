@@ -4,6 +4,8 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var port = 3000;
 var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -22,45 +24,102 @@ var nameSchema = new mongoose.Schema({
 
 var User = mongoose.model("User", nameSchema);
 
+
+app.use(cookieParser());
+
 ////////////////////////////////////////////////////////////////////////////////
 
-// Logging in
-app.post('/add_acc',(req, res) => {
-    mongoose.connect(url, function(err, db) {
-	   	var myData = new User(req.body);
+// initialize express-session to allow us track the logged-in user across sessions.
+app.use(session({
+  key: 'user_sid',
+  secret: 'randomwords',
+  resave: false,
+  saveUnitialized: false,
+  cookie:{
+    expires: 700000000
+  }
 
-	    var collection = db.collection(db_name);
-	    var cursor = collection.find({email:myData.email});
+}));
 
-	    var count = 0;
 
-	    cursor.forEach(function(item) {
-	    	if(item!=null) {
-		    	if( myData.password === item.password) {
-		    		count=1;
-                    res.redirect('http://localhost:3000/game/pick_action.html')
-		    	}
-	    	}
-		},function(err) {
-			if(count==0) {
-		    	res.status(400).send("Account not found");
-		    }
-		});
-        db.close();
-    });
+
+// This middleware will check if user's cookie is still saved in browser and user is not set, then automatically log the user out.
+app.use((req, res, next) => {
+    if (req.cookies.user_sid && !req.session.user) {
+        res.clearCookie('user_sid');
+    }
+    next();
 });
+
+// middleware function to check for logged-in users
+// not used
+var sessionChecker = (req, res, next) => {
+    if (req.session.user && req.cookies.user_sid) {
+        res.redirect('http://localhost:3000/game/pick_action.html');
+    } else {
+        next();
+    }
+};
+
+
+
+
+
+// Logging in
+app
+    .post('/add_acc',(req, res) =>
+    {
+        mongoose.connect(url, function(err, db) {
+	         var myData = new User(req.body);
+           var collection = db.collection(db_name);
+	         var cursor = collection.find({email:myData.email});
+
+	         var count = 0;
+
+    	     cursor.forEach(function(item)
+           {
+             if(item!=null) {
+    		    	     if( myData.password === item.password) {
+    		    		         count=1;
+                         //This sets the cookie to user id
+                         req.session.user = item._id.toString();
+                         res.redirect('http://localhost:3000/game/pick_action.html');
+                         //res.redirect('http://localhost:3000/login/test.html');
+    		    	     }
+             }
+           },function(err)
+           {
+    			      if(count==0)
+                {
+    		    	       res.status(400).send("Account not found");
+    		       }
+    		   }
+         );
+
+     });
+});
+
+
 
 // Creating account
 app.post("/valid", (req, res) => {
     var myData = new User(req.body);
     myData.save()
         .then(item => {
-            res.send("Name saved to database");
+            //res.send("Name saved to database");
+            res.redirect('http://localhost:3000')
         })
         .catch(err => {
             res.status(400).send("Unable to save to database");
         });
 });
+
+
+
+app.post("/test", (req, res) => {
+    res.send(req.session.user);
+});
+
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -102,10 +161,14 @@ io.on('connection', function(socket) {
         socket.join(code);
         console.log("In game: joined room " + code);
     });
-
 });
 
 ////////////////////////////////////////////////////////////////////////////////
+
+
+app.get("/login/test.html", (req, res) => {
+    res.sendFile(__dirname + "/login/test.html");
+});
 
 // Allows files to be loaded
 app.get("/login/login.html", (req, res) => {
