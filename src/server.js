@@ -16,6 +16,7 @@ mongoose.connect(url);
 var nameSchema = new mongoose.Schema({
     firstName: String,
     lastName: String,
+    username: String,
     email: String,
     password: String
 });
@@ -61,6 +62,15 @@ app.post("/valid", (req, res) => {
             res.status(400).send("Unable to save to database");
         });
 });
+
+//Validate username on signup
+app.post("/validUName", (req, res) => {
+    mongoose.connect(url, function(err, db) {
+        var collection = db.collection(db_name);
+        var valid = collection.find({username: req.body});
+        db.close();
+    });
+})
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -108,12 +118,33 @@ io.on('connection', function(socket) {
 ////////////////////////////////////////////////////////////////////////////////
 
 // Allows files to be loaded
+
+app.get("/index.css", (req, res) => {
+    res.sendFile(__dirname + "/index.css");
+});
+
 app.get("/login/login.html", (req, res) => {
     res.sendFile(__dirname + "/login/login.html");
 });
 
+app.get("/login/login.js", (req, res) => {
+    res.sendFile(__dirname + "/login/login.js");
+});
+
+app.get("/login/login.css", (req, res) => {
+    res.sendFile(__dirname + "/login/login.css");
+});
+
+app.get("/assets/cards.webp", (req, res) => {
+    res.sendFile(__dirname + "/assets/cards.webp");
+});
+
 app.get("/login/sign_in.html", (req, res) => {
     res.sendFile(__dirname + "/login/sign_in.html");
+});
+
+app.get("/login/sign_in.css", (req, res) => {
+    res.sendFile(__dirname + "/login/sign_in.css");
 });
 
 app.get('/game/pick_action.html', function(req, res) {

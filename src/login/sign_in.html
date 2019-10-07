@@ -15,6 +15,7 @@
 </head>
 
 <body style = "background-color: #E2D4B7">
+    <script src="login.js"></script>
     <div class = "header">
         <div class = "jumbotron-fluid">
             <h1>Royal Flush</h1>
@@ -32,27 +33,27 @@
                 <div class = "temp">
                     <div class="form-group">
                         <label for="firstname"><span class="req">* </span> First name: </label>
-                            <input class="form-control" type="text" name="firstname" id = "txt" onkeyup = "Validate(this)" required />
+                            <input class="form-control" type="text" name="firstname" id = "firstname" onkeyup = "nameValidate()" required />
                                 <div id="errFirst"></div>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="lastname"><span class="req">* </span> Last name: </label>
-                        <input class="form-control" type="text" name="lastname" id = "txt" onkeyup = "Validate(this)" required />
+                        <input class="form-control" type="text" name="lastname" id = "lastname" onkeyup = "nameValidate()" required />
                             <div id="errLast"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="email"><span class="req">* </span> Email Address: </label>
-                        <input class="form-control" required type="text" name="email" id = "email"  onchange="email_validate(this.value);" />
+                        <input class="form-control" required type="text" name="email" id = "email"  onkeyup="email_validate(this.value);" />
                             <div class="status" id="status"></div>
                 </div>
 
                 <div class="form-group">
-                    <label for="username"><span class="req">* </span> User name:  <small>This will be your login user name</small> </label>
-                        <input class="form-control" type="text" name="username" id = "txt" onkeyup = "Validate(this)" placeholder="minimum 6 letters" required />
-                            <div id="errLast"></div>
+                    <label for="username"><span class="req">* </span> User name:  <small>This will be your login user name</small> <p id="usernameText"></p></label>
+                        <input class="form-control" type="text" name="username" id = "username" onkeyup = "Validate(this, false)" placeholder="minimum 6 letters" required />
+                            <div id="errLastUsername"></div>
                 </div>
 
                 <div class="form-group">
@@ -60,14 +61,14 @@
                         <input required name="password" type="password" class="form-control inputpass" minlength="4" maxlength="16"  id="pass1" /> </p>
 
                     <label for="password"><span class="req">* </span> Password Confirm: </label>
-                        <input required name="password" type="password" class="form-control inputpass" minlength="4" maxlength="16" placeholder="Enter again to validate"  id="pass2" onkeyup="checkPass(); return false;" />
+                        <input required name="password" type="password" class="form-control inputpass" minlength="4" maxlength="16" placeholder="Passwords must match" onchange="checkPass()" id="pass2" />
                             <span id="confirmMessage" class="confirmMessage"></span>
                 </div>
                 </fieldset>
                 </form><!-- ends register form -->
 
                 <div class="form-group" style = "margin-top: 20px;">
-                    <input class="btn btn-success" type="submit" name="submit_reg" value="Register">
+                    <input class="btn btn-success" type="submit" name="submit_reg" value="Register" onclick="finalValidate()">
                 </div>
 
             </div>
