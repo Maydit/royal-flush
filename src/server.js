@@ -24,10 +24,10 @@ var nameSchema = new mongoose.Schema({
 
 var User = mongoose.model("User", nameSchema);
 
-
 app.use(cookieParser());
 
 ////////////////////////////////////////////////////////////////////////////////
+// Sessions
 
 // initialize express-session to allow us track the logged-in user across sessions.
 app.use(session({
@@ -37,8 +37,6 @@ app.use(session({
   }
 
 }));
-
-
 
 // This middleware will check if user's cookie is still saved in browser and user is not set, then automatically log the user out.
 app.use((req, res, next) => {
@@ -58,42 +56,33 @@ var sessionChecker = (req, res, next) => {
     }
 };
 
-
-
-
+////////////////////////////////////////////////////////////////////////////////
+// Login and signup
 
 // Logging in
-app
-    .post('/add_acc',(req, res) =>
-    {
-        mongoose.connect(url, function(err, db) {
-	         var myData = new User(req.body);
-           var collection = db.collection(db_name);
-	         var cursor = collection.find({email:myData.email});
+app.post('/add_acc',(req, res) => {
+    mongoose.connect(url, function(err, db) {
+        var myData = new User(req.body);
+        var collection = db.collection(db_name);
+        var cursor = collection.find({email:myData.email});
+        var count = 0;
 
-	         var count = 0;
-
-    	     cursor.forEach(function(item)
-           {
-             if(item!=null) {
-    		    	     if( myData.password === item.password) {
-    		    		         count=1;
-                         //This sets the cookie to user id
-                         req.session.userId = item._id.toString();
-                         req.session.userName = item.firstName + " " + item.lastName;
-                         res.redirect(req.protocol + '://' + req.get('host') + '/game/pick_action.html');
-    		    	     }
-             }
-           },function(err)
-           {
-    			      if(count==0)
-                {
-    		    	       res.status(400).send("Account not found");
-    		       }
-    		   }
-         );
-
-     });
+        cursor.forEach(function(item) {
+            if(item!=null) {
+                if( myData.password === item.password) {
+                    count=1;
+                    //This sets the cookie to user id
+                    req.session.userId = item._id.toString();
+                    req.session.userName = item.firstName + " " + item.lastName;
+                    res.redirect(req.protocol + '://' + req.get('host') + '/game/pick_action.html');
+                }
+            }
+        }, function(err) {
+            if(count==0) {
+               res.status(400).send("Account not found");
+            }
+        });
+    });
 });
 
 // Creating account
@@ -109,13 +98,44 @@ app.post("/valid", (req, res) => {
         });
 });
 
+////////////////////////////////////////////////////////////////////////////////
+// Game backend
+
 app.get("/getName", (req, res) => {
     res.send(req.session.userName);
 });
 
-////////////////////////////////////////////////////////////////////////////////
+app.get("/getUserId", (req, res) => {
+    res.send(req.session.userId);
+});
 
-var rooms = new Set();
+app.get("/recordHand/:code", (req, res) => {
+    var code = req.params.code;
+    var hand = rooms.get(code);
+    console.log(hand);
+    res.send(true);
+    /*
+    mongoose.connect(url, function(err, db) {
+        var dbo = db.db("rawData");
+        var code = req.params.code;
+        var hand = rooms.get(code);
+        dbo.collection("hands").insertOne(hand, function(err, res) {
+            if (err) {
+                throw err;
+            }
+            console.log("Hand inserted.");
+            db.close();
+        });
+    });
+    */
+});
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Room connections
+
+var rooms = new Map();
 
 // Socket code for host-client connection in game
 io.on('connection', function(socket) {
@@ -123,16 +143,35 @@ io.on('connection', function(socket) {
     socket.on('createRoom', function(code) {
         socket.room = code;
         socket.join(code);
-        rooms.add(code);
+        var emptyHand = {
+            players: [],
+            stacks: [],
+            cards: [],
+            positions: [],
+            preflopBets: [],
+            flopBets: [],
+            turnBets: [],
+            riverBets: [],
+            commCards: [],
+            winner: "",
+            pot: 0
+        }
+        rooms.set(code, emptyHand);
         console.log("Created room " + code);
     });
 
     // Joins a room if the room exists: invoked by a player
-    socket.on('joinRoom', function(code, newName) {
+    socket.on('joinRoom', function(code, newName, newId) {
         if (rooms.has(code)) {
             socket.room = code;
             socket.join(code);
             console.log("Joined room " + code);
+
+            // Adds player info to the room
+            var hand = rooms.get(code);
+            hand.players.push(newId);
+
+            // Sends into to the host and confirmation back to player
             socket.broadcast.to(code).emit('updatePlayers', newName);
             socket.emit('joinResult', 'Joined! Wait for the host to begin the game.');
         } else {
