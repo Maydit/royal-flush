@@ -31,10 +31,7 @@ app.use(cookieParser());
 
 // initialize express-session to allow us track the logged-in user across sessions.
 app.use(session({
-  key: 'user_sid',
   secret: 'randomwords',
-  resave: false,
-  saveUnitialized: false,
   cookie:{
     expires: 700000000
   }
@@ -54,7 +51,7 @@ app.use((req, res, next) => {
 // middleware function to check for logged-in users
 // not used
 var sessionChecker = (req, res, next) => {
-    if (req.session.user && req.cookies.user_sid) {
+    if (req.session.user) {
         res.redirect(req.protocol + '://' + req.get('host') + '/game/pick_action.html');
     } else {
         next();
@@ -82,7 +79,8 @@ app
     		    	     if( myData.password === item.password) {
     		    		         count=1;
                          //This sets the cookie to user id
-                         req.session.user = item._id.toString();
+                         req.session.userId = item._id.toString();
+                         req.session.userName = item.firstName + " " + item.lastName;
                          res.redirect(req.protocol + '://' + req.get('host') + '/game/pick_action.html');
     		    	     }
              }
@@ -98,8 +96,6 @@ app
      });
 });
 
-
-
 // Creating account
 app.post("/valid", (req, res) => {
     var myData = new User(req.body);
@@ -113,12 +109,9 @@ app.post("/valid", (req, res) => {
         });
 });
 
-
-
-app.post("/test", (req, res) => {
-    res.send(req.session.user);
+app.get("/getName", (req, res) => {
+    res.send(req.session.userName);
 });
-
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -135,12 +128,12 @@ io.on('connection', function(socket) {
     });
 
     // Joins a room if the room exists: invoked by a player
-    socket.on('joinRoom', function(code) {
+    socket.on('joinRoom', function(code, newName) {
         if (rooms.has(code)) {
             socket.room = code;
             socket.join(code);
             console.log("Joined room " + code);
-            socket.broadcast.to(code).emit('updatePlayers');
+            socket.broadcast.to(code).emit('updatePlayers', newName);
             socket.emit('joinResult', 'Joined! Wait for the host to begin the game.');
         } else {
             socket.emit('joinResult', 'ERROR: Room doesn\'t exist');
