@@ -109,6 +109,21 @@ app.get("/getUserId", (req, res) => {
     res.send(req.session.userId);
 });
 
+app.post("/sendCards/:code/:cardsStr/:userId", (req, res) => {
+    // Parse inputs
+    var code = req.params.code;
+    var cardsStr = req.params.cardsStr;
+    var userId = req.params.userId;
+
+    // Store in hand
+    var hand = rooms.get(code);
+    for (var i = 0; i < hand.players.length; i++) {
+        if (hand.players[i] == userId) {
+            hand.cards[i] = cardsStr;
+        }
+    }
+});
+
 app.get("/recordHand/:code", (req, res) => {
     var code = req.params.code;
     var hand = rooms.get(code);
@@ -161,7 +176,7 @@ io.on('connection', function(socket) {
     });
 
     // Joins a room if the room exists: invoked by a player
-    socket.on('joinRoom', function(code, newName, newId) {
+    socket.on('joinRoom', function(code, newName, newId, startStack) {
         if (rooms.has(code)) {
             socket.room = code;
             socket.join(code);
@@ -170,6 +185,7 @@ io.on('connection', function(socket) {
             // Adds player info to the room
             var hand = rooms.get(code);
             hand.players.push(newId);
+            hand.stacks.push(startStack);
 
             // Sends into to the host and confirmation back to player
             socket.broadcast.to(code).emit('updatePlayers', newName);
@@ -181,6 +197,18 @@ io.on('connection', function(socket) {
 
     // Tells everyone in the room to start: invoked by the host
     socket.on('beginGame', function(code) {
+        // Sets up postitioning
+        var hand = rooms.get(code);
+        for (var i = 0; i < hand.players.length; i++) {
+            hand.positions.push(i);
+            hand.cards.push("");
+            hand.preflopBets.push("");
+            hand.flopBets.push("");
+            hand.turnBets.push("");
+            hand.riverBets.push("");
+            hand.commCards.push("");
+        }
+
         socket.broadcast.to(code).emit('startGame', code);
         socket.emit('startHost', code);
     });

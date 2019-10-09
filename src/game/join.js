@@ -15,11 +15,13 @@ const App = new Vue({
     data: {
         inputCode: "",
         username: "",
+        startStack: "200",
         userId: ""
     },
     methods: {
         join() {
-            socket.emit('joinRoom', this.inputCode, this.username, this.userId);
+            var intStack = parseInt(this.startStack, 10);
+            socket.emit('joinRoom', this.inputCode, this.username, this.userId, intStack);
         }
     },
     beforeMount() {
