@@ -109,6 +109,17 @@ app.get("/getUserId", (req, res) => {
     res.send(req.session.userId);
 });
 
+app.get("/getCurrentPlayer/:code", (req, res) => {
+    var code = req.params.code;
+
+    var hand = rooms.get(code);
+    for (var i = 0; i < hand.players.length; i++) {
+        if (hand.positions[i] == 0) {
+            res.send(hand.names[i]);
+        }
+    }
+});
+
 app.post("/sendCards/:code/:cardsStr/:userId", (req, res) => {
     // Parse inputs
     var code = req.params.code;
@@ -120,6 +131,7 @@ app.post("/sendCards/:code/:cardsStr/:userId", (req, res) => {
     for (var i = 0; i < hand.players.length; i++) {
         if (hand.players[i] == userId) {
             hand.cards[i] = cardsStr;
+            break;
         }
     }
 });
@@ -128,6 +140,16 @@ app.get("/recordHand/:code", (req, res) => {
     var code = req.params.code;
     var hand = rooms.get(code);
     console.log(hand);
+
+    // Switch positions
+    hand.positions.unshift(hand.positions[hand.positions.length - 1]);
+    hand.positions.pop();
+
+    // Reset variables
+    for (var i = 0; i < hand.players.length; i++) {
+        hand.cards[i] = "";
+    }
+
     res.send(true);
     /*
     mongoose.connect(url, function(err, db) {
@@ -160,6 +182,7 @@ io.on('connection', function(socket) {
         socket.join(code);
         var emptyHand = {
             players: [],
+            names: [],
             stacks: [],
             cards: [],
             positions: [],
@@ -185,6 +208,7 @@ io.on('connection', function(socket) {
             // Adds player info to the room
             var hand = rooms.get(code);
             hand.players.push(newId);
+            hand.names.push(newName);
             hand.stacks.push(startStack);
 
             // Sends into to the host and confirmation back to player
