@@ -5,12 +5,17 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
     <title>Host Game</title>
   </head>
 
   <body>
     <div id="app">
         HOST GAME
+        <br>
+        {{currentPlayer}}'s turn
+        <br>
+        <button v-on:click="done">Done (TEMP)</button>
     </div>
 
     <script src="host_game.js"></script>

@@ -14,17 +14,26 @@ const App = new Vue({
     el: '#app',
     data: {
         inputCode: "",
-        username: ""
+        username: "",
+        startStack: "200",
+        userId: ""
     },
     methods: {
         join() {
-            socket.emit('joinRoom', this.inputCode, this.username);
+            var intStack = parseInt(this.startStack, 10);
+            socket.emit('joinRoom', this.inputCode, this.username, this.userId, intStack);
         }
     },
     beforeMount() {
+        console.log(window.location.host);
         // Sets the variable username
-        this.$http.get('http://localhost:3000/getName').then(response => {
+        this.$http.get('http://' + window.location.host + '/getName').then(response => {
             this.username = response.body;
+            console.log(this.username);
+        });
+
+        this.$http.get('http://' + window.location.host + '/getUserId').then(response => {
+            this.userId = response.body;
         });
     }
 });
