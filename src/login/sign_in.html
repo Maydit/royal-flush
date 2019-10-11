@@ -51,15 +51,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="username"><span class="req">* </span> User name:  <small>This will be your login user name</small> <p id="usernameText"></p></label>
-                        <input class="form-control" type="text" name="username" id = "username" onkeyup = "Validate(this, false)" placeholder="minimum 6 letters" required />
-                            <div id="errLastUsername"></div>
-                </div>
-
-                <div class="form-group">
                     <label for="password" ><span class="req">* </span> Password: </label>
                         <input required name="password" type="password" class="form-control inputpass" minlength="4" maxlength="16"  id="pass1" /> </p>
-
                     <label for="password"><span class="req">* </span> Password Confirm: </label>
                         <input required name="password_2" type="password" class="form-control inputpass" minlength="4" maxlength="16" placeholder="Passwords must match" onchange="checkPass()" id="pass2" />
                             <span id="confirmMessage" class="confirmMessage"></span>

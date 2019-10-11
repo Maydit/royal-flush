@@ -7,25 +7,6 @@ function email_validate(email) {
     return false;
   }
 }
-function Validate(username, registering) {
-  if(username.value.length >= 6) {
-    //check db for matching username
-    if(registering) {
-      //post request?
-      if(true) {
-        document.getElementById("usernameText").innerHTML = "Username already exists";
-        document.getElementById("usernameText").style.color = "red";
-      } else {
-        document.getElementById("usernameText").innerHTML = "";
-      }
-    }
-    document.getElementById("username").style.color = "green";
-    return true;
-  } else {
-    document.getElementById("username").style.color = "red";
-    return false;
-  }
-}
 function checkPass() {
   if(document.getElementById("pass1").value === document.getElementById("pass2").value) {
     document.getElementById("confirmMessage").innerHTML = "";
@@ -48,7 +29,7 @@ function nameValidate() {
 }
 
 function finalValidate() {
-  if(email_validate(document.getElementById("email").value) && Validate(document.getElementById("username"), true) && checkPass() && nameValidate()) {
+  if(email_validate(document.getElementById("email").value) && checkPass() && nameValidate()) {
     //submit all into the database
     //Post request?
     console.log("final validation success, new account registered");
@@ -56,7 +37,7 @@ function finalValidate() {
 }
 
 function Login() {
-  if(email_validate(document.getElementById("email").value) && Validate(document.getElementById("username", false))) {
+  if(email_validate(document.getElementById("email").value)) {
     //check database for valid login and redirect
   } else {
     //??
