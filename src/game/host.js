@@ -1,8 +1,8 @@
 var socket = io();
 
 // Alerts the host that a new player has joined their room
-socket.on('updatePlayers', function() {
-    document.getElementById("players").innerHTML = document.getElementById("players").innerHTML + " 1";
+socket.on('updatePlayers', function(newName) {
+    document.getElementById("players").innerHTML = document.getElementById("players").innerHTML + "<br>" + newName;
 });
 
 // Moves to the game with the room name being transferred over

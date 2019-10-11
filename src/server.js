@@ -4,6 +4,8 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var port = 3000;
 var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -23,31 +25,64 @@ var nameSchema = new mongoose.Schema({
 
 var User = mongoose.model("User", nameSchema);
 
+app.use(cookieParser());
+
 ////////////////////////////////////////////////////////////////////////////////
+// Sessions
+
+// initialize express-session to allow us track the logged-in user across sessions.
+app.use(session({
+  secret: 'randomwords',
+  cookie:{
+    expires: 700000000
+  }
+
+}));
+
+// This middleware will check if user's cookie is still saved in browser and user is not set, then automatically log the user out.
+app.use((req, res, next) => {
+    if (req.cookies.user_sid && !req.session.user) {
+        res.clearCookie('user_sid');
+    }
+    next();
+});
+
+// middleware function to check for logged-in users
+// not used
+var sessionChecker = (req, res, next) => {
+    if (req.session.user) {
+        res.redirect(req.protocol + '://' + req.get('host') + '/game/pick_action.html');
+    } else {
+        next();
+    }
+};
+
+////////////////////////////////////////////////////////////////////////////////
+// Login and signup
 
 // Logging in
 app.post('/add_acc',(req, res) => {
     mongoose.connect(url, function(err, db) {
-	   	var myData = new User(req.body);
+        var myData = new User(req.body);
+        var collection = db.collection(db_name);
+        var cursor = collection.find({email:myData.email});
+        var count = 0;
 
-	    var collection = db.collection(db_name);
-	    var cursor = collection.find({email:myData.email});
-
-	    var count = 0;
-
-	    cursor.forEach(function(item) {
-	    	if(item!=null) {
-		    	if( myData.password === item.password) {
-		    		count=1;
-                    res.redirect('http://localhost:3000/game/pick_action.html')
-		    	}
-	    	}
-		},function(err) {
-			if(count==0) {
-		    	res.status(400).send("Account not found");
-		    }
-		});
-        db.close();
+        cursor.forEach(function(item) {
+            if(item!=null) {
+                if( myData.password === item.password) {
+                    count=1;
+                    //This sets the cookie to user id
+                    req.session.userId = item._id.toString();
+                    req.session.userName = item.firstName + " " + item.lastName;
+                    res.redirect(req.protocol + '://' + req.get('host') + '/game/pick_action.html');
+                }
+            }
+        }, function(err) {
+            if(count==0) {
+               res.status(400).send("Account not found");
+            }
+        });
     });
 });
 
@@ -56,7 +91,8 @@ app.post("/valid", (req, res) => {
     var myData = new User(req.body);
     myData.save()
         .then(item => {
-            res.send("Name saved to database");
+            //res.send("Name saved to database");
+            res.redirect(req.protocol + '://' + req.get('host'));
         })
         .catch(err => {
             res.status(400).send("Unable to save to database");
@@ -73,8 +109,80 @@ app.post("/validUName", (req, res) => {
 })
 
 ////////////////////////////////////////////////////////////////////////////////
+// Game backend
 
-var rooms = new Set();
+app.get("/getName", (req, res) => {
+    res.send(req.session.userName);
+});
+
+app.get("/getUserId", (req, res) => {
+    res.send(req.session.userId);
+});
+
+app.get("/getCurrentPlayer/:code", (req, res) => {
+    var code = req.params.code;
+
+    var hand = rooms.get(code);
+    for (var i = 0; i < hand.players.length; i++) {
+        if (hand.positions[i] == 0) {
+            res.send(hand.names[i]);
+        }
+    }
+});
+
+app.post("/sendCards/:code/:cardsStr/:userId", (req, res) => {
+    // Parse inputs
+    var code = req.params.code;
+    var cardsStr = req.params.cardsStr;
+    var userId = req.params.userId;
+
+    // Store in hand
+    var hand = rooms.get(code);
+    for (var i = 0; i < hand.players.length; i++) {
+        if (hand.players[i] == userId) {
+            hand.cards[i] = cardsStr;
+            break;
+        }
+    }
+});
+
+app.get("/recordHand/:code", (req, res) => {
+    var code = req.params.code;
+    var hand = rooms.get(code);
+    console.log(hand);
+
+    // Switch positions
+    hand.positions.unshift(hand.positions[hand.positions.length - 1]);
+    hand.positions.pop();
+
+    // Reset variables
+    for (var i = 0; i < hand.players.length; i++) {
+        hand.cards[i] = "";
+    }
+
+    res.send(true);
+    /*
+    mongoose.connect(url, function(err, db) {
+        var dbo = db.db("rawData");
+        var code = req.params.code;
+        var hand = rooms.get(code);
+        dbo.collection("hands").insertOne(hand, function(err, res) {
+            if (err) {
+                throw err;
+            }
+            console.log("Hand inserted.");
+            db.close();
+        });
+    });
+    */
+});
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Room connections
+
+var rooms = new Map();
 
 // Socket code for host-client connection in game
 io.on('connection', function(socket) {
@@ -82,17 +190,39 @@ io.on('connection', function(socket) {
     socket.on('createRoom', function(code) {
         socket.room = code;
         socket.join(code);
-        rooms.add(code);
+        var emptyHand = {
+            players: [],
+            names: [],
+            stacks: [],
+            cards: [],
+            positions: [],
+            preflopBets: [],
+            flopBets: [],
+            turnBets: [],
+            riverBets: [],
+            commCards: [],
+            winner: "",
+            pot: 0
+        }
+        rooms.set(code, emptyHand);
         console.log("Created room " + code);
     });
 
     // Joins a room if the room exists: invoked by a player
-    socket.on('joinRoom', function(code) {
+    socket.on('joinRoom', function(code, newName, newId, startStack) {
         if (rooms.has(code)) {
             socket.room = code;
             socket.join(code);
             console.log("Joined room " + code);
-            socket.broadcast.to(code).emit('updatePlayers');
+
+            // Adds player info to the room
+            var hand = rooms.get(code);
+            hand.players.push(newId);
+            hand.names.push(newName);
+            hand.stacks.push(startStack);
+
+            // Sends into to the host and confirmation back to player
+            socket.broadcast.to(code).emit('updatePlayers', newName);
             socket.emit('joinResult', 'Joined! Wait for the host to begin the game.');
         } else {
             socket.emit('joinResult', 'ERROR: Room doesn\'t exist');
@@ -101,6 +231,18 @@ io.on('connection', function(socket) {
 
     // Tells everyone in the room to start: invoked by the host
     socket.on('beginGame', function(code) {
+        // Sets up postitioning
+        var hand = rooms.get(code);
+        for (var i = 0; i < hand.players.length; i++) {
+            hand.positions.push(i);
+            hand.cards.push("");
+            hand.preflopBets.push("");
+            hand.flopBets.push("");
+            hand.turnBets.push("");
+            hand.riverBets.push("");
+            hand.commCards.push("");
+        }
+
         socket.broadcast.to(code).emit('startGame', code);
         socket.emit('startHost', code);
     });
@@ -112,10 +254,14 @@ io.on('connection', function(socket) {
         socket.join(code);
         console.log("In game: joined room " + code);
     });
-
 });
 
 ////////////////////////////////////////////////////////////////////////////////
+
+
+app.get("/login/test.html", (req, res) => {
+    res.sendFile(__dirname + "/login/test.html");
+});
 
 // Allows files to be loaded
 

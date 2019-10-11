@@ -3,6 +3,8 @@ var socket = io();
 const App = new Vue({
     el: '#app',
     data: {
+        code: "",
+        userId: ""
     },
     methods: {
         sendCards() {
@@ -14,13 +16,20 @@ const App = new Vue({
             var card2 = card2Select.options[card2Select.selectedIndex].value;
             var suit2Select = document.getElementById("suit2");
             var suit2 = suit2Select.options[suit2Select.selectedIndex].value;
-            
+            var cardsStr = card1 + suit1 + card2 + suit2;
+
+            this.$http.post('http://' + window.location.host + '/sendCards/' + this.code + "/" + cardsStr + "/" + this.userId);
         }
     },
     beforeMount() {
         // Obtains the code and joins that room
         var str = window.location.href;
         var code = str.substring(str.length-4, str.length);
+        this.code = code;
         socket.emit('gameJoin', code);
+
+        this.$http.get('http://' + window.location.host + '/getUserId').then(response => {
+            this.userId = response.body;
+        });
     }
 });
