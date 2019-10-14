@@ -13,9 +13,15 @@
     <div id="app">
         HOST GAME
         <br>
-        {{currentPlayer}}'s turn
+        <p id="playerP">'s turn</p>
         <br>
-        <button v-on:click="done">Done (TEMP)</button>
+        <button v-on:click="check">Check</button>
+        <br>
+        <button v-on:click="match">Match</button><input type="number" v-model="raiseAmount">
+        <br>
+        <button v-on:click="raise">Raise</button>
+        <br>
+        <button v-on:click="fold">Fold</button>
     </div>
 
     <script src="host_game.js"></script>
