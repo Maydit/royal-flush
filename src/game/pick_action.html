@@ -15,10 +15,11 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 
+    <link href="https://fonts.googleapis.com/css?family=Fugaz+One&display=swap" rel="stylesheet">
     <title>Pick Action</title>
   </head>
 
-  <body style = "background-color: #E2D4B7">
+  <body style = "background-color: #b8cecd">
 
     <div class = "header">
         <div class = "jumbotron-fluid">
@@ -34,46 +35,47 @@
     <div class="container" >
         <div class="row">
             <div class="col-md-6">
-
-                <div class = "info">
-                    <h1>Welcome</h1>
-
-                    <h2>About</h2>
-                    <p>Do you enjoy poker with your friends? Ever wanted to keep track of who wins and loses and prove to them definitively that you’re the best among them? Our app allows you to record your live poker games simply and easily, then gives you personal statistics on them. You can use our lightweight design to enter poker hands and results with either your mobile device or on our website. You can tell how many hands you win on average, your betting tendencies, and many other kinds of statistics to compare them with friends, improve your game, and have fun playing face to face poker.</p>
-
-
-                    <h2>Host a Game</h2>
-                    <p>Select this option if you want to host a game. This means you will be keeping track of all the actions other player do(match, fold, raise, etc) during
-                    the course of the game. Once you click this button, you will be given a unqiue code that you can give to other players for them to join your session.</p>
-
-                    <h2>Join a Game</h2>
-                    <p>Select this option if you want to join a game. As a player, you simply input in the two cards you were given and the host will be recording your actions.
-                    Once you click this option, you will be prompted to enter a code which the host will give you in order to join a session.</p>
-
-                    <p class = "link"><a href="https://github.com/Maydit/royal-flush">Check out our Github!</a></p>
+                <div class = "rightText">
+                    <h1>Select an Option</h1>
+                    <div id="app">
+                        <div class = "create">
+                            <a href="host.html"> <button type="button" class="btn btn-primary createButton">Host a Game</button></a>
+                        </div>
 
 
+                        <div class = "host">
+                             <a href="join.html"> <button type="button" class="btn btn-primary hostButton">Join a game</button></a>
+                        </div>
+
+                        <div class = "stats">
+                            <a href=""> <button type="button" class="btn btn-primary statsButton">View Stats</button></a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
 
 
-        <div class = "rightText">
-            <h1>Select an Option</h1>
-            <div id="app">
-                <div class = "create">
-                    <a href="host.html"> <button type="button" class="btn btn-success createButton">Host a Game</button></a>
-                </div>
 
 
-                <div class = "host">
-                     <a href="join.html"> <button type="button" class="btn btn-success hostButton">Join a game</button></a>
-                </div>
+            <div class = "info">
+                <h1>Welcome</h1>
 
+                <h2>Host a Game</h2>
+                <p>Select this option if you want to host a game. This means you will be keeping track of all the actions other player do(match, fold, raise, etc) during
+                the course of the game. Once you click this button, you will be given a unqiue code that you can give to other players for them to join your session.</p>
 
+                <h2>Join a Game</h2>
+                <p>Select this option if you want to join a game. As a player, you simply input in the two cards you were given and the host will be recording your actions.
+                Once you click this option, you will be prompted to enter a code which the host will give you in order to join a session.</p>
 
+                <h2>View Stats</h2>
+                <p> Select this option if you want to view your personal stats or view
+                    global stats collected from all users of Royal Flush.
+                </p>
+
+                <p class = "link"><a href="https://github.com/Maydit/royal-flush">Check out our Github!</a></p>
             </div>
-    </div>
 
 
 
