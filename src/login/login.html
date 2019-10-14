@@ -35,7 +35,7 @@
 
                     <div class="form-group">
                         <label for="email"> Email Address: </label>
-                            <input class="form-control" required type="text" name="email" id = "email"  onkeyup="email_validate(this.value);" />
+                            <input class="form-control" required type="text" name="email" id = "email" onkeyup="email_check_login()" />
                                 <div class="status" id="status"></div>
                     </div>
 
@@ -49,7 +49,7 @@
 
 
                     <div class="form-group" style = "margin-top: 20px;">
-                        <input class="btn btn-primary" type="submit" name="submit_reg" value="Login" onclick="Login()">
+                        <input class="btn btn-primary" type="submit" name="submit_reg" value="Login" id="submit_reg" disabled>
                     </div>
 
                     </form><!-- ends register form -->
