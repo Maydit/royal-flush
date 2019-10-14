@@ -1,14 +1,12 @@
 
-body{
-    background-color: #E2D4B7;
-}
+
 
 .col-md-6{
-    background-color: #E2D4B7;
+    background-color: #b8cecd;
 }
 
 .form-group{
-    background-color: #E2D4B7;
+    background-color: #b8cecd;
 }
 
 legend{
@@ -19,7 +17,7 @@ legend{
 
 
 input{
-    background-color: #E2D4B7;
+    background-color: #7f99b1;
     float: left;
 }
 .form-group{
@@ -33,11 +31,9 @@ input{
 
 
 fieldset {
-    border: thin solid #ccc;
-    border-radius: 4px;
     padding: 20px;
     padding-left: 40px;
-    background: #fbfbfb;
+    background:  #7f99b1;
 }
 legend {
    color: #678;
@@ -80,22 +76,24 @@ span.req {
 
 .header{
     text-align: center;
-    background: #1abc9c;
+    background:  #7f99b1;
     color: white;
     margin-top: -20px;
     margin-bottom: 50px;
     height: 120px;
+
 }
 
 .header h1{
     padding-top: 15px;
+
 }
 
 .jumbotron-fluid h1{
     text-align: center;
     font-weight: bold;
     font-size: 50px;
-    font-family: 'Nunito', sans-serif;
+    font-family: 'Fugaz One', cursive;
 }
 
 .jumbotron-fluid p{
@@ -104,6 +102,17 @@ span.req {
     font-style: italic;
     font-family: 'Nunito', sans-serif;
 }
+
+
+
+.loginBlock{
+    width:50%;
+}
+
+.loginForm{
+    padding-bottom: 100px;
+}
+
 
 /* assoicated JS
 function checkPass()

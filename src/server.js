@@ -150,6 +150,18 @@ app.get("/getCurrentPlayer/:code", (req, res) => {
     }
 });
 
+app.get("/getPositions/:code", (req, res) => {
+    var code = req.params.code;
+    var hand = rooms.get(code);
+    res.send(hand.positions);
+});
+
+app.get("/getNames/:code", (req, res) => {
+    var code = req.params.code;
+    var hand = rooms.get(code);
+    res.send(hand.names);
+});
+
 app.post("/sendCards/:code/:cardsStr/:userId", (req, res) => {
     // Parse inputs
     var code = req.params.code;
@@ -164,12 +176,40 @@ app.post("/sendCards/:code/:cardsStr/:userId", (req, res) => {
             break;
         }
     }
+    res.send(true);
 });
 
-app.get("/recordHand/:code", (req, res) => {
+app.post("/addBet/:code/:bet/:phase", (req, res) => {
+    // Phase legend:
+    //      0: preflop
+    //      1: flop
+    //      2: turn
+    //      3: river
+
+    // Parse inputs
+    var code = req.params.code;
+    var bet = req.params.bet;
+    var phase = parseInt(req.params.phase, 10);
+
+    var hand = rooms.get(code);
+    if (phase == 0) {
+        hand.preflopBets.push(bet);
+    } else if (phase == 1) {
+        hand.flopBets.push(bet);
+    } else if (phase == 2) {
+        hand.turnBets.push(bet);
+    } else {
+        hand.riverBets.push(bet);
+    }
+    console.log(hand);
+    res.send(true);
+});
+
+app.post("/recordHand/:code", (req, res) => {
     var code = req.params.code;
     var hand = rooms.get(code);
-    console.log(hand);
+    //console.log(hand);
+    console.log("DONE!");
 
     // Switch positions
     hand.positions.unshift(hand.positions[hand.positions.length - 1]);
@@ -179,6 +219,10 @@ app.get("/recordHand/:code", (req, res) => {
     for (var i = 0; i < hand.players.length; i++) {
         hand.cards[i] = "";
     }
+    hand.preflopBets = [];
+    hand.flopBets = [];
+    hand.turnBets = [];
+    hand.riverBets = [];
 
     res.send(true);
     /*
@@ -256,10 +300,8 @@ io.on('connection', function(socket) {
         for (var i = 0; i < hand.players.length; i++) {
             hand.positions.push(i);
             hand.cards.push("");
-            hand.preflopBets.push("");
-            hand.flopBets.push("");
-            hand.turnBets.push("");
-            hand.riverBets.push("");
+        }
+        for (var i = 0; i < 5; i++) {
             hand.commCards.push("");
         }
 
@@ -317,6 +359,12 @@ app.get('/game/pick_action.html', function(req, res) {
     res.sendFile(__dirname + '/game/pick_action.html');
 });
 
+
+app.get('/game/pick_action.css', function(req, res) {
+    res.sendFile(__dirname + '/game/pick_action.css');
+});
+
+
 app.get('/game/player_game.js', function(req, res) {
     res.sendFile(__dirname + '/game/player_game.js');
 });
@@ -327,6 +375,10 @@ app.get('/game/host_game.js', function(req, res) {
 
 app.get('/game/player_game.html', function(req, res) {
     res.sendFile(__dirname + '/game/player_game.html');
+});
+
+app.get('/game/player_game.css', function(req, res) {
+    res.sendFile(__dirname + '/game/player_game.css');
 });
 
 app.get('/game/host_game.html', function(req, res) {

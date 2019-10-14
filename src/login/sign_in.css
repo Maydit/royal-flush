@@ -1,14 +1,14 @@
 
 body{
-    background-color: #E2D4B7;
+    background-color: #b8cecd
 }
 
 .col-md-6{
-    background-color: #E2D4B7;
+    background-color: #b8cecd
 }
 
 .form-group{
-    background-color: #E2D4B7;
+    background-color: #b8cecd
 }
 
 legend{
@@ -80,7 +80,7 @@ span.req {
 .header{
     text-align: center;
    /* background: #1abc9c;*/
-    background: #1abc9c;
+    background: #7f99b1;
     color: white;
     margin-top: -20px;
     margin-bottom: 50px;
@@ -95,7 +95,7 @@ span.req {
     text-align: center;
     font-weight: bold;
     font-size: 50px;
-    font-family: 'Nunito', sans-serif;
+    font-family: 'Fugaz One', cursive;
 }
 
 .jumbotron-fluid p{
@@ -103,6 +103,10 @@ span.req {
     font-size: 20px;
     font-style: italic;
     font-family: 'Nunito', sans-serif;
+}
+
+.registerForm{
+    margin-bottom: 100px;
 }
 
 /* assoicated JS

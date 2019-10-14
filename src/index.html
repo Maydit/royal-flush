@@ -15,10 +15,13 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 
+    <link href="https://fonts.googleapis.com/css?family=Fugaz+One&display=swap" rel="stylesheet">
+
     <title>Homepage</title>
   </head>
-
-  <body style = "background-color: #E2D4B7">
+  <!-- "background-color: #E2D4B7" DEFAULT TEAL-->
+  <!-- "background-color: #F1E9DB" GRAPE PURPLE-->
+  <body style = "background-color: #b8cecd">
 
     <div class = "header">
         <div class = "jumbotron-fluid">
@@ -35,30 +38,44 @@
         <div class="row">
             <div class="col-md-6">
 
-                <div class = "info">
-                    <h1>Welcome</h1>
+                <div class = "rightText">
+                    <h1 class = "sectionHeader">Select an Option</h1>
+                    <div id="app">
+                        <div class = "login">
 
-                    <h2>About</h2>
-                    <p>Do you enjoy poker with your friends? Ever wanted to keep track of who wins and loses and prove to them definitively that you’re the best among them? Our app allows you to record your live poker games simply and easily, then gives you personal statistics on them. You can use our lightweight design to enter poker hands and results with either your mobile device or on our website. You can tell how many hands you win on average, your betting tendencies, and many other kinds of statistics to compare them with friends, improve your game, and have fun playing face to face poker.</p>
+                            <a href="login/login.html"> <button type="button" class="btn btn-primary loginButton">Login</button></a>
+                        </div>
 
-                    <p class = "link"><a href="https://github.com/Maydit/royal-flush">Check out our Github!</a></p>
+                        <div class = "register">
+                            <a href="login/sign_in.html"> <button type="button" class="btn btn-primary registerButton">Register</button></a>
+                        </div>
 
 
+                    </div>
                 </div>
             </div>
 
 
+            <div class = "col-md-2">
 
-        <div class = "rightText">
-            <h1>Select an Option</h1>
-            <div id="app">
-                <div class = "login">
-                    <a href="login/login.html" class="btn btn-success loginButton" role = "button">Login</a>
+            </div>
+
+            <div class = "col-md-6">
+                <div class = "info">
+                    <h1 class = "sectionHeader">Welcome</h1>
+
+                    <h2 class = "subHeader">About</h2>
+                    <p>Do you enjoy poker with your friends? Ever wanted to keep track of who wins and loses and prove to them definitively that you’re the best among them? Our app allows you to record your live poker games simply and easily, then gives you personal statistics on them. You can use our lightweight design to enter poker hands and results with either your mobile device or on our website. You can tell how many hands you win on average, your betting tendencies, and many other kinds of statistics to compare them with friends, improve your game, and have fun playing face to face poker.</p>
+
+                    <p class = "link"><a href="https://github.com/Maydit/royal-flush">Check out our Github!</a></p>
                 </div>
 
-                <div class = "register">
-                    <a href="login/sign_in.html" class="btn btn-success registerButton" role = "button">Register</a>
-                </div>
+            </div>
+
+
+
+
+
 
 
 
