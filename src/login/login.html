@@ -29,21 +29,13 @@
 
                 <div class = "loginForm">
 
-<<<<<<< HEAD
-                <div class="form-group">
-                    <label for="email"> Email Address: </label>
-                        <input class="form-control" required type="text" name="email" id = "email"  onkeyup="email_check_login()" />
-                            <div class="status" id="status"></div>
-                </div>
-=======
                     <form action="/add_acc" method="post" id="fileForm" role="form">
                     <fieldset><legend class="text-center">Login<span class="req"></span></legend>
->>>>>>> master
 
 
                     <div class="form-group">
                         <label for="email"> Email Address: </label>
-                            <input class="form-control" required type="text" name="email" id = "email"  onkeyup="email_validate(this.value);" />
+                            <input class="form-control" required type="text" name="email" id = "email" onkeyup="email_check_login()" />
                                 <div class="status" id="status"></div>
                     </div>
 
@@ -57,16 +49,11 @@
 
 
                     <div class="form-group" style = "margin-top: 20px;">
-                        <input class="btn btn-primary" type="submit" name="submit_reg" value="Login" onclick="Login()">
+                        <input class="btn btn-primary" type="submit" name="submit_reg" value="Login" id="submit_reg" disabled>
                     </div>
 
                     </form><!-- ends register form -->
 
-<<<<<<< HEAD
-                <div class="form-group" style = "margin-top: 20px;">
-                    <input class="btn btn-success" type="submit" name="submit_reg" value="Login" id="submit_reg" disabled>
-=======
->>>>>>> master
                 </div>
 
             </div>
