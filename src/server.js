@@ -6,6 +6,7 @@ var port = 3000;
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+var sjcl = require('sjcl');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -18,9 +19,9 @@ mongoose.connect(url);
 var nameSchema = new mongoose.Schema({
     firstName: String,
     lastName: String,
-    username: String,
     email: String,
-    password: String
+    passHash: String,
+    salt: String,
 });
 
 var User = mongoose.model("User", nameSchema);
@@ -63,14 +64,18 @@ var sessionChecker = (req, res, next) => {
 // Logging in
 app.post('/add_acc',(req, res) => {
     mongoose.connect(url, function(err, db) {
-        var myData = new User(req.body);
+        //var myData = new User(req.body);
         var collection = db.collection(db_name);
-        var cursor = collection.find({email:myData.email});
+        var cursor = collection.find({email:req.body.email});
         var count = 0;
-
+        //todo: fix this
         cursor.forEach(function(item) {
             if(item!=null) {
-                if( myData.password === item.password) {
+                var pass = req.body.password;
+                var saltBits = sjcl.codec.base64.toBits(item.salt);
+                var derivedKey = sjcl.misc.pbkdf2(pass, saltBits, 100, 256);
+                var hash = sjcl.codec.base64.fromBits(derivedKey);
+                if( hash === item.passHash) {
                     count=1;
                     //This sets the cookie to user id
                     req.session.userId = item._id.toString();
@@ -80,7 +85,7 @@ app.post('/add_acc',(req, res) => {
             }
         }, function(err) {
             if(count==0) {
-               res.status(400).send("Account not found");
+               res.status(400).send("Account or password incorrect");
             }
         });
     });
@@ -88,7 +93,31 @@ app.post('/add_acc',(req, res) => {
 
 // Creating account
 app.post("/valid", (req, res) => {
-    var myData = new User(req.body);
+    //TODO
+    //check if email unique?
+    /*var unique;
+    mongoose.connect(url, async function(err, db) {
+        unique = await !db.exists({email: req.body.email});
+        db.close();
+    });
+    if(!unique) {
+        //todo
+        return;
+    }*/
+    //hash & salt
+    var password = req.body.password;
+    var saltBits = sjcl.random.randomWords(8);
+    var derivedKey = sjcl.misc.pbkdf2(password, saltBits, 100, 256);
+    var hash = sjcl.codec.base64.fromBits(derivedKey);
+    var salt = sjcl.codec.base64.fromBits(saltBits);
+    //to get back: var saltBits = sjcl.codec.base64.toBits(salt);
+    var dict =  {};
+    dict["firstName"] = req.body.firstname;
+    dict["lastName"] = req.body.lastname;
+    dict["email"] = req.body.email;
+    dict["salt"] = salt;
+    dict["passHash"] = hash;
+    var myData = new User(dict);
     myData.save()
         .then(item => {
             //res.send("Name saved to database");
@@ -98,15 +127,6 @@ app.post("/valid", (req, res) => {
             res.status(400).send("Unable to save to database");
         });
 });
-
-//Validate username on signup
-app.post("/validUName", (req, res) => {
-    mongoose.connect(url, function(err, db) {
-        var collection = db.collection(db_name);
-        var valid = collection.find({username: req.body});
-        db.close();
-    });
-})
 
 ////////////////////////////////////////////////////////////////////////////////
 // Game backend
