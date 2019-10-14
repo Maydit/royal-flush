@@ -28,41 +28,38 @@
     <div class="container" >
         <div class="row">
             <div class="col-md-6">
-
-                <div class = "temp">
-                    <div class="form-group">
-                        <label for="firstname"><span class="req">* </span> First name: </label>
-                            <input class="form-control" type="text" name="firstname" id = "firstname" onkeyup = "name_check();" required />
-                                <span id="errFirst" class="errFirst"></span>
+                <div class = "registerForm">
+                    <form action="/valid" method="post" id="fileForm" role="form">
+                    <fieldset><legend class="text-center">Registration Form <span class="req"><small> (required *)  </small></span></legend>
+                        <div class = "temp">
+                            <div class="form-group">
+                                <label for="firstname"><span class="req">* </span> First name: </label>
+                                    <input class="form-control" type="text" name="firstname" id = "firstname" onkeyup = "name_check();" required />
+                                        <span id="errFirst" class="errFirst"></span>
+                            </div>
+                        <div class="form-group">
+                            <label for="lastname"><span class="req">* </span> Last name: </label>
+                                <input class="form-control" type="text" name="lastname" id = "lastname" onkeyup = "name_check();" required />
+                                    <span id="errLast" class="errLast"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="email"><span class="req">* </span> Email Address: </label>
+                                <input class="form-control" required type="text" name="email" id = "email"  onkeyup="email_check();" />
+                                    <div class="status" id="status"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password" ><span class="req">* </span> Password: </label>
+                                <input required name="password" type="password" class="form-control inputpass" minlength="4" maxlength="16"  id="pass1" onkeyup="pass_check()"/> </p>
+                            <label for="password"><span class="req">* </span> Password Confirm: </label>
+                                <input required name="password_2" type="password" class="form-control inputpass" minlength="4" maxlength="16" placeholder="Passwords must match" onkeyup="pass_check()" id="pass2" />
+                                    <span id="confirmMessage" class="confirmMessage"></span>
+                        </div>
+                    </fieldset>
+                    <div class="form-group" style = "margin-top: 20px;">
+                        <input class="btn btn-success" type="submit" name="submit_reg" value="Register" id="submit_reg" disabled>
                     </div>
-
-                <div class="form-group">
-                    <label for="lastname"><span class="req">* </span> Last name: </label>
-                        <input class="form-control" type="text" name="lastname" id = "lastname" onkeyup = "name_check();" required />
-                            <span id="errLast" class="errLast"></span>
-                </div>
-
-                <div class="form-group">
-                    <label for="email"><span class="req">* </span> Email Address: </label>
-                        <input class="form-control" required type="text" name="email" id = "email"  onkeyup="email_check();" />
-                            <div class="status" id="status"></div>
-                </div>
-
-                <div class="form-group">
-                    <label for="password" ><span class="req">* </span> Password: </label>
-                        <input required name="password" type="password" class="form-control inputpass" minlength="4" maxlength="16"  id="pass1" onkeyup="pass_check()"/> </p>
-                    <label for="password"><span class="req">* </span> Password Confirm: </label>
-                        <input required name="password_2" type="password" class="form-control inputpass" minlength="4" maxlength="16" placeholder="Passwords must match" onkeyup="pass_check()" id="pass2" />
-                            <span id="confirmMessage" class="confirmMessage"></span>
-                </div>
-                </fieldset>
-                <div class="form-group" style = "margin-top: 20px;">
-                    <input class="btn btn-success" type="submit" name="submit_reg" value="Register" id="submit_reg" disabled>
-                </div>
+                </form>
             </div>
-
-
-
             <div class="rightText">
                 <h1 class="page-header">Info</h1>
                 <p>A live poker tracking app to optimize your playstyle</p>
@@ -73,8 +70,5 @@
             </div>
         </div>
     </div>
-
-
-
 </body>
 </html>
