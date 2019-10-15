@@ -32,7 +32,6 @@ const App = new Vue({
             this.code += char;
         }
 
-        console.log(this.code);
         socket.emit('createRoom', this.code);
     }
 });
