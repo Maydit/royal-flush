@@ -32,6 +32,7 @@ const App = new Vue({
             console.log(this.username);
         });
 
+        // Grabs the userID from the database 
         this.$http.get('http://' + window.location.host + '/getUserId').then(response => {
             this.userId = response.body;
         });
