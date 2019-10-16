@@ -320,12 +320,11 @@ io.on('connection', function(socket) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-
-app.get("/login/test.html", (req, res) => {
-    res.sendFile(__dirname + "/login/test.html");
-});
-
 // Allows files to be loaded
+
+app.get("/game/pokerCalculations.js", (req, res) => {
+    res.sendFile(__dirname + "/game/pokerCalculations.js");
+});
 
 app.get("/index.css", (req, res) => {
     res.sendFile(__dirname + "/index.css");
