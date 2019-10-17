@@ -16,86 +16,68 @@
     padding-top: 15px;
 }
 
+.container{
+    font-family: 'Nunito', sans-serif;
+}
 
 .header{
     text-align: center;
    /* background: #1abc9c;*/
-   /*Royal Purple: #7851a9*/
     background: #7f99b1;
     color: white;
     margin-top: -20px;
     margin-bottom: 50px;
     height: 120px;
-
 }
 
+.handHistoryButton{
+    width: 300px;
+    height: 75px;
+}
 
-.container{
+.handHistory{
+    margin-bottom: 75px;
+    margin-top: 75px;
+}
+
+.rightText{
+    text-align: center;
     font-family: 'Nunito', sans-serif;
+    margin-bottom: 100px;
 }
 
+.personalStatsButton
+{
+    width: 300px;
+    height: 75px;
 
+}
 
-.loginButton{
+.personalStats{
+    margin-bottom: 75px;
+}
+
+.globalStatsButton{
     width: 300px;
     height: 75px;
     font-size: 5em;
     text-align: center;
 }
 
-
-
-.login{
-    margin-bottom: 100px;
-    margin-top: 75px;
-    text-align: center;
-}
-
-.rightText{
-    text-align: center;
-    font-family: 'Nunito', sans-serif;
-    padding-bottom: 100px;
-}
-
-.registerButton
-{
-    width: 300px;
-    height: 75px;
-    margin-bottom: 300px;
-}
-
-.link{
-    margin-top: 20px;
-    text-align: center;
-}
-
-
-
 .info h1{
     margin-bottom: 20px;
     text-align: center;
-    /*border-bottom: thin solid #123C69;*/
+    border-bottom: thin solid #ccc;
     border-radius: 4px;
+
+    font-weight: bold;
 }
-                            /*prior was #ccc*/
+
 .rightText h1{
-    /*border-bottom: thin solid #123C69;*/
+    border-bottom: thin solid #ccc;
     border-radius: 4px;
     text-align: center;
-}
 
-.info p{
-    line-height: 25px;
-    color:black;
-    font-size:15px;
-}
-
-.sectionHeader{
-    color:black;
     font-weight: bold;
-    font-size: 40px;
-}
 
-.subHeader{
-    color: black;
 }
