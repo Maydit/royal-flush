@@ -384,6 +384,10 @@ app.get('/game/host_game.html', function(req, res) {
     res.sendFile(__dirname + '/game/host_game.html');
 });
 
+app.get('/game/host_game.css', function(req, res) {
+    res.sendFile(__dirname + '/game/host_game.css');
+});
+
 app.get('/game/host.js', function(req, res) {
     res.sendFile(__dirname + '/game/host.js');
 });
@@ -399,6 +403,41 @@ app.get('/game/host.html', function(req, res) {
 app.get('/game/join.html', function(req, res) {
     res.sendFile(__dirname + '/game/join.html');
 });
+
+app.get('/stats/stats_home.html', function(req, res) {
+    res.sendFile(__dirname + '/stats/stats_home.html');
+});
+
+app.get('/stats/stats_home.css', function(req, res) {
+    res.sendFile(__dirname + '/stats/stats_home.css');
+});
+
+app.get('/stats/hand_history.html', function(req, res) {
+    res.sendFile(__dirname + '/stats/hand_history.html');
+});
+
+app.get('/stats/hand_history.css', function(req, res) {
+    res.sendFile(__dirname + '/stats/hand_history.css');
+});
+
+app.get('/stats/personal_stats.html', function(req, res) {
+    res.sendFile(__dirname + '/stats/personal_stats.html');
+});
+
+app.get('/stats/personal_stats.css', function(req, res) {
+    res.sendFile(__dirname + '/stats/personal_stats.css');
+});
+
+app.get('/stats/global_stats.html', function(req, res) {
+    res.sendFile(__dirname + '/stats/global_stats.html');
+});
+
+app.get('/stats/global_stats.css', function(req, res) {
+    res.sendFile(__dirname + '/stats/global_stats.css');
+});
+
+
+
 
 app.get("/", (req, res) => {
     res.sendFile(__dirname + "/index.html");
