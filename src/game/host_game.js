@@ -17,7 +17,12 @@ const App = new Vue({
         // How much each player has bet
         amountInPot: [],
         // Boolean array whether each player has folded
-        folded: []
+        folded: [],
+        commCard1: "",
+        commCard2: "",
+        commCard3: "",
+        commCard4: "",
+        commCard5: ""
     },
     methods: {
         // Begins the betting rounnd prior to the flop
@@ -115,22 +120,37 @@ const App = new Vue({
         // conditions are everyone folded or end of round
         checkNextPhase() {
             // Determines if everyone folded
-            var numActive = 0;
+            var active = "";
             for (var i = 0; i < this.folded.length; i++) {
                 if (this.folded[i] == false) {
-                    numActive += 1;
+                    active += i.toString();
                 }
             }
             // True if everyone folded
-            var defaultWinner = (numActive == 1);
+            var defaultWinner = (active.length == 1);
 
             if (defaultWinner) {
                 // Round done, send data
                 this.phase = 0;
-                this.$http.post('http://' + window.location.host + '/recordHand/' + this.code);
-                this.positions.unshift(this.positions[this.positions.length - 1]);
-                this.positions.pop();
-                this.beginPreflop();
+                var commCardsStr = '/' + this.commCard1 + this.commCard2 + this.commCard3 + this.commCard4 + this.commCard5 + '/';
+                this.$http.get('http://' + window.location.host + '/recordHand/' + this.code + commCardsStr + active).then(response => {
+                    var winnerIndex = parseInt(response.body);
+                    for (var i = 0; i < this.amountInPot.length; i++) {
+                        console.log(this.amountInPot[i]);
+                        this.$http.post('http://' + window.location.host + '/updateStacks/' + this.code + '/' + i + '/' + this.amountInPot[i]);
+                        if (winnerIndex == i) {
+                            var totalPot = 0;
+                            for (var j = 0; j < this.amountInPot.length; j++) {
+                                totalPot -= this.amountInPot[j];
+                            }
+                            console.log(totalPot);
+                            this.$http.post('http://' + window.location.host + '/updateStacks/' + this.code + '/' + i + '/' + totalPot);
+                        }
+                    }
+                    this.positions.unshift(this.positions[this.positions.length - 1]);
+                    this.positions.pop();
+                    this.beginPreflop();
+                });
             } else if (this.index == this.cycleEndsAt) {
                 // Change phase
                 if (this.phase == 0) {
@@ -145,10 +165,25 @@ const App = new Vue({
                 } else if (this.phase == 3) {
                     this.phase = 0;
                     // Round done, send data
-                    this.$http.post('http://' + window.location.host + '/recordHand/' + this.code);
-                    this.positions.unshift(this.positions[this.positions.length - 1]);
-                    this.positions.pop();
-                    this.beginPreflop();
+                    var commCardsStr = '/' + this.commCard1 + this.commCard2 + this.commCard3 + this.commCard4 + this.commCard5 + '/';
+                    this.$http.get('http://' + window.location.host + '/recordHand/' + this.code + commCardsStr + active).then(response => {
+                        var winnerIndex = parseInt(response.body);
+                        for (var i = 0; i < this.amountInPot.length; i++) {
+                            console.log(this.amountInPot[i]);
+                            this.$http.post('http://' + window.location.host + '/updateStacks/' + this.code + '/' + i + '/' + this.amountInPot[i]);
+                            if (winnerIndex == i) {
+                                var totalPot = 0;
+                                for (var j = 0; j < this.amountInPot.length; j++) {
+                                    totalPot -= this.amountInPot[j];
+                                }
+                                console.log(totalPot);
+                                this.$http.post('http://' + window.location.host + '/updateStacks/' + this.code + '/' + i + '/' + totalPot);
+                            }
+                        }
+                        this.positions.unshift(this.positions[this.positions.length - 1]);
+                        this.positions.pop();
+                        this.beginPreflop();
+                    });
                 }
             }
         },
