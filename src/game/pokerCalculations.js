@@ -9,11 +9,11 @@ class Card {
         } else if (rank == 'J') {
             this.rank = 11;
         } else if (rank == 'Q') {
-            this.rank = 12
+            this.rank = 12;
         } else if (rank == 'K') {
-            this.rank = 13
+            this.rank = 13;
         } else if (rank == 'A') {
-            this.rank = 14
+            this.rank = 14;
         }
         this.suit = cardStr.charAt(1);
     }
@@ -230,8 +230,8 @@ class Hand {
     // Given 5-7 cards, determine the best 5-card hand.
     constructor(cardsStr) {
         var cards = [];
-        for (var i = 0; i < cardsStr.length; i++) {
-            var newCard = new Card(cardsStr[i]);
+        for (var i = 0; i < cardsStr.length / 2; i+=2) {
+            var newCard = new Card(cardsStr.substring(i, 2));
             cards.push(newCard);
         }
 
