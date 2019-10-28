@@ -16,6 +16,7 @@
     "express": "^4.17.1",
     "express-session": "^1.16.2",
     "http": "0.0.0",
+    "mongodb": "^3.3.3",
     "mongoose": "^5.7.3",
     "sjcl": "^1.0.8",
     "socket.io": "^2.3.0",

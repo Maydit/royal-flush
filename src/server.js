@@ -10,6 +10,7 @@ var sjcl = require('sjcl');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb+srv://admin:adminpassword@cluster0-f0kkf.mongodb.net/test?retryWrites=true";
 var db_name = "users";
 var mongoose = require("mongoose");
@@ -657,7 +658,6 @@ app.get("/recordHand/:code/:commCardsStr/:notFolded", (req, res) => {
     }
     sortedHands = Array.from(allHands);
     sortedHands.sort(handSorter);
-    console.log("FIGURING OUT WINNER:");
     for (var i = 0; i < notFoldedStr.length; i++) {
         if (sortedHands[sortedHands.length-1].equals(allHands[i])) {
             hand.winner = parseInt(notFoldedStr.charAt(i));
@@ -681,20 +681,23 @@ app.get("/recordHand/:code/:commCardsStr/:notFolded", (req, res) => {
     hand.commCards = "";
 
     res.send(hand.winner.toString());
-    /*
-    mongoose.connect(url, function(err, db) {
-        var dbo = db.db("rawData");
-        var code = req.params.code;
-        var hand = rooms.get(code);
-        dbo.collection("hands").insertOne(hand, function(err, res) {
+
+
+    MongoClient.connect(url, { useNewUrlParser: true }, (error, client) => {
+        if(error) {
+            throw error;
+        }
+
+        database = client.db("rawData");
+        database.collection("hands").insertOne(hand, function(err, res) {
             if (err) {
                 throw err;
+            } else {
+                console.log("Hand inserted.");
             }
-            console.log("Hand inserted.");
-            db.close();
         });
     });
-    */
+
 });
 
 app.post("/updateStacks/:code/:pos/:amount", (req, res) => {
@@ -703,11 +706,7 @@ app.post("/updateStacks/:code/:pos/:amount", (req, res) => {
     var pos = parseInt(req.params.pos);
     var amount = parseInt(req.params.amount);
 
-    console.log("POS: " + pos);
-    console.log("AMOUNT: " + amount);
-    console.log("PRIOR STACK: " + hand.stacks[pos]);
     hand.stacks[pos] -= amount;
-    console.log("AFTER STACK: " + hand.stacks[pos]);
     res.send(true);
 });
 
