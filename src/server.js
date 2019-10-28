@@ -665,10 +665,73 @@ app.get("/recordHand/:code/:commCardsStr/:notFolded", (req, res) => {
     }
 
     console.log(hand);
+    
+    var dupHand = {
+        players: [],
+        names: [],
+        stacks: [],
+        cards: [],
+        positions: [],
+        preflopBets: [],
+        flopBets: [],
+        turnBets: [],
+        riverBets: [],
+        commCards: "",
+        winner: "",
+        pot: 0
+    };
+
+    for (var i = 0; i < hand.players.length; i++) {
+        dupHand.players.push(hand.players[i]);
+    }
+    for (var i = 0; i < hand.names.length; i++) {
+        dupHand.names.push(hand.names[i]);
+    }
+    for (var i = 0; i < hand.stacks.length; i++) {
+        dupHand.stacks.push(hand.stacks[i]);
+    }
+    for (var i = 0; i < hand.cards.length; i++) {
+        dupHand.cards.push(hand.cards[i]);
+    }
+    for (var i = 0; i < hand.positions.length; i++) {
+        dupHand.positions.push(hand.positions[i]);
+    }
+    for (var i = 0; i < hand.preflopBets.length; i++) {
+        dupHand.preflopBets.push(hand.preflopBets[i]);
+    }
+    for (var i = 0; i < hand.flopBets.length; i++) {
+        dupHand.flopBets.push(hand.flopBets[i]);
+    }
+    for (var i = 0; i < hand.turnBets.length; i++) {
+        dupHand.turnBets.push(hand.turnBets[i]);
+    }
+    for (var i = 0; i < hand.riverBets.length; i++) {
+        dupHand.riverBets.push(hand.riverBets[i]);
+    }
+    dupHand.commCards = hand.commCards;
+    dupHand.winner = hand.winner;
+    dupHand.pot = hand.pot;
+
+
+    MongoClient.connect(url, { useNewUrlParser: true }, (error, client) => {
+        if(error) {
+            throw error;
+        }
+
+        database = client.db("rawData");
+        database.collection("hands").insertOne(dupHand, function(err, res) {
+            if (err) {
+                throw err;
+            } else {
+                console.log("Hand inserted.");
+            }
+        });
+    });
 
     // Switch positions
     hand.positions.unshift(hand.positions[hand.positions.length - 1]);
     hand.positions.pop();
+    console.log(hand.positions);
 
     // Reset variables
     for (var i = 0; i < hand.players.length; i++) {
@@ -681,23 +744,6 @@ app.get("/recordHand/:code/:commCardsStr/:notFolded", (req, res) => {
     hand.commCards = "";
 
     res.send(hand.winner.toString());
-
-
-    MongoClient.connect(url, { useNewUrlParser: true }, (error, client) => {
-        if(error) {
-            throw error;
-        }
-
-        database = client.db("rawData");
-        database.collection("hands").insertOne(hand, function(err, res) {
-            if (err) {
-                throw err;
-            } else {
-                console.log("Hand inserted.");
-            }
-        });
-    });
-
 });
 
 app.post("/updateStacks/:code/:pos/:amount", (req, res) => {
@@ -734,7 +780,7 @@ io.on('connection', function(socket) {
             commCards: "",
             winner: "",
             pot: 0
-        }
+        };
         rooms.set(code, emptyHand);
         console.log("Created room " + code);
     });
