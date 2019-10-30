@@ -114,12 +114,31 @@
                     <option value="D" class = "suit" style = "color:red;">&diams;</option>
                 </select>
             </div>
-            <button class = "btn btn-primary submit" v-on:click="sendCards">Submit</button>
+            <button class = "btn btn-primary submit" onclick="myFunction()" v-on:click="sendCards">Submit</button>
+
+            <!-- The actual snackbar -->
+            <div id="snackbar">Cards Submitted!</div>
+
+            <script>
+            function myFunction()
+            {
+              var x = document.getElementById("snackbar");
+              x.className = "show";
+              setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+            }
+            </script>
         </div>
 
 
     </div>
 
     <script src="player_game.js"></script>
+
+
+
+
+
+
+
   </body>
 </html>
