@@ -135,20 +135,7 @@ app.post("/valid", (req, res) => {
 class Card {
     constructor(cardStr) {
         var rank = cardStr.charAt(0);
-        if (rank == '2' || rank == '3' || rank == '4' || rank == '5' ||
-            rank == '6' || rank == '7' || rank == '8' || rank == '9') {
-            this.rank = parseInt(rank);
-        } else if (rank == 'T') {
-            this.rank = 10;
-        } else if (rank == 'J') {
-            this.rank = 11;
-        } else if (rank == 'Q') {
-            this.rank = 12;
-        } else if (rank == 'K') {
-            this.rank = 13;
-        } else if (rank == 'A') {
-            this.rank = 14;
-        }
+        this.rank = "  23456789TJQKA".indexOf(rank);
         this.suit = cardStr.charAt(1);
     }
 
