@@ -38,7 +38,6 @@ app.use(session({
   cookie:{
     expires: 700000000
   }
-
 }));
 
 // This middleware will check if user's cookie is still saved in browser and user is not set, then automatically log the user out.
@@ -96,37 +95,44 @@ app.post('/add_acc',(req, res) => {
 app.post("/valid", (req, res) => {
     //TODO
     //check if email unique?
-    /*var unique;
-    mongoose.connect(url, async function(err, db) {
-        unique = await !db.exists({email: req.body.email});
-        db.close();
-    });
-    if(!unique) {
-        //todo
-        return;
-    }*/
-    //hash & salt
-    var password = req.body.password;
-    var saltBits = sjcl.random.randomWords(8);
-    var derivedKey = sjcl.misc.pbkdf2(password, saltBits, 100, 256);
-    var hash = sjcl.codec.base64.fromBits(derivedKey);
-    var salt = sjcl.codec.base64.fromBits(saltBits);
-    //to get back: var saltBits = sjcl.codec.base64.toBits(salt);
-    var dict =  {};
-    dict["firstName"] = req.body.firstname;
-    dict["lastName"] = req.body.lastname;
-    dict["email"] = req.body.email;
-    dict["salt"] = salt;
-    dict["passHash"] = hash;
-    var myData = new User(dict);
-    myData.save()
-        .then(item => {
-            //res.send("Name saved to database");
-            res.redirect(req.protocol + '://' + req.get('host'));
-        })
-        .catch(err => {
-            res.status(400).send("Unable to save to database");
+    mongoose.connect(url, function(err, db) {
+        var found = 0;
+        var collection = db.collection(db_name);
+        var cursor = collection.find({email:req.body.email});
+        cursor.forEach(function(item) {
+            if(item!=null) {
+                //duplicate email
+                res.end("Email already in use");
+                found++;
+            }
         });
+        if(found > 0) throw "err";
+    }).then(result => {
+        //hash & salt
+        var password = req.body.password;
+        var saltBits = sjcl.random.randomWords(8);
+        var derivedKey = sjcl.misc.pbkdf2(password, saltBits, 100, 256);
+        var hash = sjcl.codec.base64.fromBits(derivedKey);
+        var salt = sjcl.codec.base64.fromBits(saltBits);
+        //to get back: var saltBits = sjcl.codec.base64.toBits(salt);
+        var dict =  {};
+        dict["firstName"] = req.body.firstname;
+        dict["lastName"] = req.body.lastname;
+        dict["email"] = req.body.email;
+        dict["salt"] = salt;
+        dict["passHash"] = hash;
+        var myData = new User(dict);
+        myData.save()
+            .then(item => {
+                //res.send("Name saved to database");
+                res.redirect(req.protocol + '://' + req.get('host'));
+            })
+            .catch(err => {
+                res.status(400).send("Unable to save to database");
+            });
+    }).catch(err => {
+        return;
+    });
 });
 
 ////////////////////////////////////////////////////////////////////////////////
