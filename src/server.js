@@ -62,7 +62,7 @@ var sessionChecker = (req, res, next) => {
 // Login and signup
 
 // Logging in
-app.post('/add_acc',(req, res) => {
+app.post('/login',(req, res) => {
     mongoose.connect(url, function(err, db) {
         //var myData = new User(req.body);
         var collection = db.collection(db_name);
@@ -92,7 +92,7 @@ app.post('/add_acc',(req, res) => {
 });
 
 // Creating account
-app.post("/valid", (req, res) => {
+app.post("/sign_up", (req, res) => {
     //TODO
     //check if email unique?
     mongoose.connect(url, function(err, db) {
@@ -658,7 +658,7 @@ app.get("/recordHand/:code/:commCardsStr/:notFolded", (req, res) => {
     }
 
     console.log(hand);
-    
+
     var dupHand = {
         players: [],
         names: [],
