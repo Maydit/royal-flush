@@ -90,23 +90,11 @@ app.post('/login',(req, res) => {
     });
 });
 
+
+
 // Creating account
 app.post("/register", (req, res) => {
-    //TODO
-    //check if email unique?
-    mongoose.connect(url, function(err, db) {
-        var found = 0;
-        var collection = db.collection(db_name);
-        var cursor = collection.find({email:req.body.email});
-        cursor.forEach(function(item) {
-            if(item!=null) {
-                //duplicate email
-                res.end("Email already in use");
-                found++;
-            }
-        });
-        if(found > 0) throw "err";
-    }).then(result => {
+    function send() {
         //hash & salt
         var password = req.body.password;
         var saltBits = sjcl.random.randomWords(8);
@@ -114,7 +102,7 @@ app.post("/register", (req, res) => {
         var hash = sjcl.codec.base64.fromBits(derivedKey);
         var salt = sjcl.codec.base64.fromBits(saltBits);
         //to get back: var saltBits = sjcl.codec.base64.toBits(salt);
-        var dict =  {};
+        var dict = {};
         dict["firstName"] = req.body.firstname;
         dict["lastName"] = req.body.lastname;
         dict["email"] = req.body.email;
@@ -122,16 +110,34 @@ app.post("/register", (req, res) => {
         dict["passHash"] = hash;
         var myData = new User(dict);
         myData.save()
-            .then(item => {
-                //res.send("Name saved to database");
+            .then(() => {
                 res.redirect(req.protocol + '://' + req.get('host'));
             })
-            .catch(err => {
+            .catch(() => {
                 res.status(400).send("Unable to save to database");
             });
-    }).catch(err => {
-        return;
-    });
+    }
+    new Promise(function(resolve, reject) {
+        mongoose.connect(url, async function(err, db) {
+            var collection = db.collection(db_name);
+            const num = await collection.find({email:req.body.email}).count();
+            if(num > 0) {
+                resolve("Email already in use");
+            } else {
+                reject("Email unique");
+            }
+        });
+    })
+    .then(
+        () => {
+            res.end("Email already in use"); 
+        })
+    .catch(
+        () => { 
+            send(); 
+        }
+    );
+    //holy promise
 });
 
 ////////////////////////////////////////////////////////////////////////////////
