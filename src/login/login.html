@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-
     <link href="https://fonts.googleapis.com/css?family=Fugaz+One&display=swap" rel="stylesheet">
 </head>
 
@@ -21,45 +20,28 @@
             <p>"Stats don't bluff"</p>
         </div>
     </div>
-
-
     <div class="container" >
         <div class="row">
             <div class="col-md-6">
-
                 <div class = "loginForm">
-
-                    <form action="/add_acc" method="post" id="fileForm" role="form">
+                    <form action="/login" method="post" id="fileForm" role="form">
                     <fieldset><legend class="text-center">Login<span class="req"></span></legend>
-
-
                     <div class="form-group">
                         <label for="email"> Email Address: </label>
                             <input class="form-control" required type="text" name="email" id = "email" onkeyup="email_check_login()" />
                                 <div class="status" id="status"></div>
                     </div>
-
                     <div class="form-group">
                         <label for="password" > Password: </label>
                             <input required name="password" type="password" class="form-control inputpass" minlength="4" maxlength="16"  id="pass1" /> </p>
-
-
                     </div>
                     </fieldset>
-
-
                     <div class="form-group" style = "margin-top: 20px;">
                         <input class="btn btn-primary" type="submit" name="submit_reg" value="Login" id="submit_reg" disabled>
                     </div>
-
                     </form><!-- ends register form -->
-
                 </div>
-
             </div>
-
-
-
             <div class = "col-md-6">
                 <div class="rightText">
                     <h1 class="page-header">Info</h1>
@@ -68,17 +50,7 @@
                     <p><a href="https://github.com/Maydit/royal-flush">Check out our Github!</a></p>
                 </div>
             </div>
-
-
-
-
-
-
-
         </div>
     </div>
-
-
-
 </body>
 </html>

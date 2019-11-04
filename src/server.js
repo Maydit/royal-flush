@@ -2,7 +2,6 @@ var express = require("express");
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var port = 3000;
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
@@ -62,7 +61,7 @@ var sessionChecker = (req, res, next) => {
 // Login and signup
 
 // Logging in
-app.post('/add_acc',(req, res) => {
+app.post('/login',(req, res) => {
     mongoose.connect(url, function(err, db) {
         //var myData = new User(req.body);
         var collection = db.collection(db_name);
@@ -92,7 +91,7 @@ app.post('/add_acc',(req, res) => {
 });
 
 // Creating account
-app.post("/valid", (req, res) => {
+app.post("/register", (req, res) => {
     //TODO
     //check if email unique?
     mongoose.connect(url, function(err, db) {
@@ -171,7 +170,7 @@ function cardSorter(a, b) {
 function checkForStraightFlush(cards) {
     var flushHand = checkForFlush(cards);
     if (flushHand.length != 0) {
-        straightFlushHand = checkForStraight(flushHand);
+        const straightFlushHand = checkForStraight(flushHand);
         return straightFlushHand;
     }
     return flushHand;
@@ -236,7 +235,7 @@ function checkForStraight(originalCards) {
     }
 
     var straightHand = [];
-    for (var i = cards.length - 5; i >= 0; i--) {
+    for (i = cards.length - 5; i >= 0; i--) {
         if (cards[i].rank == cards[i+4].rank - 4) {
             for (var j = i; j < i+5; j++) {
                 straightHand.push(cards[j]);
@@ -298,7 +297,7 @@ function checkForFullHouse(originalCards) {
         }
     } else if (tripArr.length == 1) {
         // Remove the triplets from the cards to check for pairs
-        for (var i = 0; i < cards.length; i++) {
+        for (i = 0; i < cards.length; i++) {
             if (cards[i].rank == tripArr[0]) {
                 houseHand.push(cards[i]);
                 cards.splice(i,1);
@@ -308,7 +307,7 @@ function checkForFullHouse(originalCards) {
 
         var pairArr = checkForPairs(cards);
         if (pairArr.length != 0) {
-            for (var i = 0; i < cards.length; i++) {
+            for (i = 0; i < cards.length; i++) {
                 if (cards[i].rank == pairArr[pairArr.length - 1]) {
                     houseHand.push(cards[i]);
                 }
@@ -494,7 +493,7 @@ class Hand {
         if (tripArr.length != 0) {
             // If true, length MUST be 1.
             this.cards = [];
-            for (var i = 0; i < cards.length; i++) {
+            for (i = 0; i < cards.length; i++) {
                 if (cards[i].rank == tripArr[0]) {
                     this.cards.push(cards[i]);
                     cards.splice(i,1);
@@ -511,7 +510,7 @@ class Hand {
             if (pairArr.length > 1) {
                 // 2 pair
                 this.cards = [];
-                for (var i = 0; i < cards.length; i++) {
+                for (i = 0; i < cards.length; i++) {
                     if (cards[i].rank == pairArr[pairArr.length-1] || cards[i].rank == pairArr[pairArr.length-2]) {
                         this.cards.push(cards[i]);
                         cards.splice(i,1);
@@ -524,7 +523,7 @@ class Hand {
             } else {
                 // 1 pair
                 this.cards = [];
-                for (var i = 0; i < cards.length; i++) {
+                for (i = 0; i < cards.length; i++) {
                     if (cards[i].rank == pairArr[0]) {
                         this.cards.push(cards[i]);
                         cards.splice(i,1);
@@ -629,7 +628,7 @@ app.post("/addBet/:code/:bet/:phase", (req, res) => {
     } else {
         hand.riverBets.push(bet);
     }
-    console.log(hand);
+    //console.log(hand);
     res.send(true);
 });
 
@@ -637,7 +636,7 @@ app.get("/recordHand/:code/:commCardsStr/:notFolded", (req, res) => {
     var code = req.params.code;
     var hand = rooms.get(code);
     var notFoldedStr = req.params.notFolded;
-    console.log("DONE!");
+    //console.log("DONE!");
 
     // Add community cards to the hand
     hand.commCards = req.params.commCardsStr;
@@ -649,15 +648,15 @@ app.get("/recordHand/:code/:commCardsStr/:notFolded", (req, res) => {
         var currentHand = new Hand(hand.cards[playerPos] + hand.commCards);
         allHands.push(currentHand);
     }
-    sortedHands = Array.from(allHands);
+    var sortedHands = Array.from(allHands);
     sortedHands.sort(handSorter);
-    for (var i = 0; i < notFoldedStr.length; i++) {
+    for (i = 0; i < notFoldedStr.length; i++) {
         if (sortedHands[sortedHands.length-1].equals(allHands[i])) {
             hand.winner = parseInt(notFoldedStr.charAt(i));
         }
     }
 
-    console.log(hand);
+    //console.log(hand);
     
     var dupHand = {
         players: [],
@@ -674,31 +673,31 @@ app.get("/recordHand/:code/:commCardsStr/:notFolded", (req, res) => {
         pot: 0
     };
 
-    for (var i = 0; i < hand.players.length; i++) {
+    for (i = 0; i < hand.players.length; i++) {
         dupHand.players.push(hand.players[i]);
     }
-    for (var i = 0; i < hand.names.length; i++) {
+    for (i = 0; i < hand.names.length; i++) {
         dupHand.names.push(hand.names[i]);
     }
-    for (var i = 0; i < hand.stacks.length; i++) {
+    for (i = 0; i < hand.stacks.length; i++) {
         dupHand.stacks.push(hand.stacks[i]);
     }
-    for (var i = 0; i < hand.cards.length; i++) {
+    for (i = 0; i < hand.cards.length; i++) {
         dupHand.cards.push(hand.cards[i]);
     }
-    for (var i = 0; i < hand.positions.length; i++) {
+    for (i = 0; i < hand.positions.length; i++) {
         dupHand.positions.push(hand.positions[i]);
     }
-    for (var i = 0; i < hand.preflopBets.length; i++) {
+    for (i = 0; i < hand.preflopBets.length; i++) {
         dupHand.preflopBets.push(hand.preflopBets[i]);
     }
-    for (var i = 0; i < hand.flopBets.length; i++) {
+    for (i = 0; i < hand.flopBets.length; i++) {
         dupHand.flopBets.push(hand.flopBets[i]);
     }
-    for (var i = 0; i < hand.turnBets.length; i++) {
+    for (i = 0; i < hand.turnBets.length; i++) {
         dupHand.turnBets.push(hand.turnBets[i]);
     }
-    for (var i = 0; i < hand.riverBets.length; i++) {
+    for (i = 0; i < hand.riverBets.length; i++) {
         dupHand.riverBets.push(hand.riverBets[i]);
     }
     dupHand.commCards = hand.commCards;
@@ -711,12 +710,12 @@ app.get("/recordHand/:code/:commCardsStr/:notFolded", (req, res) => {
             throw error;
         }
 
-        database = client.db("rawData");
+        var database = client.db("rawData");
         database.collection("hands").insertOne(dupHand, function(err, res) {
             if (err) {
                 throw err;
             } else {
-                console.log("Hand inserted.");
+                //console.log("Hand inserted.");
             }
         });
     });
@@ -724,10 +723,10 @@ app.get("/recordHand/:code/:commCardsStr/:notFolded", (req, res) => {
     // Switch positions
     hand.positions.unshift(hand.positions[hand.positions.length - 1]);
     hand.positions.pop();
-    console.log(hand.positions);
+    //console.log(hand.positions);
 
     // Reset variables
-    for (var i = 0; i < hand.players.length; i++) {
+    for (i = 0; i < hand.players.length; i++) {
         hand.cards[i] = "";
     }
     hand.preflopBets = [];
@@ -775,7 +774,7 @@ io.on('connection', function(socket) {
             pot: 0
         };
         rooms.set(code, emptyHand);
-        console.log("Created room " + code);
+        //console.log("Created room " + code);
     });
 
     // Joins a room if the room exists: invoked by a player
@@ -783,7 +782,7 @@ io.on('connection', function(socket) {
         if (rooms.has(code)) {
             socket.room = code;
             socket.join(code);
-            console.log("Joined room " + code);
+            //console.log("Joined room " + code);
 
             // Adds player info to the room
             var hand = rooms.get(code);
@@ -817,7 +816,7 @@ io.on('connection', function(socket) {
     socket.on('gameJoin', function(code) {
         socket.room = code;
         socket.join(code);
-        console.log("In game: joined room " + code);
+        //console.log("In game: joined room " + code);
     });
 });
 
@@ -948,5 +947,5 @@ app.get("/", (req, res) => {
 
 // Puts it on a port
 http.listen(3000, function(){
-  console.log('Server up on 3000');
+  //console.log('Server up on 3000');
 });
