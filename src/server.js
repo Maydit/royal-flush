@@ -90,23 +90,28 @@ app.post('/login',(req, res) => {
     });
 });
 
+
+
 // Creating account
-app.post("/register", (req, res) => {
-    //TODO
-    //check if email unique?
-    mongoose.connect(url, function(err, db) {
-        var found = 0;
-        var collection = db.collection(db_name);
-        var cursor = collection.find({email:req.body.email});
-        cursor.forEach(function(item) {
-            if(item!=null) {
-                //duplicate email
-                res.end("Email already in use");
-                found++;
-            }
+app.post("/register", async (req, res) => {
+    var unique = true;
+    function find(unique) {
+        mongoose.connect(url, function(err, db) {
+            var collection = db.collection(db_name);
+            var cursor = collection.find({email:req.body.email});
+            cursor.forEach(function(item) {
+                if(item!=null) {
+                    //duplicate email
+                    unique = false;
+                    console.log("1" + unique);
+                    res.end("Email already in use");
+                }
+            });
         });
-        if(found > 0) throw "err";
-    }).then(result => {
+    }
+    function send(unique) {
+        console.log("2" + unique);
+        if(!unique) return;
         //hash & salt
         var password = req.body.password;
         var saltBits = sjcl.random.randomWords(8);
@@ -122,16 +127,15 @@ app.post("/register", (req, res) => {
         dict["passHash"] = hash;
         var myData = new User(dict);
         myData.save()
-            .then(item => {
-                //res.send("Name saved to database");
+            .then(() => {
                 res.redirect(req.protocol + '://' + req.get('host'));
             })
-            .catch(err => {
+            .catch(() => {
                 res.status(400).send("Unable to save to database");
             });
-    }).catch(err => {
-        return;
-    });
+    }
+    find(unique);
+    send(unique);
 });
 
 ////////////////////////////////////////////////////////////////////////////////
