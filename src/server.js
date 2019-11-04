@@ -93,25 +93,22 @@ app.post('/login',(req, res) => {
 
 
 // Creating account
-app.post("/register", async (req, res) => {
-    var unique = true;
-    function find(unique) {
-        mongoose.connect(url, function(err, db) {
+app.post("/register", (req, res) => {
+    var findPromise = new Promise(function(resolve, reject) {
+        mongoose.connect(url, async function(err, db) {
             var collection = db.collection(db_name);
-            var cursor = collection.find({email:req.body.email});
-            cursor.forEach(function(item) {
-                if(item!=null) {
-                    //duplicate email
-                    unique = false;
-                    console.log("1" + unique);
-                    res.end("Email already in use");
-                }
-            });
+            const num = await collection.find({email:req.body.email}).count();
+            console.log(num);
+            if(num > 0) {
+                resolve("Email already in use");
+            } else {
+                console.log("why am i here>???");
+                reject("Email unique");
+            }
         });
-    }
-    function send(unique) {
-        console.log("2" + unique);
-        if(!unique) return;
+    });
+    function send() {
+        console.log("Sending to db");
         //hash & salt
         var password = req.body.password;
         var saltBits = sjcl.random.randomWords(8);
@@ -134,8 +131,7 @@ app.post("/register", async (req, res) => {
                 res.status(400).send("Unable to save to database");
             });
     }
-    find(unique);
-    send(unique);
+    findPromise.then(reason => { console.log(reason); res.end("Email already in use"); }, send());
 });
 
 ////////////////////////////////////////////////////////////////////////////////
