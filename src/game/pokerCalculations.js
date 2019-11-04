@@ -1,20 +1,7 @@
 class Card {
     constructor(cardStr) {
         var rank = cardStr.charAt(0);
-        if (rank == '2' || rank == '3' || rank == '4' || rank == '5' ||
-            rank == '6' || rank == '7' || rank == '8' || rank == '9') {
-            this.rank = parseInt(rank);
-        } else if (rank == 'T') {
-            this.rank = 10;
-        } else if (rank == 'J') {
-            this.rank = 11;
-        } else if (rank == 'Q') {
-            this.rank = 12;
-        } else if (rank == 'K') {
-            this.rank = 13;
-        } else if (rank == 'A') {
-            this.rank = 14;
-        }
+        this.rank = "  23456789TJQKA".indexOf(rank);
         this.suit = cardStr.charAt(1);
     }
 
@@ -39,7 +26,7 @@ function cardSorter(a, b) {
 function checkForStraightFlush(cards) {
     var flushHand = checkForFlush(cards);
     if (flushHand.length != 0) {
-        straightFlushHand = checkForStraight(flushHand);
+        const straightFlushHand = checkForStraight(flushHand);
         return straightFlushHand;
     }
     return flushHand;
@@ -104,7 +91,7 @@ function checkForStraight(originalCards) {
     }
 
     var straightHand = [];
-    for (var i = cards.length - 5; i >= 0; i--) {
+    for (i = cards.length - 5; i >= 0; i--) {
         if (cards[i].rank == cards[i+4].rank - 4) {
             for (var j = i; j < i+5; j++) {
                 straightHand.push(cards[j]);
@@ -166,7 +153,7 @@ function checkForFullHouse(originalCards) {
         }
     } else if (tripArr.length == 1) {
         // Remove the triplets from the cards to check for pairs
-        for (var i = 0; i < cards.length; i++) {
+        for (i = 0; i < cards.length; i++) {
             if (cards[i].rank == tripArr[0]) {
                 houseHand.push(cards[i]);
                 cards.splice(i,1);
@@ -176,7 +163,7 @@ function checkForFullHouse(originalCards) {
 
         var pairArr = checkForPairs(cards);
         if (pairArr.length != 0) {
-            for (var i = 0; i < cards.length; i++) {
+            for (i = 0; i < cards.length; i++) {
                 if (cards[i].rank == pairArr[pairArr.length - 1]) {
                     houseHand.push(cards[i]);
                 }
