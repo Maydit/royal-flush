@@ -94,21 +94,7 @@ app.post('/login',(req, res) => {
 
 // Creating account
 app.post("/register", (req, res) => {
-    var findPromise = new Promise(function(resolve, reject) {
-        mongoose.connect(url, async function(err, db) {
-            var collection = db.collection(db_name);
-            const num = await collection.find({email:req.body.email}).count();
-            console.log(num);
-            if(num > 0) {
-                resolve("Email already in use");
-            } else {
-                console.log("why am i here>???");
-                reject("Email unique");
-            }
-        });
-    });
     function send() {
-        console.log("Sending to db");
         //hash & salt
         var password = req.body.password;
         var saltBits = sjcl.random.randomWords(8);
@@ -116,7 +102,7 @@ app.post("/register", (req, res) => {
         var hash = sjcl.codec.base64.fromBits(derivedKey);
         var salt = sjcl.codec.base64.fromBits(saltBits);
         //to get back: var saltBits = sjcl.codec.base64.toBits(salt);
-        var dict =  {};
+        var dict = {};
         dict["firstName"] = req.body.firstname;
         dict["lastName"] = req.body.lastname;
         dict["email"] = req.body.email;
@@ -131,7 +117,27 @@ app.post("/register", (req, res) => {
                 res.status(400).send("Unable to save to database");
             });
     }
-    findPromise.then(reason => { console.log(reason); res.end("Email already in use"); }, send());
+    new Promise(function(resolve, reject) {
+        mongoose.connect(url, async function(err, db) {
+            var collection = db.collection(db_name);
+            const num = await collection.find({email:req.body.email}).count();
+            if(num > 0) {
+                resolve("Email already in use");
+            } else {
+                reject("Email unique");
+            }
+        });
+    })
+    .then(
+        () => {
+            res.end("Email already in use"); 
+        })
+    .catch(
+        () => { 
+            send(); 
+        }
+    );
+    //holy promise
 });
 
 ////////////////////////////////////////////////////////////////////////////////
