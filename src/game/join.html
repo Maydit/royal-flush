@@ -3,21 +3,54 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link rel= "stylesheet" type="text/css" href = "join.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Fugaz+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <title>Join</title>
   </head>
 
-  <body>
-    <div id="app">
-        <input type="text" v-model="inputCode">
-        <br>
-        <input type="number" v-model="startStack">
-        <br>
-        <button v-on:click="join">Join</button>
-        <p id="confirmationMessage"></p>
+  <body style = "background-color: #b8cecd">
+    <div class = "header">
+        <div class = "jumbotron-fluid">
+            <h1>Royal Flush</h1>
+            <p>"Stats don't bluff"</p>
+        </div>
     </div>
+
+
+    <div class = "container">
+    <div class = "row">
+        <div class = "col-md-6">
+        </div>
+
+        <div class = "rightText">
+            <div id = "app">
+                <h1>Join a Game!</h1>
+                <div id = "enterCode">
+                    <h4>Enter Code: </h4>
+                    <input type="text" v-model="inputCode" class="form-control">
+                </div>
+
+                <div id = "enterPot">
+                    <h4>Enter starting amount:</h4>
+                    <input type="number" v-model="startStack" class="form-control">
+                </div>
+                <button class = "btn btn-primary" v-on:click="join" id = "joinButton" >Join</button>
+                <p id="confirmationMessage"></p>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+
+
     <script src="join.js"></script>
   </body>
 </html>

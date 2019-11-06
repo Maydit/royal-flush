@@ -130,11 +130,11 @@ app.post("/register", (req, res) => {
     })
     .then(
         () => {
-            res.end("Email already in use"); 
+            res.end("Email already in use");
         })
     .catch(
-        () => { 
-            send(); 
+        () => {
+            send();
         }
     );
     //holy promise
@@ -663,7 +663,7 @@ app.get("/recordHand/:code/:commCardsStr/:notFolded", (req, res) => {
     }
 
     //console.log(hand);
-    
+
     var dupHand = {
         players: [],
         names: [],
@@ -906,8 +906,16 @@ app.get('/game/host.html', function(req, res) {
     res.sendFile(__dirname + '/game/host.html');
 });
 
+app.get('/game/host.css', function(req, res) {
+    res.sendFile(__dirname + '/game/host.css');
+});
+
 app.get('/game/join.html', function(req, res) {
     res.sendFile(__dirname + '/game/join.html');
+});
+
+app.get('/game/join.css', function(req, res) {
+    res.sendFile(__dirname + '/game/join.css');
 });
 
 app.get('/stats/stats_home.html', function(req, res) {
