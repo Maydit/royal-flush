@@ -12,6 +12,13 @@
     font-family: 'Nunito', sans-serif;
 }
 
+#logoutButton{
+    margin-top: 10px;
+    margin-right: 5px;
+    float: right;
+}
+
+
 .header h1{
     padding-top: 15px;
 }

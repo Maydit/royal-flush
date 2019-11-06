@@ -28,6 +28,12 @@
     height: 120px;
 
 }
+
+#logoutButton{
+    margin-top: 10px;
+    margin-right: 5px;
+    float: right;
+}
 /* --------------HEADER---------------*/
 
 #app p{
