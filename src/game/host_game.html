@@ -22,32 +22,96 @@
             <p>"Stats don't bluff"</p>
         </div>
     </div>
+
+
+
+
+
+
     <div id="app">
-        HOST GAME
+
         <br>
-        <p id="playerP">'s turn</p>
+        <div id = "playerLabel">
+            <label>It is: </label>
+            <p id="playerP">'s turn</p>
+        </div>
+
         <br>
-        <button v-on:click="check">Check</button>
-        <br>
-        <button v-on:click="match">Match</button><input type="number" v-model="raiseAmount">
-        <br>
-        <button v-on:click="raise">Raise</button>
-        <br>
-        <button v-on:click="fold">Fold</button>
-        <br>
-        <br>
-        <input v-model="commCard1">
-        <br>
-        <input v-model="commCard2">
-        <br>
-        <input v-model="commCard3">
-        <br>
-        <input v-model="commCard4">
-        <br>
-        <input v-model="commCard5">
-        <br>
-        <button id="resubmitBtn" v-on:click="resubmit" disabled>Resubmit</button>
-        <br>
+
+
+        <div id = "actionBoard">
+            <h3>Action Board</h3>
+
+
+<!--             <div class="row">
+              <div class="col-md-12">
+                <button v-on:click="check" type="button" class="btn btn-primary checkButton">Check</button>
+                <button v-on:click="match" type="button" class="btn btn-primary matchButton">Match</button>
+                <button v-on:click="fold" type="button" class="btn btn-primary foldButton">Fold</button>
+              </div>
+            </div> -->
+             <div class='wrapper text-center'>
+                <div class="btn-group" id = "buttonRow" role="group" aria-label="Basic example">
+                    <button v-on:click="check" type="button" class="btn btn-primary checkButton">Check</button>
+                    <button v-on:click="match" type="button" class="btn btn-primary matchButton">Match</button>
+                    <button v-on:click="fold" type="button" class="btn btn-primary foldButton">Fold</button>
+                </div>
+            </div>
+
+
+
+            <br>
+            <br>
+
+            <div class='wrapper text-center'>
+                <div id = "row2">
+                    <button v-on:click="raise" type="button" class="btn btn-primary raiseButton">Raise</button>
+                    <input type="number" v-model="raiseAmount" class = "numberInput" placeholder="Number to raise">
+                </div>
+            </div>
+
+
+            <br>
+            <br>
+
+            <div class = "CC">
+                <label>Community Card 1: </label>
+                <input v-model="commCard1" >
+            </div>
+
+            <br>
+            <div class = "CC">
+                <label>Community Card 2: </label>
+                <input v-model="commCard2">
+            </div>
+
+            <br>
+            <div class = "CC">
+                <label>Community Card 3: </label>
+                <input v-model="commCard3">
+            </div>
+
+            <br>
+            <div class = "CC">
+                <label>Community Card 4: </label>
+                <input v-model="commCard4">
+            </div>
+
+            <br>
+            <div class = "CC">
+                <label>Community Card 5: </label>
+                <input v-model="commCard5">
+            </div>
+            <br>
+
+
+
+            <button id="resubmitBtn" class="btn btn-primary" v-on:click="resubmit" disabled>Resubmit</button>
+            <br>
+        </div>
+
+
+
         <p id="log"></p>
     </div>
     <script src="host_game.js"></script>
