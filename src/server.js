@@ -41,22 +41,22 @@ app.use(session({
 }));
 
 // This middleware will check if user's cookie is still saved in browser and user is not set, then automatically log the user out.
-app.use((req, res, next) => {
-    if (req.cookies.user_sid && !req.session.user) {
-        res.clearCookie('user_sid');
-    }
-    next();
-});
+// app.use((req, res, next) => {
+//     if (req.cookies.user_sid && !req.session.user) {
+//         res.clearCookie('user_sid');
+//     }
+//     next();
+// });
 
 // middleware function to check for logged-in users
 // not used
-var sessionChecker = (req, res, next) => {
-    if (req.session.user) {
-        res.redirect(req.protocol + '://' + req.get('host') + '/game/pick_action.html');
-    } else {
-        next();
-    }
-};
+// var sessionChecker = (req, res, next) => {
+//     if (req.session.user) {
+//         res.redirect(req.protocol + '://' + req.get('host') + '/game/pick_action.html');
+//     } else {
+//         next();
+//     }
+// };
 
 ////////////////////////////////////////////////////////////////////////////////
 // Login and signup
@@ -834,7 +834,15 @@ app.get("/index.css", (req, res) => {
 });
 
 app.get("/login/login.html", (req, res) => {
-    res.sendFile(__dirname + "/login/login.html");
+
+    if(req.session.userName)
+    {
+        res.redirect(req.protocol + '://' + req.get('host') + '/game/pick_action.html');
+    }
+    else
+    {
+        res.sendFile(__dirname + "/login/login.html");
+    }
 });
 
 app.get("/login/login.js", (req, res) => {
@@ -850,7 +858,15 @@ app.get("/assets/cards.webp", (req, res) => {
 });
 
 app.get("/login/sign_in.html", (req, res) => {
-    res.sendFile(__dirname + "/login/sign_in.html");
+
+    if(req.session.userName)
+    {
+        res.redirect(req.protocol + '://' + req.get('host') + '/game/pick_action.html');
+    }
+    else
+    {
+        res.sendFile(__dirname + "/login/sign_in.html");
+    }
 });
 
 app.get("/login/sign_in.css", (req, res) => {
@@ -858,7 +874,15 @@ app.get("/login/sign_in.css", (req, res) => {
 });
 
 app.get('/game/pick_action.html', function(req, res) {
-    res.sendFile(__dirname + '/game/pick_action.html');
+
+    if(req.session.userName != null)
+    {
+        res.sendFile(__dirname + '/game/pick_action.html');
+    }
+    else
+    {
+        res.redirect(req.protocol + '://' + req.get('host'));
+    }
 });
 
 app.get('/game/pick_action.css', function(req, res) {
@@ -874,7 +898,16 @@ app.get('/game/host_game.js', function(req, res) {
 });
 
 app.get('/game/player_game.html', function(req, res) {
-    res.sendFile(__dirname + '/game/player_game.html');
+
+    if(req.session.userName != null)
+    {
+        res.sendFile(__dirname + '/game/player_game.html');
+    }
+    else
+    {
+        res.redirect(req.protocol + '://' + req.get('host'));
+    }
+
 });
 
 app.get('/game/player_game.css', function(req, res) {
@@ -882,7 +915,15 @@ app.get('/game/player_game.css', function(req, res) {
 });
 
 app.get('/game/host_game.html', function(req, res) {
-    res.sendFile(__dirname + '/game/host_game.html');
+
+    if(req.session.userName != null)
+    {
+        res.sendFile(__dirname + '/game/host_game.html');
+    }
+    else
+    {
+        res.redirect(req.protocol + '://' + req.get('host'));
+    }
 });
 
 app.get('/game/host_game.css', function(req, res) {
@@ -898,15 +939,41 @@ app.get('/game/join.js', function(req, res) {
 });
 
 app.get('/game/host.html', function(req, res) {
-    res.sendFile(__dirname + '/game/host.html');
+
+    if(req.session.userName != null)
+    {
+        res.sendFile(__dirname + '/game/host.html');
+    }
+    else
+    {
+        res.redirect(req.protocol + '://' + req.get('host'));
+    }
+
 });
 
 app.get('/game/join.html', function(req, res) {
-    res.sendFile(__dirname + '/game/join.html');
+
+    if(req.session.userName != null)
+    {
+        res.sendFile(__dirname + '/game/join.html');
+    }
+    else
+    {
+        res.redirect(req.protocol + '://' + req.get('host'));
+    }
 });
 
 app.get('/stats/stats_home.html', function(req, res) {
-    res.sendFile(__dirname + '/stats/stats_home.html');
+
+
+    if(req.session.userName != null)
+    {
+        res.sendFile(__dirname + '/stats/stats_home.html');
+    }
+    else
+    {
+        res.redirect(req.protocol + '://' + req.get('host'));
+    }
 });
 
 app.get('/stats/stats_home.css', function(req, res) {
@@ -914,7 +981,15 @@ app.get('/stats/stats_home.css', function(req, res) {
 });
 
 app.get('/stats/hand_history.html', function(req, res) {
-    res.sendFile(__dirname + '/stats/hand_history.html');
+
+    if(req.session.userName != null)
+    {
+        res.sendFile(__dirname + '/stats/hand_history.html');
+    }
+    else
+    {
+        res.redirect(req.protocol + '://' + req.get('host'));
+    }
 });
 
 app.get('/stats/hand_history.css', function(req, res) {
@@ -922,7 +997,17 @@ app.get('/stats/hand_history.css', function(req, res) {
 });
 
 app.get('/stats/personal_stats.html', function(req, res) {
-    res.sendFile(__dirname + '/stats/personal_stats.html');
+
+
+
+    if(req.session.userName != null)
+    {
+        res.sendFile(__dirname + '/stats/personal_stats.html');
+    }
+    else
+    {
+        res.redirect(req.protocol + '://' + req.get('host'));
+    }
 });
 
 app.get('/stats/personal_stats.css', function(req, res) {
@@ -930,7 +1015,17 @@ app.get('/stats/personal_stats.css', function(req, res) {
 });
 
 app.get('/stats/global_stats.html', function(req, res) {
-    res.sendFile(__dirname + '/stats/global_stats.html');
+
+
+
+    if(req.session.userName != null)
+    {
+        res.sendFile(__dirname + '/stats/global_stats.html');
+    }
+    else
+    {
+        res.redirect(req.protocol + '://' + req.get('host'));
+    }
 });
 
 app.get('/stats/global_stats.css', function(req, res) {
@@ -941,7 +1036,15 @@ app.get('/stats/global_stats.css', function(req, res) {
 
 
 app.get("/", (req, res) => {
-    res.sendFile(__dirname + "/index.html");
+    if(req.session.userName)
+    {
+        res.redirect(req.protocol + '://' + req.get('host') + '/game/pick_action.html');
+    }
+    else
+    {
+        res.sendFile(__dirname + "/index.html");
+    }
+
 });
 
 /////////////////////////////////////////////////////////////////////////////
