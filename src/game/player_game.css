@@ -8,6 +8,13 @@
     height: 120px;
 }
 
+#logoutButton{
+    margin-top: 10px;
+    margin-right: 5px;
+    float: right;
+}
+
+
 .container{
     font-family: 'Nunito', sans-serif;
 }
@@ -55,7 +62,7 @@
 #card1{
     margin-top: 20px;
     width: 150px;
-    margin-right: 100px;
+    margin-right: 16px;
     height: 50px;
     text-align: center;
     font-size: 25px;
@@ -70,7 +77,7 @@
 #card2{
     margin-top: 20px;
     width: 150px;
-    margin-right: 100px;
+    margin-right: 16px;
     height: 50px;
     margin-bottom: 50px;
     font-size: 25px;

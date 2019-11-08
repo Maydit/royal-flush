@@ -1,6 +1,5 @@
 var socket = io();
 
-
 function addToLog(message) {
     document.getElementById("log").innerHTML = message + "<br>" + document.getElementById("log").innerHTML;
 }
@@ -93,7 +92,7 @@ const App = new Vue({
             for (var i = 0; i < this.positions.length; i++) {
                 if (this.positions[i] == 0) {
                     this.currentPlayer = this.names[i];
-                    document.getElementById("playerP").innerHTML = this.currentPlayer + "\'s turn";
+                    document.getElementById("playerP").innerHTML = this.currentPlayer + "'s turn";
                     this.index = i;
                     this.cycleEndsAt = i;
                     break;
@@ -115,7 +114,7 @@ const App = new Vue({
                 }
             }
             this.currentPlayer = this.names[this.index];
-            document.getElementById("playerP").innerHTML = this.currentPlayer + "\'s turn";
+            document.getElementById("playerP").innerHTML = this.currentPlayer + "'s turn";
         },
 
         // Returns how much the previous non folded player has in the pot
@@ -181,7 +180,7 @@ const App = new Vue({
                     this.beginRiver();
                 } else if (this.phase == 3) {
                     // Round done, send data
-                    var commCardsStr = '/' + this.commCard1 + this.commCard2 + this.commCard3 + this.commCard4 + this.commCard5 + '/';
+                    commCardsStr = '/' + this.commCard1 + this.commCard2 + this.commCard3 + this.commCard4 + this.commCard5 + '/';
                     // There MUST be 5 cards
                     if (commCardsStr.length != 12) {
                         switchActiveButtons();
@@ -286,7 +285,7 @@ const App = new Vue({
         // Invoked at the end of each betting function
         actionSelected(bet, foldedMarker) {
             for (var i = 0; i < this.amountInPot.length; i++) {
-                console.log("amountInPot[" + i + "]: " + this.amountInPot[i]);
+                //console.log("amountInPot[" + i + "]: " + this.amountInPot[i]);
             }
             this.$http.post('http://' + window.location.host + '/addBet/' + this.code + '/' + bet + '/' + this.phase);
             this.nextPlayer();
@@ -309,7 +308,7 @@ const App = new Vue({
                 }
             }
             // True if everyone folded
-            var defaultWinner = (active.length == 1);
+            //var defaultWinner = (active.length == 1);
 
             var commCardsStr = '/' + this.commCard1 + this.commCard2 + this.commCard3 + this.commCard4 + this.commCard5 + '/';
             if (this.phase == 0 && commCardsStr.length != 2) {
@@ -324,7 +323,6 @@ const App = new Vue({
                 switchActiveButtons();
                 this.recordAndReset(commCardsStr, active);
             }
-
         },
 
         resetInputs() {

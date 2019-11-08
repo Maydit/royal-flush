@@ -3,19 +3,51 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link rel= "stylesheet" type="text/css" href = "host.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Fugaz+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
     <title>Host</title>
   </head>
 
-  <body>
-    <div id="app">
-        {{code}}
-        <button v-on:click="submit">Continue</button>
-        <br>
-        Players:
-        <p id="players"></p>
+  <body style = "background-color: #b8cecd">
+    <div class = "header">
+        <div class = "jumbotron-fluid">
+            <h1>Royal Flush</h1>
+            <p>"Stats don't bluff"</p>
+            <button type="button" class="btn btn-danger" id = "logoutButton">Logout</button>
+        </div>
     </div>
+
+    <div class = "container">
+    <div class = "row">
+      <div class = "col-md-6">
+      </div>
+      <div class = "rightText">
+        <h1>Host a Game</h1>
+        <div id="app">
+          <h4>Session Code is:</h4>
+          {{code}}
+          <br>
+          <button v-on:click="submit" class = "btn btn-primary" id = "startButton">Start Game</button>
+          <br>
+          <p id = "playerLabel">Players: </p>
+          <p id="players"></p>
+        </div>
+
+
+
+      </div>
+    </div>
+    </div>
+
+
+
+
+
 
     <script src="host.js"></script>
   </body>

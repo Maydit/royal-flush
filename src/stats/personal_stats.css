@@ -12,9 +12,17 @@
     font-family: 'Nunito', sans-serif;
 }
 
+#logoutButton{
+    margin-top: 10px;
+    margin-right: 5px;
+    float: right;
+}
+
+
 .header h1{
     padding-top: 15px;
 }
+
 .header{
     text-align: center;
    /* background: #1abc9c;*/
