@@ -122,6 +122,10 @@
     height: 50px;
 }
 
+.select2 element{
+  font-family: courier;
+}
+
 
 /* The snackbar - position it at the bottom and in the middle of the screen */
 #snackbar {
