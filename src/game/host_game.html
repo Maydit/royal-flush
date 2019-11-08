@@ -35,14 +35,14 @@
 
         <br>
         <div id = "playerLabel">
-            <label>It is: </label>
+            <label>It is currently:</label>
             <p id="playerP">'s turn</p>
         </div>
 
         <br>
 
 
-        <div id = "actionBoard">
+        <div id = "actionBoard" style="background-color: #CAA472">
             <h3>Action Board</h3>
 
 
@@ -79,31 +79,36 @@
 
             <div class = "CC">
                 <label>Community Card 1: </label>
-                <input v-model="commCard1" >
+                <input type = "text" v-model="commCard1" id = "promptCC1" onkeyup="displayCC('promptCC1', 'CC1')"/>
+                <element id = "CC1"></element>
             </div>
 
             <br>
             <div class = "CC">
                 <label>Community Card 2: </label>
-                <input v-model="commCard2">
+                <input v-model="commCard2" id = "promptCC2" onkeyup="displayCC('promptCC2', 'CC2')">
+                <element id = "CC2"></element>
             </div>
 
             <br>
             <div class = "CC">
                 <label>Community Card 3: </label>
-                <input v-model="commCard3">
+                <input v-model="commCard3" id = "promptCC3" onkeyup="displayCC('promptCC3', 'CC3')">
+                <element id = "CC3"></element>
             </div>
 
             <br>
             <div class = "CC">
                 <label>Community Card 4: </label>
-                <input v-model="commCard4">
+                <input v-model="commCard4" id = "promptCC4" onkeyup="displayCC('promptCC4', 'CC4')">
+                <element id = "CC4"></element>
             </div>
 
             <br>
             <div class = "CC">
                 <label>Community Card 5: </label>
-                <input v-model="commCard5">
+                <input v-model="commCard5" id = "promptCC5" onkeyup="displayCC('promptCC5', 'CC5')">
+                <element id = "CC5"></element>
             </div>
             <br>
 
@@ -115,7 +120,11 @@
 
 
 
-        <p id="log"></p>
+        <div id = "logBlock">
+            <h3>Action Log: </h3>
+            <p id="log"></p>
+        </div>
+
     </div>
     <script src="host_game.js"></script>
   </body>
