@@ -39,9 +39,11 @@
 
 
 #actionBoard{
-    width: 75%;
+    width: 69%;
     margin: auto;
-
+    float: left;
+    margin-left: 20px;
+    margin-right: 20px;
     border: 3px solid black;
     margin-top: 20px;
     font-family: 'Nunito', sans-serif;
