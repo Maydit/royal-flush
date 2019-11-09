@@ -17,7 +17,7 @@ function switchActiveButtons() {
 
 
 function displayCC(id, targetId){
-    var value = document.getElementById(id).value;
+    var value = document.getElementById(id).value.toUpperCase();
     if(value == 'AS'){
         document.getElementById(targetId).innerHTML = "🂡";
     }

@@ -130,7 +130,7 @@ app.post("/register", (req, res) => {
             .catch(() => {
                 res.status(400).send("Unable to save to database");
             });
-    }
+    })
     new Promise(function(resolve, reject) {
         mongoose.connect(url, async function(err, db) {
             var collection = db.collection(db_name);
