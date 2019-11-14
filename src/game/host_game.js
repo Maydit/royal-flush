@@ -138,16 +138,16 @@ function displayCC(id, targetId){
     }
 
 
-    else if(value == '10S'){
+    else if(value == 'TS'){
         document.getElementById(targetId).innerHTML = "🂪";
     }
-    else if(value == '10H'){
+    else if(value == 'TH'){
         document.getElementById(targetId).innerHTML = "🂺";
     }
-    else if(value == '10D'){
+    else if(value == 'TD'){
         document.getElementById(targetId).innerHTML = "🃊";
     }
-    else if(value == '10C'){
+    else if(value == 'TC'){
         document.getElementById(targetId).innerHTML = "🃚";
     }
 
