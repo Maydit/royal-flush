@@ -10,6 +10,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 var MongoClient = require('mongodb').MongoClient;
+var ObjectId = require('mongodb').ObjectID;
 var url = "mongodb+srv://admin:adminpassword@cluster0-f0kkf.mongodb.net/test?retryWrites=true";
 var db_name = "users";
 var mongoose = require("mongoose");
@@ -22,6 +23,7 @@ var nameSchema = new mongoose.Schema({
     email: String,
     passHash: String,
     salt: String,
+    hands: Array
 });
 
 var User = mongoose.model("User", nameSchema);
@@ -122,6 +124,7 @@ app.post("/register", (req, res) => {
         dict["email"] = req.body.email;
         dict["salt"] = salt;
         dict["passHash"] = hash;
+        dict["hands"] = [];
         var myData = new User(dict);
         myData.save()
             .then(() => {
@@ -728,13 +731,29 @@ app.get("/recordHand/:code/:commCardsStr/:notFolded", (req, res) => {
         if(error) {
             throw error;
         }
-
+        var hand_id;
         var database = client.db("rawData");
         database.collection("hands").insertOne(dupHand, function(err, res) {
             if (err) {
                 throw err;
             } else {
-                //console.log("Hand inserted.");
+
+                hand_id = res.insertedId;
+
+                var user_db = client.db("test");
+                for (i = 0; i<hand.players.length ;i++)
+                {
+                    var query =  {_id : new ObjectId(hand.players[i].toString()) };
+                    var new_val = {$push: {hands:hand_id}};
+
+
+
+                     user_db.collection("users").updateOne(query, new_val, function(err, res)
+                     {
+                         if (err) throw err;
+
+                     });
+                }
             }
         });
     });
