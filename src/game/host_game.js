@@ -26,6 +26,9 @@ const App = new Vue({
         index: 0,
         // Player in which the round is set to end at
         cycleEndsAt: 0,
+        preflopEndedAt: 0,
+        flopEndedAt: 0,
+        turnEndedAt: 0,
         raiseAmount: "",
         // Integers determining game position, mapped to the names
         positions: [],
@@ -114,6 +117,25 @@ const App = new Vue({
                     break;
                 }
             }
+            this.currentPlayer = this.names[this.index];
+            document.getElementById("playerP").innerHTML = this.currentPlayer + "\'s turn";
+        },
+
+        // Assigns current player and index as the previous non-folded player
+        prevPlayer() {
+            console.log(this.index);
+            while (true) {
+                this.index -= 1;
+                // For looping past the last element
+                if (this.index == -1) {
+                    this.index = this.names.length-1;
+                }
+
+                if (this.folded[this.index] == false) {
+                    break;
+                }
+            }
+            console.log(this.index);
             this.currentPlayer = this.names[this.index];
             document.getElementById("playerP").innerHTML = this.currentPlayer + "\'s turn";
         },
@@ -245,8 +267,9 @@ const App = new Vue({
 
             if (canDo) {
                 addToLog(this.names[this.index] + " matched.");
+                var matchAmount = prevAmountInPot - this.amountInPot[this.index];
                 this.amountInPot[this.index] = prevAmountInPot;
-                var bet = this.positions[this.index].toString() + "m";
+                var bet = this.positions[this.index].toString() + "m" + matchAmount;
                 this.actionSelected(bet, false);
             } else {
                 addToLog("ERROR: Nothing to match.");
@@ -285,9 +308,6 @@ const App = new Vue({
 
         // Invoked at the end of each betting function
         actionSelected(bet, foldedMarker) {
-            for (var i = 0; i < this.amountInPot.length; i++) {
-                console.log("amountInPot[" + i + "]: " + this.amountInPot[i]);
-            }
             this.$http.post('http://' + window.location.host + '/addBet/' + this.code + '/' + bet + '/' + this.phase);
             this.nextPlayer();
             this.checkNextPhase();
@@ -296,6 +316,34 @@ const App = new Vue({
             if (foldedMarker) {
                 this.cycleEndsAt = this.index;
             }
+        },
+
+        undo() {
+            // For determining if we just moved phase
+            if (this.index == this.cycleEndsAt) {
+                this.phase -= 1;
+                if (this.phase == 0) {
+                    this.index = this.preflopEndedAt;
+                } else if (this.phase == 1) {
+                    this.index = this.flopEndedAt;
+                } else if (this.phase == 2) {
+                    this.index = this.turnEndedAt;
+                }
+            }
+
+            this.$http.get('http://' + window.location.host + '/removeBet/' + this.code + '/' + this.phase).then(response => {
+
+                addToLog("Undo action.");
+                var prevAction = response.body.charAt(1);
+                if (prevAction == 'c') {
+                    // Only have to undo actionSelected
+                    this.prevPlayer();
+                } else if (prevAction == 'm') {
+                    this.prevPlayer();
+                    // Remove the amount they matched
+                    //var matchAmount = parseInt(prevAction.substring(2))
+                }
+            });
         },
 
         resubmit() {

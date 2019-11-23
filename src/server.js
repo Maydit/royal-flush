@@ -640,6 +640,24 @@ app.post("/addBet/:code/:bet/:phase", (req, res) => {
     res.send(true);
 });
 
+app.get("/removeBet/:code/:phase", (req, res) => {
+    // Parse inputs
+    var code = req.params.code;
+    var phase = parseInt(req.params.phase, 10);
+
+    var hand = rooms.get(code);
+    if (phase == 0) {
+        res.send(hand.preflopBets.pop());
+    } else if (phase == 1) {
+        res.send(hand.flopBets.pop());
+    } else if (phase == 2) {
+        res.send(hand.turnBets.pop());
+    } else {
+        res.send(hand.riverBets.pop());
+    }
+    console.log(hand);
+});
+
 app.get("/recordHand/:code/:commCardsStr/:notFolded", (req, res) => {
     var code = req.params.code;
     var hand = rooms.get(code);
@@ -665,7 +683,7 @@ app.get("/recordHand/:code/:commCardsStr/:notFolded", (req, res) => {
     }
 
     console.log(hand);
-    
+
     var dupHand = {
         players: [],
         names: [],
