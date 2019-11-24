@@ -9,6 +9,7 @@ var sjcl = require('sjcl');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+var async = require("async");
 var poker = require('./game/pokerCalculations.js');
 
 var MongoClient = require('mongodb').MongoClient;
@@ -37,6 +38,7 @@ app.use(cookieParser());
 
 // initialize express-session to allow us track the logged-in user across sessions.
 app.use(session({
+  key:'user_id',
   secret: 'randomwords',
   cookie:{
     expires: 700000000
@@ -157,6 +159,17 @@ app.post("/register", (req, res) => {
         }
     );
     //holy promise
+});
+
+
+
+app.post("/logout",(req,res) => {
+    res.clearCookie('user_id');
+    //res.redirect(req.protocol + '://' + req.get('host') + '/index.html');
+
+    res.sendFile(__dirname + "/index.html");
+
+
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -327,6 +340,295 @@ class Hand {
     }
 }
 
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Game Stats
+
+// app.get("/getHandHistory", (req, res) => {
+//     mongoose.connect(url, function(err,db){
+//
+//     var user_db = db.collection("users");
+//     var hand_db = db.collection("hands");
+//     var user_id = req.session.userId;
+//
+//
+//     async.waterfall([
+//         function getUser(callback){
+//
+//             user_db.findOne({_id: new ObjectId(user_id.toString())},function (err,res)
+//                 {
+//                     callback(null,res.hands)
+//                 }
+//             );
+//         },
+//         function getHand(user,callback)
+//         {
+//             console.log(user);
+//             for(var x=0;x<user.length;x++)
+//             {
+//                 console.log(user[x]);
+//                 hand_db.findOne({_id: new ObjectId(user[x].toString())},function (err,res)
+//                     {
+//                         if(res)
+//                         {
+//                             var players = res.players;
+//                             var cards = res.cards;
+//                             var pos = 0;
+//
+//                             for(var x=0;x<players.length;x++)
+//                             {
+//                                 if(players[x]==user_id)
+//                                 {
+//                                     pos = x;
+//                                     break;
+//                                 }
+//                             }
+//                             console.log(pos);
+//                             console.log(cards[pos]);
+//                         }
+//                         else
+//                         {
+//                             console.log("No hands found")
+//                         }
+//                     }
+//                 );
+//             }
+//         },
+//
+//         ], function(err2,casts){
+//             if(err2)
+//             {
+//                 console.log("ERROR2!!")
+//             }
+//         });
+//
+//     });
+//
+//
+// });
+
+
+
+
+
+
+
+
+//getStats
+app.get("/getHandHistory", (req, res) => {
+
+
+
+    mongoose.connect(url, function(err,db){
+
+    var user_db = db.collection("users");
+    var hand_db = db.collection("hands");
+    var user_id = req.session.userId;
+
+
+    var pre_flop_fold = 0;
+    var pre_flop_match = 0;
+    var pre_flop_check = 0;
+    var pre_flop_raise = 0;
+    var pre_flop_total = 0;
+
+
+    var total_raise = 0;
+    var total_actions = 0;
+
+    var total_sd = 0;
+    var won_sd = 0;
+
+
+    async.waterfall([
+        function getUser(callback){
+
+            user_db.findOne({_id: new ObjectId(user_id.toString())},function (err,res)
+                {
+                    callback(null,res.hands)
+                }
+            );
+        },
+        function getHand(user,callback)
+        {
+            console.log(user);
+            async.each(user, function(each_hand,eachCallback){
+                hand_db.findOne({_id: new ObjectId(each_hand.toString())},function (err,res)
+                {
+                    if(res)
+                    {
+                        var players = res.players;
+                        var cards = res.cards;
+
+                        var pre_flop = res.preflopBets;
+                        var flop = res.flopBets;
+                        var turn = res.turnBets;
+                        var river = res.riverBets;
+
+                        var pos = 0;
+                        var order = 0;
+
+                        var winner = res.winner;
+
+                        for(var x=0;x<players.length;x++)
+                        {
+                            if(players[x]==user_id)
+                            {
+                                pos = x;
+                                break;
+                            }
+                        }
+
+                        order = res.positions[pos];
+                        console.log(cards[pos]);
+
+
+                        //pre-flop action
+                        for(var x=0;x<pre_flop.length;x++)
+                        {
+                            if(pre_flop[x][0]==order)
+                            {
+                                if(pre_flop[x][1]=="m")
+                                {
+                                    pre_flop_match += 1;
+                                }
+                                if(pre_flop[x][1]=="c")
+                                {
+                                    pre_flop_check += 1;
+                                }
+                                if(pre_flop[x][1]=="r")
+                                {
+                                    pre_flop_raise += 1;
+                                    total_raise += 1;
+                                }
+                                if(pre_flop[x][1]=="f")
+                                {
+                                    pre_flop_fold += 1;
+                                }
+
+                                pre_flop_total += 1;
+                                total_actions += 1;
+
+                            }
+                        }
+
+
+                        //flop action
+                        for(var x=0;x<flop.length;x++)
+                        {
+                            if(flop[x][0]==order)
+                            {
+
+                                if(flop[x][1]=="r")
+                                {
+                                    total_raise += 1;
+                                }
+                                total_actions += 1;
+                            }
+                        }
+
+
+                        //turn action
+                        for(var x=0;x<turn.length;x++)
+                        {
+                            if(turn[x][0]==order)
+                            {
+
+                                if(turn[x][1]=="r")
+                                {
+                                    total_raise += 1;
+                                }
+                                total_actions += 1;
+                            }
+                        }
+
+
+                        var sd_temp = 0;
+
+                        //river action
+                        for(var x=0;x<river.length;x++)
+                        {
+                            if(river[x][0]==order)
+                            {
+                                if(river[x][1]!="f")
+                                {
+                                    sd_temp += 1;
+                                }
+
+                                if(river[x][1]=="f")
+                                {
+                                    sd_temp = 0;
+                                }
+
+
+                                if(river[x][1]=="r")
+                                {
+                                    total_raise += 1;
+                                }
+                                total_actions += 1;
+                            }
+                        }
+
+                        if(sd_temp>0)
+                        {
+                            total_sd += 1;
+                            if(winner == pos)
+                            {
+                                won_sd += 1;
+                            }
+                        }
+
+
+
+
+                    }
+                    else
+                    {
+                        console.log("No hands found")
+                    }
+
+                    eachCallback();
+                });
+            },function(err,result)
+            {
+                callback(null);
+            })
+
+        },
+
+        ], function(err2,casts){
+            if(err2)
+            {
+                console.log("ERROR2!!")
+            }
+            else
+            {
+                //VPIP
+                console.log("VPIP: " +  ((pre_flop_match + pre_flop_raise)/pre_flop_total).toFixed(2).toString());
+
+                //PFR
+                console.log("PFR: " + (pre_flop_raise/pre_flop_total).toFixed(2).toString());
+
+                //AGG
+                console.log("AGG: " + (total_raise/total_actions).toFixed(2).toString());
+
+                //PSW
+                console.log("PSW: " + (won_sd/total_sd).toFixed(2).toString());
+
+            }
+        });
+
+    });
+
+
+});
+
+
+
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // Game backend
 
@@ -481,7 +783,8 @@ app.get("/recordHand/:code/:commCardsStr/:notFolded", (req, res) => {
             throw error;
         }
         var hand_id;
-        var database = client.db("rawData");
+        // var database = client.db("rawData");
+        var database = client.db("test");
         database.collection("hands").insertOne(dupHand, function(err, res) {
             if (err) {
                 throw err;

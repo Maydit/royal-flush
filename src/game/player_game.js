@@ -1,7 +1,3 @@
-
-
-
-
 var socket = io();
 
 const App = new Vue({
