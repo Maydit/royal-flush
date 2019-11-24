@@ -1,11 +1,3 @@
-document.getElementsByClassName('cardSymbol')[0].onchange = function() {
-  var index = this.selectedIndex;
-  var inputText = this.children[index].innerHTML.trim();
-  console.log(inputText);
-}
-
-
-
 var socket = io();
 
 const App = new Vue({
