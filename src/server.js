@@ -603,17 +603,25 @@ app.get("/getStats", (req, res) => {
             }
             else
             {
+                var returnStr = "";
+
+
                 //VPIP
-                console.log("VPIP: " +  ((pre_flop_match + pre_flop_raise)/pre_flop_total).toFixed(2).toString());
+                returnStr += Math.round(((pre_flop_match + pre_flop_raise)/pre_flop_total) * 100);
+                returnStr += ",";
 
                 //PFR
-                console.log("PFR: " + (pre_flop_raise/pre_flop_total).toFixed(2).toString());
+                returnStr += Math.round((pre_flop_raise/pre_flop_total).toFixed(2) * 100);
+                returnStr += ",";
 
                 //AGG
-                console.log("AGG: " + (total_raise/total_actions).toFixed(2).toString());
+                returnStr += Math.round((total_raise/total_actions).toFixed(2) * 100);
+                returnStr += ",";
 
                 //PSW
-                console.log("PSW: " + (won_sd/total_sd).toFixed(2).toString());
+                returnStr += Math.round((won_sd/total_sd).toFixed(2) * 100);
+
+                res.send(returnStr);
 
             }
         });
@@ -1061,6 +1069,10 @@ app.get('/game/join.html', function(req, res) {
 
 app.get('/game/join.css', function(req, res) {
     res.sendFile(__dirname + '/game/join.css');
+});
+
+app.get('/stats/personal_stats.js', function(req, res) {
+    res.sendFile(__dirname + '/stats/personal_stats.js');
 });
 
 app.get('/stats/stats_home.html', function(req, res) {

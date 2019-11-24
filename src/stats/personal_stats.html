@@ -1,20 +1,19 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
     <link rel= "stylesheet" type="text/css" href = "personal_stats.css" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Fugaz+One&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Fugaz+One&display=swap" rel="stylesheet">
+
     <title>Personal Stats</title>
   </head>
 
@@ -29,7 +28,7 @@
         </div>
     </div>
 
-    <div class="container" >
+    <div id="app" class="container" >
       <div class="row">
 
           <div class="col-md-6">
@@ -37,14 +36,14 @@
               <p class = "ltext">VPIP</p>
               <p class= "description">Voluntary Put in Pot</p>
               <p class = "ldescription">How often you put money in the pot during pre-flop.</p>
-              <p class = "vpipVal">99%</p>
+              <p id="vpip" class = "vpipVal"></p>
             </div>
 
               <div class = "agg">
                  <p class = "rtext">AGG</p>
                  <p class= "description">Aggression</p>
                  <p class = "ldescription">How often you raise compared to other actions.</p>
-                 <p class = vpipVal>31%</p>
+                 <p id="agg" class = vpipVal></p>
               </div>
 
 
@@ -60,14 +59,14 @@
                 <p class = "ltext">PFR</p>
                 <p class= "description">Pre Flop Raise</p>
                 <p class = "ldescription">How often you raise during pre-flop.</p>
-                <p class = vpipVal>50%</p>
+                <p id="pfr" class = vpipVal></p>
               </div>
 
               <div class = "psw">
                 <p class = "rtext">PSW</p>
                 <p class= "description">Percentage of Showdowns Won</p>
                 <p class = "ldescription">How often you win showdowns.</p>
-                <p class = vpipVal>33%</p>
+                <p id="psw" class = vpipVal></p>
               </div>
 
             </div>
@@ -78,7 +77,7 @@
       </div>
 
 
-
+      <script src="personal_stats.js"></script>
 
   </body>
 </html>
