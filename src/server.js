@@ -346,68 +346,68 @@ class Hand {
 ////////////////////////////////////////////////////////////////////////////////
 // Game Stats
 
-// app.get("/getHandHistory", (req, res) => {
-//     mongoose.connect(url, function(err,db){
-//
-//     var user_db = db.collection("users");
-//     var hand_db = db.collection("hands");
-//     var user_id = req.session.userId;
-//
-//
-//     async.waterfall([
-//         function getUser(callback){
-//
-//             user_db.findOne({_id: new ObjectId(user_id.toString())},function (err,res)
-//                 {
-//                     callback(null,res.hands)
-//                 }
-//             );
-//         },
-//         function getHand(user,callback)
-//         {
-//             console.log(user);
-//             for(var x=0;x<user.length;x++)
-//             {
-//                 console.log(user[x]);
-//                 hand_db.findOne({_id: new ObjectId(user[x].toString())},function (err,res)
-//                     {
-//                         if(res)
-//                         {
-//                             var players = res.players;
-//                             var cards = res.cards;
-//                             var pos = 0;
-//
-//                             for(var x=0;x<players.length;x++)
-//                             {
-//                                 if(players[x]==user_id)
-//                                 {
-//                                     pos = x;
-//                                     break;
-//                                 }
-//                             }
-//                             console.log(pos);
-//                             console.log(cards[pos]);
-//                         }
-//                         else
-//                         {
-//                             console.log("No hands found")
-//                         }
-//                     }
-//                 );
-//             }
-//         },
-//
-//         ], function(err2,casts){
-//             if(err2)
-//             {
-//                 console.log("ERROR2!!")
-//             }
-//         });
-//
-//     });
-//
-//
-// });
+app.get("/getHandHistory", (req, res) => {
+    mongoose.connect(url, function(err,db){
+
+    var user_db = db.collection("users");
+    var hand_db = db.collection("hands");
+    var user_id = req.session.userId;
+
+
+    async.waterfall([
+        function getUser(callback){
+
+            user_db.findOne({_id: new ObjectId(user_id.toString())},function (err,res)
+                {
+                    callback(null,res.hands)
+                }
+            );
+        },
+        function getHand(user,callback)
+        {
+            console.log(user);
+            for(var x=0;x<user.length;x++)
+            {
+                console.log(user[x]);
+                hand_db.findOne({_id: new ObjectId(user[x].toString())},function (err,res)
+                    {
+                        if(res)
+                        {
+                            var players = res.players;
+                            var cards = res.cards;
+                            var pos = 0;
+
+                            for(var x=0;x<players.length;x++)
+                            {
+                                if(players[x]==user_id)
+                                {
+                                    pos = x;
+                                    break;
+                                }
+                            }
+                            // console.log(pos);
+                            console.log(cards[pos]);
+                        }
+                        else
+                        {
+                            console.log("No hands found")
+                        }
+                    }
+                );
+            }
+        },
+
+        ], function(err2,casts){
+            if(err2)
+            {
+                console.log("ERROR2!!")
+            }
+        });
+
+    });
+
+
+});
 
 
 
@@ -417,7 +417,7 @@ class Hand {
 
 
 //getStats
-app.get("/getHandHistory", (req, res) => {
+app.get("/getStats", (req, res) => {
 
 
 
@@ -581,8 +581,6 @@ app.get("/getHandHistory", (req, res) => {
                         }
 
 
-
-
                     }
                     else
                     {
@@ -706,7 +704,7 @@ app.post("/addBet/:code/:bet/:phase", (req, res) => {
     res.send(true);
 });
 
-app.get("/recordHand/:code/:commCardsStr/:notFolded", (req, res) => {
+app.get("/recordHand/:code/:commCardsStr/:notFolded/:totalPotAmount", (req, res) => {
     var code = req.params.code;
     var hand = rooms.get(code);
     var notFoldedStr = req.params.notFolded;
@@ -714,6 +712,7 @@ app.get("/recordHand/:code/:commCardsStr/:notFolded", (req, res) => {
 
     // Add community cards to the hand
     hand.commCards = req.params.commCardsStr;
+    hand.pot = req.params.totalPotAmount;
 
     // Check who won
     var allHands = [];
@@ -723,7 +722,7 @@ app.get("/recordHand/:code/:commCardsStr/:notFolded", (req, res) => {
         allHands.push(currentHand);
     }
     var sortedHands = Array.from(allHands);
-    sortedHands.sort(handSorter);
+    sortedHands.sort(poker.handSorter);
     for (i = 0; i < notFoldedStr.length; i++) {
         if (sortedHands[sortedHands.length-1].equals(allHands[i])) {
             hand.winner = parseInt(notFoldedStr.charAt(i));

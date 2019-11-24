@@ -200,7 +200,11 @@ const App = new Vue({
             addToLog("Hand inserted to the database. Starting next round.");
             this.phase = 0;
             this.resetInputs();
-            this.$http.get('http://' + window.location.host + '/recordHand/' + this.code + commCardsStr + active).then(response => {
+            var totalPotAmount = 0;
+            for (var i = 0; i < this.positions.length; i++) {
+                totalPotAmount += this.amountInPot[i];
+            }
+            this.$http.get('http://' + window.location.host + '/recordHand/' + this.code + commCardsStr + active + '/' + totalPotAmount).then(response => {
                 var winnerIndex = parseInt(response.body);
                 for (var i = 0; i < this.amountInPot.length; i++) {
                     this.$http.post('http://' + window.location.host + '/updateStacks/' + this.code + '/' + i + '/' + this.amountInPot[i]);
