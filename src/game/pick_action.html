@@ -1,88 +1,73 @@
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel= "stylesheet" type="text/css" href = "pick_action.css" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Fugaz+One&display=swap" rel="stylesheet">
-    <title>Pick Action</title>
-  </head>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
 
-  <body style = "background-color: #b8cecd">
-    <div class = "header">
-        <div class = "jumbotron-fluid">
-            <h1>Royal Flush</h1>
-            <p>"Stats don't bluff"</p>
-            <button type="button" class="btn btn-danger" id = "logoutButton"  href="/logout">Logout</button>
-            <form method="post" action="/logout">
-                <input type="submit">
-            </form>
+        <link rel= "stylesheet" type="text/css" href = "pick_action.css" />
+        <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Fugaz+One&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+        <title>Pick Action</title>
+    </head>
+
+    <body style = "background-color: #b8cecd">
+
+        <div class = "header">
+            <div class = "jumbotron-fluid">
+                <h1>Royal Flush</h1>
+                <p>"Stats don't bluff"</p>
+                <button type="button" class="btn btn-danger" id = "logoutButton"  href="/logout">Logout</button>
+                <form method="post" action="/logout">
+                    <input type="submit">
+                </form>
+            </div>
         </div>
-    </div>
-    <div class="container" >
-        <div class="row">
-            <div class="col-md-6">
-                <div class = "rightText">
-                    <h1>Select an Option</h1>
-                    <div id="app">
-                        <div class = "create">
-                            <a href="host.html"> <button type="button" class="btn btn-primary createButton">Host a Game</button></a>
-                        </div>
-                        <div class = "host">
-                             <a href="join.html"> <button type="button" class="btn btn-primary hostButton">Join a game</button></a>
-                        </div>
-                        <div class = "stats">
-                            <a href="/../stats/stats_home.html"> <button type="button" class="btn btn-primary statsButton">View Stats</button></a>
+
+        <div class="container" >
+            <div class="row">
+                <div class="col-md-6">
+                    <div class = "rightText">
+                        <h1>Select an Option</h1>
+                        <div id="app">
+                            <div class = "create">
+                                <a href="host.html"> <button type="button" class="btn btn-primary createButton">Host a Game</button></a>
+                            </div>
+                            <div class = "host">
+                                <a href="join.html"> <button type="button" class="btn btn-primary hostButton">Join a game</button></a>
+                            </div>
+                            <div class = "stats">
+                                <a href="/../stats/stats_home.html"> <button type="button" class="btn btn-primary statsButton">View Stats</button></a>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <div class = "info">
+                    <h1>Welcome</h1>
+
+                    <h2>Host a Game</h2>
+                    <p>Select this option if you want to host a game. This means you will be keeping track of all the actions other player do(match, fold, raise, etc) during the course of the game. Once you click this button, you will be given a unqiue code that you can give to other players for them to join your session.</p>
+
+                    <h2>Join a Game</h2>
+                    <p>Select this option if you want to join a game. As a player, you simply input in the two cards you were given and the host will be recording your actions. Once you click this option, you will be prompted to enter a code which the host will give you in order to join a session.</p>
+
+                    <h2>View Stats</h2>
+                    <p> Select this option if you want to view your personal stats or view global stats collected from all users of Royal Flush.</p>
+
+                    <p class = "link"><a href="https://github.com/Maydit/royal-flush">Check out our Github!</a></p>
+                </div>
             </div>
-            <div class = "info">
-                <h1>Welcome</h1>
+        </div>
 
-                <h2>Host a Game</h2>
-                <p>Select this option if you want to host a game. This means you will be keeping track of all the actions other player do(match, fold, raise, etc) during
-                the course of the game. Once you click this button, you will be given a unqiue code that you can give to other players for them to join your session.</p>
-
-                <h2>Join a Game</h2>
-                <p>Select this option if you want to join a game. As a player, you simply input in the two cards you were given and the host will be recording your actions.
-                Once you click this option, you will be prompted to enter a code which the host will give you in order to join a session.</p>
-
-                <h2>View Stats</h2>
-                <p> Select this option if you want to view your personal stats or view
-                    global stats collected from all users of Royal Flush.
-                </p>
-
-                <p class = "link"><a href="https://github.com/Maydit/royal-flush">Check out our Github!</a></p>
-            </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <script>
+        <script>
         const App = new Vue({
             el: '#app',
             methods: {
@@ -94,6 +79,7 @@
                 }
             }
         });
-    </script>
-  </body>
+        </script>
+
+    </body>
 </html>

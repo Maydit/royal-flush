@@ -1,5 +1,12 @@
 var socket = io();
 
+// Invoked by the submit button, tells the user their request went through
+function displaySnack() {
+    var x = document.getElementById("snackbar");
+    x.className = "show";
+    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+}
+
 const App = new Vue({
     el: '#app',
     data: {
