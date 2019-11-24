@@ -15,6 +15,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Fugaz+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.css">
+
+<!--     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <title>Hand History</title>
   </head>
 
@@ -26,5 +30,43 @@
             <button type="button" class="btn btn-danger" id = "logoutButton">Logout</button>
         </div>
     </div>
+
+    <div class = "mainTable">
+        <table class="table">
+
+          <thead>
+            <tr>
+              <th scope="col">Card 1</th>
+              <th scope="col">Card 2</th>
+              <th scope="col">Play?</th>
+            </tr>
+          </thead>
+
+          <tbody class = "columns">
+            <tr>
+              <td>🂡</td>
+              <td>🂵</td>
+              <td>Yes</td>
+            </tr>
+            <tr>
+              <td>🂡</td>
+              <td>🂵</td>
+              <td>No</td>
+            </tr>
+            <tr>
+              <td>🂡</td>
+              <td>🂵</td>
+              <td>Yes</td>
+            </tr>
+          </tbody>
+
+        </table>
+    </div>
+
+
+
+
+
+
   </body>
 </html>

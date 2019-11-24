@@ -32,3 +32,21 @@
     margin-bottom: 50px;
     height: 120px;
 }
+
+.mainTable{
+    width: 65%;
+    margin: auto;
+}
+
+tbody tr{
+    line-height: 55px;
+    min-height: 55px;
+    height: 55px;
+    font-size: 20px;
+}
+
+thead tr{
+    font-size: 30px;
+}
+
+
