@@ -1,131 +1,112 @@
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    <link rel= "stylesheet" type="text/css" href = "host_game.css" />
-    <link href="https://fonts.googleapis.com/css?family=Fugaz+One&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-    <title>Host Game</title>
-  </head>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
 
-  <body style = "background-color: #b8cecd">
-    <div class = "header">
-        <div class = "jumbotron-fluid">
-            <h1>Royal Flush</h1>
-            <p>"Stats don't bluff"</p>
-            <button type="button" class="btn btn-danger" id = "logoutButton">Logout</button>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+        <link rel= "stylesheet" type="text/css" href = "host_game.css" />
+        <link href="https://fonts.googleapis.com/css?family=Fugaz+One&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
+
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+        <title>Host Game</title>
+    </head>
+
+    <body style = "background-color: #b8cecd">
+
+        <div class = "header">
+            <div class = "jumbotron-fluid">
+                <h1>Royal Flush</h1>
+                <p>"Stats don't bluff"</p>
+                <button type="button" class="btn btn-danger" id = "logoutButton">Logout</button>
+            </div>
         </div>
 
+        <div id="app">
 
-    </div>
+            <br>
+            <div id = "playerLabel">
+                <label>It is currently:</label>
+                <p id="playerP">'s turn</p>
+            </div>
+            <br>
 
-
-
-
-
-
-    <div id="app">
-
-        <br>
-        <div id = "playerLabel">
-            <label>It is currently:</label>
-            <p id="playerP">'s turn</p>
-        </div>
-
-        <br>
-
-
-        <div id = "actionBoard" style="background-color: #CAA472">
-            <h3>Action Board</h3>
-
-
-<!--             <div class="row">
-              <div class="col-md-12">
-                <button v-on:click="check" type="button" class="btn btn-primary checkButton">Check</button>
-                <button v-on:click="match" type="button" class="btn btn-primary matchButton">Match</button>
-                <button v-on:click="fold" type="button" class="btn btn-primary foldButton">Fold</button>
-              </div>
-            </div> -->
-             <div class='wrapper text-center'>
-                <div class="btn-group" id = "buttonRow" role="group" aria-label="Basic example">
-                    <button v-on:click="check" type="button" class="btn btn-primary checkButton">Check</button>
-                    <button v-on:click="match" type="button" class="btn btn-primary matchButton">Match</button>
-                    <button v-on:click="fold" type="button" class="btn btn-primary foldButton">Fold</button>
+            <div id = "actionBoard" style="background-color: #CAA472">
+                <h3>Action Board</h3>
+                <div class='wrapper text-center'>
+                    <div class="btn-group" id = "buttonRow" role="group" aria-label="Basic example">
+                        <button v-on:click="check" type="button" class="btn btn-primary checkButton">Check</button>
+                        <button v-on:click="match" type="button" class="btn btn-primary matchButton">Match</button>
+                        <button v-on:click="fold" type="button" class="btn btn-primary foldButton">Fold</button>
+                    </div>
                 </div>
-            </div>
+                <br>
+                <br>
 
-
-
-            <br>
-            <br>
-
-            <div class='wrapper text-center'>
-                <div id = "row2">
-                    <button v-on:click="raise" type="button" class="btn btn-primary raiseButton">Raise</button>
-                    <input type="number" v-model="raiseAmount" class = "numberInput" placeholder="Number to raise">
+                <div class='wrapper text-center'>
+                    <div id = "row2">
+                        <button v-on:click="raise" type="button" class="btn btn-primary raiseButton">Raise</button>
+                        <input type="number" v-model="raiseAmount" class = "numberInput" placeholder="Number to raise">
+                    </div>
                 </div>
+                <br>
+                <br>
+
+                <div class = "CC">
+                    <label>Community Card 1: </label>
+                    <input type = "text" v-model="commCard1" id = "promptCC1" onkeyup="displayCC('promptCC1', 'CC1')"/>
+                    <element id = "CC1"></element>
+                </div>
+                <br>
+
+                <div class = "CC">
+                    <label>Community Card 2: </label>
+                    <input v-model="commCard2" id = "promptCC2" onkeyup="displayCC('promptCC2', 'CC2')">
+                    <element id = "CC2"></element>
+                </div>
+                <br>
+
+                <div class = "CC">
+                    <label>Community Card 3: </label>
+                    <input v-model="commCard3" id = "promptCC3" onkeyup="displayCC('promptCC3', 'CC3')">
+                    <element id = "CC3"></element>
+                </div>
+                <br>
+
+                <div class = "CC">
+                    <label>Community Card 4: </label>
+                    <input v-model="commCard4" id = "promptCC4" onkeyup="displayCC('promptCC4', 'CC4')">
+                    <element id = "CC4"></element>
+                </div>
+                <br>
+
+                <div class = "CC">
+                    <label>Community Card 5: </label>
+                    <input v-model="commCard5" id = "promptCC5" onkeyup="displayCC('promptCC5', 'CC5')">
+                    <element id = "CC5"></element>
+                </div>
+                <br>
+
+                <button id="resubmitBtn" class="btn btn-primary" v-on:click="resubmit" disabled>Resubmit</button>
+                <br>
             </div>
 
-
-            <br>
-            <br>
-
-            <div class = "CC">
-                <label>Community Card 1: </label>
-                <input type = "text" v-model="commCard1" id = "promptCC1" onkeyup="displayCC('promptCC1', 'CC1')"/>
-                <element id = "CC1"></element>
+            <div id = "logBlock">
+                <h3>Action Log: </h3>
+                <p id="log"></p>
             </div>
 
-            <br>
-            <div class = "CC">
-                <label>Community Card 2: </label>
-                <input v-model="commCard2" id = "promptCC2" onkeyup="displayCC('promptCC2', 'CC2')">
-                <element id = "CC2"></element>
-            </div>
-
-            <br>
-            <div class = "CC">
-                <label>Community Card 3: </label>
-                <input v-model="commCard3" id = "promptCC3" onkeyup="displayCC('promptCC3', 'CC3')">
-                <element id = "CC3"></element>
-            </div>
-
-            <br>
-            <div class = "CC">
-                <label>Community Card 4: </label>
-                <input v-model="commCard4" id = "promptCC4" onkeyup="displayCC('promptCC4', 'CC4')">
-                <element id = "CC4"></element>
-            </div>
-
-            <br>
-            <div class = "CC">
-                <label>Community Card 5: </label>
-                <input v-model="commCard5" id = "promptCC5" onkeyup="displayCC('promptCC5', 'CC5')">
-                <element id = "CC5"></element>
-            </div>
-            <br>
-
-
-
-            <button id="resubmitBtn" class="btn btn-primary" v-on:click="resubmit" disabled>Resubmit</button>
-            <br>
         </div>
 
+        <script src="host_game.js"></script>
+        <script src="card_parser.js"></script>
 
-
-        <div id = "logBlock">
-            <h3>Action Log: </h3>
-            <p id="log"></p>
-        </div>
-
-    </div>
-    <script src="host_game.js"></script>
-  </body>
+    </body>
 </html>

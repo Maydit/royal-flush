@@ -1,12 +1,11 @@
-document.getElementsByClassName('cardSymbol')[0].onchange = function() {
-  var index = this.selectedIndex;
-  var inputText = this.children[index].innerHTML.trim();
-  console.log(inputText);
-}
-
-
-
 var socket = io();
+
+// Invoked by the submit button, tells the user their request went through
+function displaySnack() {
+    var x = document.getElementById("snackbar");
+    x.className = "show";
+    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+}
 
 const App = new Vue({
     el: '#app',
@@ -16,6 +15,7 @@ const App = new Vue({
     },
     methods: {
         sendCards() {
+            // Obtains all the user inputted values
             var card1Select = document.getElementById("card1");
             var card1 = card1Select.options[card1Select.selectedIndex].value;
             var suit1Select = document.getElementById("suit1");
@@ -25,6 +25,8 @@ const App = new Vue({
             var suit2Select = document.getElementById("suit2");
             var suit2 = suit2Select.options[suit2Select.selectedIndex].value;
             var cardsStr = card1 + suit1 + card2 + suit2;
+
+            // Sends the cards to the server 
             this.$http.post('http://' + window.location.host + '/sendCards/' + this.code + "/" + cardsStr + "/" + this.userId);
         }
     },
