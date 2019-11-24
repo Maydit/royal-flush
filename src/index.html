@@ -1,59 +1,64 @@
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel= "stylesheet" type="text/css" href = "index.css" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Fugaz+One&display=swap" rel="stylesheet">
-    <title>Homepage</title>
-  </head>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
 
-  <body style = "background-color: #b8cecd">
-    <div class = "header">
-        <div class = "jumbotron-fluid">
-            <h1>Royal Flush</h1>
-            <p>"Stats don't bluff"</p>
+        <link rel= "stylesheet" type="text/css" href = "index.css" />
+        <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Fugaz+One&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+        <title>Homepage</title>
+    </head>
+
+    <body style = "background-color: #b8cecd">
+
+        <div class = "header">
+            <div class = "jumbotron-fluid">
+                <h1>Royal Flush</h1>
+                <p>"Stats don't bluff"</p>
+            </div>
         </div>
-    </div>
-    <div class="container" >
-        <div class="row">
-            <div class="col-md-6">
-                <div class = "rightText">
-                    <h1 class = "sectionHeader">Select an Option</h1>
-                    <div id="app">
-                        <div class = "login">
-                            <a href="login/login.html"> <button type="button" class="btn btn-primary loginButton">Login</button></a>
-                        </div>
-                        <div class = "register">
-                            <a href="login/sign_in.html"> <button type="button" class="btn btn-primary registerButton">Register</button></a>
+
+        <div class="container" >
+            <div class="row">
+                <div class="col-md-6">
+                    <div class = "rightText">
+                        <h1 class = "sectionHeader">Select an Option</h1>
+                        <div id="app">
+                            <div class = "login">
+                                <a href="login/login.html"> <button type="button" class="btn btn-primary loginButton">Login</button></a>
+                            </div>
+                            <div class = "register">
+                                <a href="login/sign_in.html"> <button type="button" class="btn btn-primary registerButton">Register</button></a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class = "col-md-2">
-            </div>
-            <div class = "col-md-6">
-                <div class = "info">
-                    <h1 class = "sectionHeader">Welcome</h1>
-                    <h2 class = "subHeader">About</h2>
-                    <p>Do you enjoy poker with your friends? Ever wanted to keep track of who wins and loses and prove to them definitively that you’re the best among them? Our app allows you to record your live poker games simply and easily, then gives you personal statistics on them. You can use our lightweight design to enter poker hands and results with either your mobile device or on our website. You can tell how many hands you win on average, your betting tendencies, and many other kinds of statistics to compare them with friends, improve your game, and have fun playing face to face poker.</p>
 
-                    <p class = "link"><a href="https://github.com/Maydit/royal-flush">Check out our Github!</a></p>
+                <div class = "col-md-2">
+                </div>
+
+                <div class = "col-md-6">
+                    <div class = "info">
+                        <h1 class = "sectionHeader">Welcome</h1>
+                        <h2 class = "subHeader">About</h2>
+                        <p>Do you enjoy poker with your friends? Ever wanted to keep track of who wins and loses and prove to them definitively that you’re the best among them? Our app allows you to record your live poker games simply and easily, then gives you personal statistics on them. You can use our lightweight design to enter poker hands and results with either your mobile device or on our website. You can tell how many hands you win on average, your betting tendencies, and many other kinds of statistics to compare them with friends, improve your game, and have fun playing face to face poker.</p>
+
+                        <p class = "link"><a href="https://github.com/Maydit/royal-flush">Check out our Github!</a></p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <script>
+
+        <script>
         const App = new Vue({
             el: '#app',
             methods: {
@@ -65,6 +70,7 @@
                 }
             }
         });
-    </script>
-  </body>
+        </script>
+        
+    </body>
 </html>

@@ -1,72 +1,86 @@
 <!DOCTYPE html>
 <html>
-<head>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
 
-    <meta charset="utf-8">
-    <title>Signup</title>
-    <link rel= "stylesheet" type="text/css" href = "sign_in.css" />
-    <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Fugaz+One&display=swap" rel="stylesheet">
-</head>
+        <link rel= "stylesheet" type="text/css" href = "sign_in.css" />
+        <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Fugaz+One&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 
-<body style = "background-color: #b8cecd">
-    <script src="login.js"></script>
-    <div class = "header">
-        <div class = "jumbotron-fluid">
-            <h1>Royal Flush</h1>
-            <p>"Stats don't bluff"</p>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+        <title>Signup</title>
+    </head>
+
+    <body style = "background-color: #b8cecd">
+
+        <div class = "header">
+            <div class = "jumbotron-fluid">
+                <h1>Royal Flush</h1>
+                <p>"Stats don't bluff"</p>
+            </div>
         </div>
-    </div>
-    <div class="container" >
-        <div class="row">
-            <div class="col-md-6">
-                <div class = "registerForm">
 
-                    <form action="/register" method="post" id="fileForm" role="form">
-                    <fieldset><legend class="text-center">Registration Form <span class="req"><small> (required *)  </small></span></legend>
-                        <div class = "temp">
-                            <div class="form-group">
-                                <label for="firstname"><span class="req">* </span> First name: </label>
+        <div class="container" >
+            <div class="row">
+                <div class="col-md-6">
+                    <div class = "registerForm">
+                        <form action="/register" method="post" id="fileForm" role="form">
+                            <fieldset><legend class="text-center">Registration Form <span class="req"><small> (required *)  </small></span></legend>
+
+                                <div class="form-group">
+                                    <label for="firstname"><span class="req">* </span> First name: </label>
                                     <input class="form-control" type="text" name="firstname" id = "firstname" onkeyup = "name_check();" required />
-                                        <span id="errFirst" class="errFirst"></span>
-                            </div>
-                        <div class="form-group">
-                            <label for="lastname"><span class="req">* </span> Last name: </label>
-                                <input class="form-control" type="text" name="lastname" id = "lastname" onkeyup = "name_check();" required />
+                                    <span id="errFirst" class="errFirst"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="lastname"><span class="req">* </span> Last name: </label>
+                                    <input class="form-control" type="text" name="lastname" id = "lastname" onkeyup = "name_check();" required />
                                     <span id="errLast" class="errLast"></span>
-                        </div>
-                        <div class="form-group">
-                            <label for="email"><span class="req">* </span> Email Address: </label>
-                                <input class="form-control" required type="text" name="email" id = "email"  onkeyup="email_check();" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="email"><span class="req">* </span> Email Address: </label>
+                                    <input class="form-control" required type="text" name="email" id = "email"  onkeyup="email_check();" />
                                     <div class="status" id="status"></div>
-                        </div>
-                        <div class="form-group">
-                            <label for="password" ><span class="req">* </span> Password: </label>
-                                <input required name="password" type="password" class="form-control inputpass" minlength="4" maxlength="16"  id="pass1" onkeyup="pass_check()"/> </p>
-                            <label for="password"><span class="req">* </span> Password Confirm: </label>
-                                <input required name="password_2" type="password" class="form-control inputpass" minlength="4" maxlength="16" placeholder="Passwords must match" onkeyup="pass_check()" id="pass2" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="password" ><span class="req">* </span> Password: </label>
+                                    <input required name="password" type="password" class="form-control inputpass" minlength="4" maxlength="16"  id="pass1" onkeyup="pass_check()"/> </p>
+                                    <label for="password"><span class="req">* </span> Password Confirm: </label>
+                                    <input required name="password_2" type="password" class="form-control inputpass" minlength="4" maxlength="16" placeholder="Passwords must match" onkeyup="pass_check()" id="pass2" />
                                     <span id="confirmMessage" class="confirmMessage"></span>
-                        </div>
-                    </fieldset>
-                    <div class="form-group" style = "margin-top: 20px;">
-                        <input class="btn btn-success" type="submit" name="submit_reg" value="Register" id="submit_reg" disabled>
+                                </div>
+
+                            </fieldset>
+
+                            <div class="form-group" style = "margin-top: 20px;">
+                                <input class="btn btn-success" type="submit" name="submit_reg" value="Register" id="submit_reg" disabled>
+                            </div>
+
+                        </form>
                     </div>
-                    </form>
                 </div>
-            </div>
-            <div class = "col-md-6">
-                <div class="rightText">
-                    <h1 class="page-header">Info</h1>
-                    <p>A live poker tracking app to optimize your playstyle</p>
-                    <p>"Stats don't bluff"</p>
-                    <p><a href="https://github.com/Maydit/royal-flush">Check out our Github!</a></p>
+
+                <div class = "col-md-6">
+                    <div class="rightText">
+                        <h1 class="page-header">Info</h1>
+                        <p>A live poker tracking app to optimize your playstyle</p>
+                        <p>"Stats don't bluff"</p>
+                        <p><a href="https://github.com/Maydit/royal-flush">Check out our Github!</a></p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</body>
+
+        <script src="login.js"></script>
+
+    </body>
 </html>
