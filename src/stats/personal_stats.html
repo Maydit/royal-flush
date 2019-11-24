@@ -23,7 +23,9 @@
         <div class = "jumbotron-fluid">
             <h1>Royal Flush</h1>
             <p>"Stats don't bluff"</p>
-            <button type="button" class="btn btn-danger" id = "logoutButton">Logout</button>
+            <form method="post" action="/logout">
+              <button type="submit" class="btn btn-danger" id = "logoutButton">Logout</button>
+            </form>
         </div>
     </div>
 
@@ -34,28 +36,39 @@
           <div class="col-md-6">
             <div class = "vpip">
               <p class = "ltext">VPIP</p>
-              <p class = "vpipVal">69</p>
-
+              <p class= "description">Voluntary Put in Pot</p>
+              <p class = "ldescription">How often you put money in the pot during pre-flop.</p>
+              <p class = "vpipVal">99%</p>
             </div>
 
-            <div class = "agg">
-              <p class = "ltext">Agg</p>
-              <p class = vpipVal>9900000</p>
-            </div>
+              <div class = "agg">
+                 <p class = "rtext">AGG</p>
+                 <p class= "description">Aggression</p>
+                 <p class = "ldescription">How often you raise compared to other actions.</p>
+                 <p class = vpipVal>31%</p>
+              </div>
+
+
           </div>
 
 
           <div class = "col-md-6">
             <div class = "rightText">
 
-              <div class = "potsWon">
-                 <p class = "rtext">%of pots won</p>
-                 <p class = vpipVal>100%</p>
+
+
+              <div class = "pfr">
+                <p class = "ltext">PFR</p>
+                <p class= "description">Pre Flop Raise</p>
+                <p class = "ldescription">How often you raise during pre-flop.</p>
+                <p class = vpipVal>50%</p>
               </div>
 
-              <div class = "totalWin">
-                <p class = "rtext">Total Winnings</p>
-                <p class = vpipVal>$900000000001</p>
+              <div class = "psw">
+                <p class = "rtext">PSW</p>
+                <p class= "description">Percentage of Showdowns Won</p>
+                <p class = "ldescription">How often you win showdowns.</p>
+                <p class = vpipVal>33%</p>
               </div>
 
             </div>
