@@ -23,7 +23,9 @@
         <div class = "jumbotron-fluid">
             <h1>Royal Flush</h1>
             <p>"Stats don't bluff"</p>
-            <button type="button" class="btn btn-danger" id = "logoutButton">Logout</button>
+            <form method="post" action="/logout">
+                <button type="submit" class="btn btn-danger" id = "logoutButton">Logout</button>
+            </form>
         </div>
     </div>
     <div class="container" >
@@ -37,9 +39,7 @@
                     <div class = "personalStats">
                          <a href="personal_stats.html"> <button type="button" class="btn btn-primary personalStatsButton">View Personal Stats</button></a>
                     </div>
-                    <div class = "globalStats">
-                        <a href="global_stats.html"> <button type="button" class="btn btn-primary globalStatsButton">View Global Stats</button></a>
-                    </div>
+
                 </div>
             </div>
             <div class = "info">
@@ -51,8 +51,6 @@
                 <h2>Personal Stats</h2>
                 <p>This option allows you to see all of your personal stats for all the games you have played using Royal Flush!</p>
 
-                <h2>Global Stats</h2>
-                <p> This option allows you to see all of the stats across all users using Royal Flush!</p>
 
                 <p class = "link"><a href="https://github.com/Maydit/royal-flush">Check out our Github!</a></p>
             </div>

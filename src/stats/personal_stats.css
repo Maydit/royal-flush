@@ -35,34 +35,35 @@
 
 .vpip{
     border: 1.5px solid black;
-    padding-bottom: 20%;
-    margin-bottom: 80px;
+    padding-bottom: 10%;
+    margin-bottom: 25px;
     position: relative;
    /* text-align: center;*/
-   background-color: #4DCCBD;
+   background-color: #B5FFE9;
+   /*background-color: #F0BCD4;*/
 
+}
+
+.pfr{
+    border: 1.5px solid black;
+    padding-bottom: 10%;
+    position: relative;
+    background-color: #EF959C;
+    margin-bottom: 25px;
 }
 
 .agg{
     border: 1.5px solid black;
-    padding-bottom: 20%;
+    padding-bottom: 10%;
     position: relative;
-    background-color: #2374AB;
+    background-color: #FCB9B2;
 }
 
-.potsWon{
+.psw{
     border: 1.5px solid black;
-    padding-bottom: 20%;
-    margin-bottom: 80px;
+    padding-bottom: 10%;
     position: relative;
-    background-color: #FF8484;
-}
-
-.totalWin{
-    border: 1.5px solid black;
-    padding-bottom: 20%;
-    position: relative;
-    background-color: #D6FFF6;
+    background-color: #CEABB1;
 }
 
 .lText{
@@ -78,7 +79,19 @@
 .vpipVal{
     text-align: center;
     font-size: 25px;
-    margin-top: 75px;
+    margin-top: 65px;
+}
+
+.description{
+    text-align: center;
+    font-size: 20px;
+    font-style: italic;
+}
+
+.ldescription{
+    text-align: center;
+    font-size: 15px;
+    font-style: italic;
 }
 
 
