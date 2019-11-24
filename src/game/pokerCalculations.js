@@ -178,3 +178,88 @@ exports.checkForPairs = function(cards) {
     }
     return pairArr;
 }
+
+exports.handSorter = function(hand1, hand2) {
+    if (hand1.strength > hand2.strength) {
+        return 1;
+    } else if (hand1.strength < hand2.strength) {
+        return -1;
+    } else {
+        // same kind of hand, need to see which is better
+        if (hand1.strength == 8 || hand1.strength == 5 || hand1.strength == 4 || hand1.strength == 0) {
+            // For these hands, just check who has the higher cards
+            for (var i = 4; i >= 0; i--) {
+                if (hand1.cards[i].compareTo(hand2.cards[i]) == 1) {
+                    return 1;
+                } else if (hand1.cards[i].compareTo(hand2.cards[i]) == -1) {
+                    return -1;
+                }
+            }
+            return 0;
+        }
+
+        if (hand1.strength == 7 || this.strength == 6) {
+            // For these hands, check the first card and then the last card.
+            if (hand1.cards[0].compareTo(hand2.cards[0]) == 1) {
+                return 1;
+            } else if (hand1.cards[0].compareTo(hand2.cards[0]) == -1) {
+                return -1;
+            }
+            if (hand1.cards[4].compareTo(hand2.cards[4]) == 1) {
+                return 1;
+            } else if (hand1.cards[4].compareTo(hand2.cards[4]) == -1) {
+                return -1;
+            }
+            return 0;
+        }
+
+        if (hand1.strength == 3 || hand1.strength == 1) {
+            // Check 1st, then 5th and 4th.
+            if (hand1.cards[0].compareTo(hand2.cards[0]) == 1) {
+                return 1;
+            } else if (hand1.cards[0].compareTo(hand2.cards[0]) == -1) {
+                return -1;
+            }
+            if (hand1.cards[4].compareTo(hand2.cards[4]) == 1) {
+                return 1;
+            } else if (hand1.cards[4].compareTo(hand2.cards[4]) == -1) {
+                return -1;
+            }
+            if (hand1.cards[3].compareTo(hand2.cards[3]) == 1) {
+                return 1;
+            } else if (hand1.cards[3].compareTo(hand2.cards[3]) == -1) {
+                return -1;
+            }
+
+            if (hand1.strength == 3) {
+                return 0;
+            } else {
+                // One more round for pairs instead of 3 of a kind
+                if (hand1.cards[2].compareTo(hand2.cards[2]) == 1) {
+                    return 1;
+                } else if (hand1.cards[2].compareTo(hand2.cards[2]) == -1) {
+                    return -1;
+                }
+                return 0;
+            }
+        }
+
+        // this is for 2 pairs, check 3rd, 1st, last.
+        if (hand1.cards[2].compareTo(hand2.cards[2]) == 1) {
+            return 1;
+        } else if (hand1.cards[2].compareTo(hand2.cards[2]) == -1) {
+            return -1;
+        }
+        if (hand1.cards[0].compareTo(hand2.cards[0]) == 1) {
+            return 1;
+        } else if (hand1.cards[0].compareTo(hand2.cards[0]) == -1) {
+            return -1;
+        }
+        if (hand1.cards[4].compareTo(hand2.cards[4]) == 1) {
+            return 1;
+        } else if (hand1.cards[4].compareTo(hand2.cards[4]) == -1) {
+            return -1;
+        }
+        return 0;
+    }
+}
