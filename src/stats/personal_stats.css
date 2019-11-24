@@ -48,22 +48,25 @@
     border: 1.5px solid black;
     padding-bottom: 10%;
     position: relative;
-    background-color: #EF959C;
+    /*background-color: #EF959C;*/
     margin-bottom: 25px;
+    background-color: #7FBEAB;
 }
 
 .agg{
     border: 1.5px solid black;
     padding-bottom: 10%;
     position: relative;
-    background-color: #FCB9B2;
+  /*  background-color: #FCB9B2;*/
+  background-color: #FFBFA0;
 }
 
 .psw{
     border: 1.5px solid black;
     padding-bottom: 10%;
     position: relative;
-    background-color: #CEABB1;
+    /*background-color: #CEABB1;*/
+    background-color: #FFF5B2;
 }
 
 .lText{
@@ -102,4 +105,8 @@
     margin-top: 40px;
     font-size: 30px;
     font-weight: bold;
+}
+
+h1{
+    text-align: center;
 }
