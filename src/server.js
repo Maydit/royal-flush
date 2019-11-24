@@ -1151,6 +1151,6 @@ app.get("/", (req, res) => {
 /////////////////////////////////////////////////////////////////////////////
 
 // Puts it on a port
-http.listen(3000, function(){
+http.listen(process.env.PORT || 3000, function(){
   //console.log('Server up on 3000');
 });
