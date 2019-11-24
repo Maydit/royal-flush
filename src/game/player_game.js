@@ -15,6 +15,7 @@ const App = new Vue({
     },
     methods: {
         sendCards() {
+            // Obtains all the user inputted values
             var card1Select = document.getElementById("card1");
             var card1 = card1Select.options[card1Select.selectedIndex].value;
             var suit1Select = document.getElementById("suit1");
@@ -24,6 +25,8 @@ const App = new Vue({
             var suit2Select = document.getElementById("suit2");
             var suit2 = suit2Select.options[suit2Select.selectedIndex].value;
             var cardsStr = card1 + suit1 + card2 + suit2;
+
+            // Sends the cards to the server 
             this.$http.post('http://' + window.location.host + '/sendCards/' + this.code + "/" + cardsStr + "/" + this.userId);
         }
     },

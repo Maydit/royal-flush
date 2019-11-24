@@ -986,6 +986,10 @@ app.get('/game/host_game.js', function(req, res) {
     res.sendFile(__dirname + '/game/host_game.js');
 });
 
+app.get('/game/card_parser.js', function(req, res) {
+    res.sendFile(__dirname + '/game/card_parser.js');
+});
+
 app.get('/game/player_game.html', function(req, res) {
 
     if(req.session.userName != null)
