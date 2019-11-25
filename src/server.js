@@ -362,21 +362,58 @@ app.get("/getHandHistory", (req, res) => {
                 }
             );
         },
-        function getHand(user, callback) {
-            console.log(user);
-            for (var x = 0; x < user.length; x++) {
-                console.log(user[x]);
-                hand_db.findOne({_id: new ObjectId(user[x].toString())},function (err,res) {
-                    if (res) {
-                        var players = res.players;
-                        var cards = res.cards;
-                        var pos = 0;
+        function getHand(user,callback)
+        {
+            //console.log(user);
+            for(var x=0;x<user.length;x++)
+            {
+                //console.log(user[x]);
+                hand_db.findOne({_id: new ObjectId(user[x].toString())},function (err,res)
+                    {
+                        if(res)
+                        {
+                            var players = res.players;
+                            var cards = res.cards;
+                            var pre_flop = res.preflopBets;
+                            var pos = 0;
+                            var played = 0;
 
-                        for (var x = 0; x < players.length; x++) {
-                            if (players[x] == user_id) {
-                                pos = x;
-                                break;
+                            for(var x=0;x<players.length;x++)
+                            {
+                                if(players[x]==user_id)
+                                {
+                                    pos = x;
+                                    break;
+                                }
                             }
+
+                            order = res.positions[pos];
+
+                            for(var x=0;x<pre_flop.length;x++)
+                            {
+                                if(pre_flop[x][0] == order)
+                                {
+                                    if(pre_flop[x][1] == "f" )
+                                    {
+                                        played = 0;
+                                    }
+
+                                    else
+                                    {
+                                        played += 1;
+                                    }
+                                }
+                            }
+
+                            var msg;
+                            if(played > 0) {
+                                msg = "Yes";
+                            } else {
+                                msg = "No";
+                            }
+                            console.log(cards[pos] + " " + msg);
+                        } else {
+                            console.log("No hands found")
                         }
 
                         console.log(cards[pos]);
