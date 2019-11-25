@@ -355,17 +355,25 @@ app.get("/getHandHistory", (req, res) => {
         var hand_db = db.collection("hands");
         var user_id = req.session.userId;
 
+    var test = [];
 
-        async.waterfall([
-            function getUser(callback) {
-                user_db.findOne({_id: new ObjectId(user_id.toString())},function (err,res) {
+    async.waterfall([
+        function getUser(callback){
+
+            user_db.findOne({_id: new ObjectId(user_id.toString())},function (err,res)
+                {
                     callback(null,res.hands)
-                });
-            },
-            function getHand(user,callback) {
-                for (var x = 0;x < user.length; x++) {
-                    hand_db.findOne({_id: new ObjectId(user[x].toString())},function (err,res) {
-                        if (res) {
+                }
+            );
+        },
+        function getHand(user,callback)
+        {
+            async.each(user,function(each_hand,eachCallback){
+
+                hand_db.findOne({_id: new ObjectId(each_hand.toString())},function (err,res)
+                    {
+                        if(res)
+                        {
                             var players = res.players;
                             var cards = res.cards;
                             var pre_flop = res.preflopBets;
@@ -396,17 +404,40 @@ app.get("/getHandHistory", (req, res) => {
                             } else {
                                 msg = "No";
                             }
-                            console.log(cards[pos] + " " + msg);
-                        } else {
+
+
+                            //console.log(cards[pos] + " " + msg);
+                            test.push(cards[pos] + " " + msg);
+
+                        }
+                        else
+                        {
                             console.log("No hands found")
                         }
+
+                        eachCallback();
                     });
-                }
-            },
-        ],
-        function(err2, casts) {
-            if (err2) {
+
+            }, function(err,result)
+            {
+                callback(null);
+            })
+
+        },
+
+        ], function(err2,casts){
+            if(err2)
+            {
+
                 console.log("ERROR2!!")
+            }
+            else
+            {
+                console.log("Worked!");
+                for(var x=0;x<test.length;x++)
+                {
+                    console.log(test[x]);
+                }
             }
         });
     });
