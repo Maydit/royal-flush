@@ -354,6 +354,8 @@ app.get("/getHandHistory", (req, res) => {
     var user_id = req.session.userId;
 
 
+    var test = [];
+
     async.waterfall([
         function getUser(callback){
 
@@ -365,11 +367,9 @@ app.get("/getHandHistory", (req, res) => {
         },
         function getHand(user,callback)
         {
-            //console.log(user);
-            for(var x=0;x<user.length;x++)
-            {
-                //console.log(user[x]);
-                hand_db.findOne({_id: new ObjectId(user[x].toString())},function (err,res)
+            async.each(user,function(each_hand,eachCallback){
+
+                hand_db.findOne({_id: new ObjectId(each_hand.toString())},function (err,res)
                     {
                         if(res)
                         {
@@ -417,23 +417,37 @@ app.get("/getHandHistory", (req, res) => {
                                 msg = "No";
                             }
 
-                            console.log(cards[pos] + " " + msg);
-
+                            //console.log(cards[pos] + " " + msg);
+                            test.push(cards[pos] + " " + msg);
 
                         }
                         else
                         {
                             console.log("No hands found")
                         }
-                    }
-                );
-            }
+
+                        eachCallback();
+                    });
+
+            }, function(err,result)
+            {
+                callback(null);
+            })
+
         },
 
         ], function(err2,casts){
             if(err2)
             {
                 console.log("ERROR2!!")
+            }
+            else
+            {
+                console.log("Worked!");
+                for(var x=0;x<test.length;x++)
+                {
+                    console.log(test[x]);
+                }
             }
         });
 
