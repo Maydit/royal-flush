@@ -350,30 +350,22 @@ class Hand {
 
 app.get("/getHandHistory", (req, res) => {
     mongoose.connect(url, function(err,db) {
-
         var user_db = db.collection("users");
         var hand_db = db.collection("hands");
         var user_id = req.session.userId;
 
-    var test = [];
+        var test = [];
 
-    async.waterfall([
-        function getUser(callback){
-
-            user_db.findOne({_id: new ObjectId(user_id.toString())},function (err,res)
-                {
+        async.waterfall([
+            function getUser(callback) {
+                user_db.findOne({_id: new ObjectId(user_id.toString())},function (err,res) {
                     callback(null,res.hands)
-                }
-            );
-        },
-        function getHand(user,callback)
-        {
-            async.each(user,function(each_hand,eachCallback){
-
-                hand_db.findOne({_id: new ObjectId(each_hand.toString())},function (err,res)
-                    {
-                        if(res)
-                        {
+                });
+            },
+            function getHand(user,callback) {
+                async.each(user,function(each_hand,eachCallback) {
+                    hand_db.findOne({_id: new ObjectId(each_hand.toString())},function (err,res) {
+                        if (res) {
                             var players = res.players;
                             var cards = res.cards;
                             var pre_flop = res.preflopBets;
@@ -405,39 +397,24 @@ app.get("/getHandHistory", (req, res) => {
                                 msg = "No";
                             }
 
-
-                            //console.log(cards[pos] + " " + msg);
                             test.push(cards[pos] + " " + msg);
-
-                        }
-                        else
-                        {
+                        } else {
                             console.log("No hands found")
                         }
 
                         eachCallback();
                     });
-
-            }, function(err,result)
-            {
-                callback(null);
-            })
-
-        },
-
-        ], function(err2,casts){
-            if(err2)
-            {
-
+                }, function(err,result) {
+                    callback(null);
+                });
+            },
+        ],
+        function(err2,casts){
+            if(err2) {
                 console.log("ERROR2!!")
-            }
-            else
-            {
+            } else {
                 console.log("Worked!");
-                for(var x=0;x<test.length;x++)
-                {
-                    console.log(test[x]);
-                }
+                res.send(test);
             }
         });
     });
@@ -989,6 +966,10 @@ app.get('/game/join.css', function(req, res) {
 
 app.get('/stats/personal_stats.js', function(req, res) {
     res.sendFile(__dirname + '/stats/personal_stats.js');
+});
+
+app.get('/stats/hand_history.js', function(req, res) {
+    res.sendFile(__dirname + '/stats/hand_history.js');
 });
 
 app.get('/stats/stats_home.html', function(req, res) {
