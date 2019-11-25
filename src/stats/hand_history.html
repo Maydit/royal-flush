@@ -1,85 +1,69 @@
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel= "stylesheet" type="text/css" href = "hand_history.css" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Fugaz+One&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.css">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
 
-<!--     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-    <title>Hand History</title>
-  </head>
+        <link rel= "stylesheet" type="text/css" href = "hand_history.css" />
+        <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Fugaz+One&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 
-  <body style = "background-color: #b8cecd">
-    <div class = "header">
-        <div class = "jumbotron-fluid">
-            <h1>Royal Flush</h1>
-            <p>"Stats don't bluff"</p>
-            <form method="post" action="/logout">
-              <button type="submit" class="btn btn-danger" id = "logoutButton">Logout</button>
-            </form>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 
+        <title>Hand History</title>
+    </head>
 
-            <form action="/getStats" method="get" id="fileForm" role="form">
+    <body style = "background-color: #b8cecd">
+        <div class = "header">
+            <div class = "jumbotron-fluid">
+                <h1>Royal Flush</h1>
+                <p>"Stats don't bluff"</p>
+                <form method="post" action="/logout">
+                    <button type="submit" class="btn btn-danger" id = "logoutButton">Logout</button>
+                </form>
 
-            <div class="form-group" style = "margin-top: 20px;">
-                <input class="btn btn-success" type="submit" name="submit_reg" value="Register" id="submit_reg" >
             </div>
-            </form>
-
-
-
         </div>
-    </div>
 
-    <div class = "mainTable">
-        <table class="table">
+        <div id="app" class = "mainTable">
+            <table class="table">
 
-          <thead>
-            <tr>
-              <th scope="col">Card 1</th>
-              <th scope="col">Card 2</th>
-              <th scope="col">Play?</th>
-            </tr>
-          </thead>
+                <thead>
+                    <tr>
+                        <th scope="col">Card 1</th>
+                        <th scope="col">Card 2</th>
+                        <th scope="col">Play?</th>
+                    </tr>
+                </thead>
 
-          <tbody class = "columns">
-            <tr>
-              <td>🂡</td>
-              <td>🂵</td>
-              <td>Yes</td>
-            </tr>
-            <tr>
-              <td>🂡</td>
-              <td>🂵</td>
-              <td>No</td>
-            </tr>
-            <tr>
-              <td>🂡</td>
-              <td>🂵</td>
-              <td>Yes</td>
-            </tr>
-          </tbody>
+                <tbody class = "columns">
+                    <tr>
+                        <td>🂡</td>
+                        <td>🂵</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>🂡</td>
+                        <td>🂵</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td>🂡</td>
+                        <td>🂵</td>
+                        <td>Yes</td>
+                    </tr>
+                </tbody>
 
-        </table>
-    </div>
+            </table>
+        </div>
 
+        <script src="hand_history.js"></script>
 
-
-
-
-
-  </body>
+    </body>
 </html>
