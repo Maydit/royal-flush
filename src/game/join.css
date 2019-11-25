@@ -17,6 +17,11 @@
     padding-top: 15px;
 }
 
+#title a{
+    text-decoration: none;
+    color: white;
+}
+
 .header{
     text-align: center;
    /* background: #1abc9c;*/
