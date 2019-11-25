@@ -11,6 +11,10 @@
     float: right;
 }
 
+#title a{
+    text-decoration: none;
+    color: white;
+}
 
 
 .jumbotron-fluid p{
