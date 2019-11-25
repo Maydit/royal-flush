@@ -1,6 +1,7 @@
 var express = require("express");
 var app = express();
 var http = require('http').Server(app);
+
 var io = require('socket.io')(http);
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
@@ -8,10 +9,11 @@ var session = require('express-session');
 var sjcl = require('sjcl');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
 var async = require("async");
+
 var poker = require('./game/pokerCalculations.js');
 
+// Database connection requirements
 var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectID;
 var url = "mongodb+srv://admin:adminpassword@cluster0-f0kkf.mongodb.net/test?retryWrites=true";
@@ -347,118 +349,82 @@ class Hand {
 // Game Stats
 
 app.get("/getHandHistory", (req, res) => {
-    mongoose.connect(url, function(err,db){
+    mongoose.connect(url, function(err,db) {
 
-    var user_db = db.collection("users");
-    var hand_db = db.collection("hands");
-    var user_id = req.session.userId;
+        var user_db = db.collection("users");
+        var hand_db = db.collection("hands");
+        var user_id = req.session.userId;
 
-
-    async.waterfall([
-        function getUser(callback){
-
-            user_db.findOne({_id: new ObjectId(user_id.toString())},function (err,res)
-                {
+        async.waterfall([
+        function getUser(callback) {
+            user_db.findOne({_id: new ObjectId(user_id.toString())},function (err,res) {
                     callback(null,res.hands)
                 }
             );
         },
-        function getHand(user,callback)
-        {
+        function getHand(user, callback) {
             console.log(user);
-            for(var x=0;x<user.length;x++)
-            {
+            for (var x = 0; x < user.length; x++) {
                 console.log(user[x]);
-                hand_db.findOne({_id: new ObjectId(user[x].toString())},function (err,res)
-                    {
-                        if(res)
-                        {
-                            var players = res.players;
-                            var cards = res.cards;
-                            var pos = 0;
+                hand_db.findOne({_id: new ObjectId(user[x].toString())},function (err,res) {
+                    if (res) {
+                        var players = res.players;
+                        var cards = res.cards;
+                        var pos = 0;
 
-                            for(var x=0;x<players.length;x++)
-                            {
-                                if(players[x]==user_id)
-                                {
-                                    pos = x;
-                                    break;
-                                }
+                        for (var x = 0; x < players.length; x++) {
+                            if (players[x] == user_id) {
+                                pos = x;
+                                break;
                             }
-                            // console.log(pos);
-                            console.log(cards[pos]);
                         }
-                        else
-                        {
-                            console.log("No hands found")
-                        }
+
+                        console.log(cards[pos]);
+                    } else {
+                        console.log("No hands found")
                     }
-                );
+                });
             }
         },
-
-        ], function(err2,casts){
-            if(err2)
-            {
+        ], function(err2, casts) {
+            if(err2) {
                 console.log("ERROR2!!")
             }
         });
-
     });
-
-
 });
-
-
-
-
-
-
-
 
 //getStats
 app.get("/getStats", (req, res) => {
+    mongoose.connect(url, function(err,db) {
 
+        var user_db = db.collection("users");
+        var hand_db = db.collection("hands");
+        var user_id = req.session.userId;
 
+        var pre_flop_fold = 0;
+        var pre_flop_match = 0;
+        var pre_flop_check = 0;
+        var pre_flop_raise = 0;
+        var pre_flop_total = 0;
 
-    mongoose.connect(url, function(err,db){
+        var total_raise = 0;
+        var total_actions = 0;
 
-    var user_db = db.collection("users");
-    var hand_db = db.collection("hands");
-    var user_id = req.session.userId;
+        var total_sd = 0;
+        var won_sd = 0;
 
-
-    var pre_flop_fold = 0;
-    var pre_flop_match = 0;
-    var pre_flop_check = 0;
-    var pre_flop_raise = 0;
-    var pre_flop_total = 0;
-
-
-    var total_raise = 0;
-    var total_actions = 0;
-
-    var total_sd = 0;
-    var won_sd = 0;
-
-
-    async.waterfall([
-        function getUser(callback){
-
-            user_db.findOne({_id: new ObjectId(user_id.toString())},function (err,res)
-                {
-                    callback(null,res.hands)
-                }
-            );
+        async.waterfall([
+        function getUser(callback) {
+            user_db.findOne({_id: new ObjectId(user_id.toString())},function (err, res) {
+                callback(null,res.hands)
+            });
         },
-        function getHand(user,callback)
-        {
+        function getHand(user,callback) {
             console.log(user);
             async.each(user, function(each_hand,eachCallback){
-                hand_db.findOne({_id: new ObjectId(each_hand.toString())},function (err,res)
-                {
-                    if(res)
-                    {
+                hand_db.findOne({_id: new ObjectId(each_hand.toString())},function (err,res) {
+                    if (res) {
                         var players = res.players;
                         var cards = res.cards;
 
@@ -472,10 +438,8 @@ app.get("/getStats", (req, res) => {
 
                         var winner = res.winner;
 
-                        for(var x=0;x<players.length;x++)
-                        {
-                            if(players[x]==user_id)
-                            {
+                        for (var x = 0; x < players.length; x++) {
+                            if(players[x] == user_id) {
                                 pos = x;
                                 break;
                             }
@@ -484,191 +448,146 @@ app.get("/getStats", (req, res) => {
                         order = res.positions[pos];
                         console.log(cards[pos]);
 
-
                         //pre-flop action
-                        for(var x=0;x<pre_flop.length;x++)
-                        {
-                            if(pre_flop[x][0]==order)
-                            {
-                                if(pre_flop[x][1]=="m")
-                                {
+                        for (var x = 0; x < pre_flop.length; x++) {
+                            if (pre_flop[x][0] == order) {
+                                if (pre_flop[x][1] == "m") {
                                     pre_flop_match += 1;
                                 }
-                                if(pre_flop[x][1]=="c")
-                                {
+                                if (pre_flop[x][1] == "c") {
                                     pre_flop_check += 1;
                                 }
-                                if(pre_flop[x][1]=="r")
-                                {
+                                if (pre_flop[x][1]=="r") {
                                     pre_flop_raise += 1;
                                     total_raise += 1;
                                 }
-                                if(pre_flop[x][1]=="f")
-                                {
+                                if (pre_flop[x][1] == "f") {
                                     pre_flop_fold += 1;
                                 }
 
                                 pre_flop_total += 1;
                                 total_actions += 1;
-
                             }
                         }
-
 
                         //flop action
-                        for(var x=0;x<flop.length;x++)
-                        {
-                            if(flop[x][0]==order)
-                            {
-
-                                if(flop[x][1]=="r")
-                                {
+                        for (var x = 0; x < flop.length; x++) {
+                            if (flop[x][0] == order) {
+                                if (flop[x][1] == "r") {
                                     total_raise += 1;
                                 }
                                 total_actions += 1;
                             }
                         }
-
 
                         //turn action
-                        for(var x=0;x<turn.length;x++)
-                        {
-                            if(turn[x][0]==order)
-                            {
-
-                                if(turn[x][1]=="r")
-                                {
+                        for(var x = 0; x < turn.length; x++) {
+                            if (turn[x][0] == order) {
+                                if (turn[x][1] == "r") {
                                     total_raise += 1;
                                 }
                                 total_actions += 1;
                             }
                         }
-
 
                         var sd_temp = 0;
 
                         //river action
-                        for(var x=0;x<river.length;x++)
-                        {
-                            if(river[x][0]==order)
-                            {
-                                if(river[x][1]!="f")
-                                {
+                        for(var x = 0; x < river.length; x++) {
+                            if (river[x][0] == order) {
+                                if (river[x][1] != "f") {
                                     sd_temp += 1;
                                 }
 
-                                if(river[x][1]=="f")
-                                {
+                                if (river[x][1] == "f") {
                                     sd_temp = 0;
                                 }
 
-
-                                if(river[x][1]=="r")
-                                {
+                                if (river[x][1] == "r") {
                                     total_raise += 1;
                                 }
                                 total_actions += 1;
                             }
                         }
 
-                        if(sd_temp>0)
-                        {
+                        if (sd_temp > 0) {
                             total_sd += 1;
-                            if(winner == pos)
-                            {
+                            if (winner == pos) {
                                 won_sd += 1;
                             }
                         }
-
-
-                    }
-                    else
-                    {
-                        console.log("No hands found")
+                    } else {
+                        console.log("No hands found");
                     }
 
                     eachCallback();
                 });
-            },function(err,result)
-            {
+            }, function(err,result) {
                 callback(null);
             })
-
         },
-
-        ], function(err2,casts){
-            if(err2)
-            {
-                console.log("ERROR2!!")
-            }
-            else
-            {
+        ], function(err2,casts) {
+            if (err2) {
+                console.log("ERROR2!!");
+            } else {
                 var returnStr = "";
-
 
                 //VPIP
                 returnStr += Math.round(((pre_flop_match + pre_flop_raise)/pre_flop_total) * 100);
                 returnStr += ",";
 
                 //PFR
-                returnStr += Math.round((pre_flop_raise/pre_flop_total).toFixed(2) * 100);
+                returnStr += Math.round((pre_flop_raise/pre_flop_total) * 100);
                 returnStr += ",";
 
                 //AGG
-                returnStr += Math.round((total_raise/total_actions).toFixed(2) * 100);
+                returnStr += Math.round((total_raise/total_actions) * 100);
                 returnStr += ",";
 
                 //PSW
-                returnStr += Math.round((won_sd/total_sd).toFixed(2) * 100);
+                returnStr += Math.round((won_sd/total_sd) * 100);
 
                 res.send(returnStr);
-
             }
         });
-
     });
-
-
 });
-
-
-
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // Game backend
 
+function deepCopyArray(oldArr, newArr) {
+    for (i = 0; i < oldArr.length; i++) {
+        newArr.push(oldArr[i]);
+    }
+}
+
+// Gets name of the logged in user
 app.get("/getName", (req, res) => {
     res.send(req.session.userName);
 });
 
+// Gets id of the logged in user
 app.get("/getUserId", (req, res) => {
     res.send(req.session.userId);
 });
 
-app.get("/getCurrentPlayer/:code", (req, res) => {
-    var code = req.params.code;
-
-    var hand = rooms.get(code);
-    for (var i = 0; i < hand.players.length; i++) {
-        if (hand.positions[i] == 0) {
-            res.send(hand.names[i]);
-        }
-    }
-});
-
+// Returns all positions to the frontend
 app.get("/getPositions/:code", (req, res) => {
     var code = req.params.code;
     var hand = rooms.get(code);
     res.send(hand.positions);
 });
 
+// Returns all names to the frontend
 app.get("/getNames/:code", (req, res) => {
     var code = req.params.code;
     var hand = rooms.get(code);
     res.send(hand.names);
 });
 
+// Players invoke this when they submit cards
 app.post("/sendCards/:code/:cardsStr/:userId", (req, res) => {
     // Parse inputs
     var code = req.params.code;
@@ -686,6 +605,7 @@ app.post("/sendCards/:code/:cardsStr/:userId", (req, res) => {
     res.send(true);
 });
 
+// Add a bet to the hand
 app.post("/addBet/:code/:bet/:phase", (req, res) => {
     // Phase legend:
     //      0: preflop
@@ -708,10 +628,10 @@ app.post("/addBet/:code/:bet/:phase", (req, res) => {
     } else {
         hand.riverBets.push(bet);
     }
-    //console.log(hand);
     res.send(true);
 });
 
+// For pushing the hand to the database
 app.get("/recordHand/:code/:commCardsStr/:notFolded/:totalPotAmount", (req, res) => {
     var code = req.params.code;
     var hand = rooms.get(code);
@@ -753,65 +673,41 @@ app.get("/recordHand/:code/:commCardsStr/:notFolded/:totalPotAmount", (req, res)
         pot: 0
     };
 
-    for (i = 0; i < hand.players.length; i++) {
-        dupHand.players.push(hand.players[i]);
-    }
-    for (i = 0; i < hand.names.length; i++) {
-        dupHand.names.push(hand.names[i]);
-    }
-    for (i = 0; i < hand.stacks.length; i++) {
-        dupHand.stacks.push(hand.stacks[i]);
-    }
-    for (i = 0; i < hand.cards.length; i++) {
-        dupHand.cards.push(hand.cards[i]);
-    }
-    for (i = 0; i < hand.positions.length; i++) {
-        dupHand.positions.push(hand.positions[i]);
-    }
-    for (i = 0; i < hand.preflopBets.length; i++) {
-        dupHand.preflopBets.push(hand.preflopBets[i]);
-    }
-    for (i = 0; i < hand.flopBets.length; i++) {
-        dupHand.flopBets.push(hand.flopBets[i]);
-    }
-    for (i = 0; i < hand.turnBets.length; i++) {
-        dupHand.turnBets.push(hand.turnBets[i]);
-    }
-    for (i = 0; i < hand.riverBets.length; i++) {
-        dupHand.riverBets.push(hand.riverBets[i]);
-    }
+    // Create a deep copy of the current hand
+    deepCopyArray(hand.players, dupHand.players);
+    deepCopyArray(hand.names, dupHand.names);
+    deepCopyArray(hand.stacks, dupHand.stacks);
+    deepCopyArray(hand.cards, dupHand.cards);
+    deepCopyArray(hand.positions, dupHand.positions);
+    deepCopyArray(hand.preflopBets, dupHand.preflopBets);
+    deepCopyArray(hand.flopBets, dupHand.flopBets);
+    deepCopyArray(hand.turnBets, dupHand.turnBets);
+    deepCopyArray(hand.riverBets, dupHand.riverBets);
     dupHand.commCards = hand.commCards;
     dupHand.winner = hand.winner;
     dupHand.pot = hand.pot;
 
-
+    // Send to database
     MongoClient.connect(url, { useNewUrlParser: true }, (error, client) => {
         if(error) {
             throw error;
         }
         var hand_id;
-        // var database = client.db("rawData");
         var database = client.db("test");
         database.collection("hands").insertOne(dupHand, function(err, res) {
             if (err) {
                 throw err;
             } else {
-
                 hand_id = res.insertedId;
 
                 var user_db = client.db("test");
-                for (i = 0; i<hand.players.length ;i++)
-                {
+                for (i = 0; i < hand.players.length; i++) {
                     var query =  {_id : new ObjectId(hand.players[i].toString()) };
                     var new_val = {$push: {hands:hand_id}};
 
-
-
-                     user_db.collection("users").updateOne(query, new_val, function(err, res)
-                     {
-                         if (err) throw err;
-
-                     });
+                    user_db.collection("users").updateOne(query, new_val, function(err, res) {
+                        if (err) throw err;
+                    });
                 }
             }
         });
@@ -820,7 +716,6 @@ app.get("/recordHand/:code/:commCardsStr/:notFolded/:totalPotAmount", (req, res)
     // Switch positions
     hand.positions.unshift(hand.positions[hand.positions.length - 1]);
     hand.positions.pop();
-    //console.log(hand.positions);
 
     // Reset variables
     for (i = 0; i < hand.players.length; i++) {
@@ -832,9 +727,11 @@ app.get("/recordHand/:code/:commCardsStr/:notFolded/:totalPotAmount", (req, res)
     hand.riverBets = [];
     hand.commCards = "";
 
+    // Send the winner name, so that the frontend can update stacks
     res.send(hand.winner.toString());
 });
 
+// Subtracts an amount from a person's stack
 app.post("/updateStacks/:code/:pos/:amount", (req, res) => {
     var code = req.params.code;
     var hand = rooms.get(code);
@@ -913,7 +810,6 @@ io.on('connection', function(socket) {
     socket.on('gameJoin', function(code) {
         socket.room = code;
         socket.join(code);
-        //console.log("In game: joined room " + code);
     });
 });
 
@@ -930,13 +826,9 @@ app.get("/index.css", (req, res) => {
 });
 
 app.get("/login/login.html", (req, res) => {
-
-    if(req.session.userName)
-    {
+    if (req.session.userName) {
         res.redirect(req.protocol + '://' + req.get('host') + '/game/pick_action.html');
-    }
-    else
-    {
+    } else {
         res.sendFile(__dirname + "/login/login.html");
     }
 });
@@ -954,13 +846,9 @@ app.get("/assets/cards.webp", (req, res) => {
 });
 
 app.get("/login/sign_in.html", (req, res) => {
-
-    if(req.session.userName)
-    {
+    if (req.session.userName) {
         res.redirect(req.protocol + '://' + req.get('host') + '/game/pick_action.html');
-    }
-    else
-    {
+    } else {
         res.sendFile(__dirname + "/login/sign_in.html");
     }
 });
@@ -970,13 +858,9 @@ app.get("/login/sign_in.css", (req, res) => {
 });
 
 app.get('/game/pick_action.html', function(req, res) {
-
-    if(req.session.userName != null)
-    {
+    if (req.session.userName != null) {
         res.sendFile(__dirname + '/game/pick_action.html');
-    }
-    else
-    {
+    } else {
         res.redirect(req.protocol + '://' + req.get('host'));
     }
 });
@@ -998,16 +882,11 @@ app.get('/game/card_parser.js', function(req, res) {
 });
 
 app.get('/game/player_game.html', function(req, res) {
-
-    if(req.session.userName != null)
-    {
+    if(req.session.userName != null) {
         res.sendFile(__dirname + '/game/player_game.html');
-    }
-    else
-    {
+    } else {
         res.redirect(req.protocol + '://' + req.get('host'));
     }
-
 });
 
 app.get('/game/player_game.css', function(req, res) {
@@ -1015,13 +894,9 @@ app.get('/game/player_game.css', function(req, res) {
 });
 
 app.get('/game/host_game.html', function(req, res) {
-
-    if(req.session.userName != null)
-    {
+    if (req.session.userName != null) {
         res.sendFile(__dirname + '/game/host_game.html');
-    }
-    else
-    {
+    } else {
         res.redirect(req.protocol + '://' + req.get('host'));
     }
 });
@@ -1039,16 +914,11 @@ app.get('/game/join.js', function(req, res) {
 });
 
 app.get('/game/host.html', function(req, res) {
-
-    if(req.session.userName != null)
-    {
+    if (req.session.userName != null) {
         res.sendFile(__dirname + '/game/host.html');
-    }
-    else
-    {
+    } else {
         res.redirect(req.protocol + '://' + req.get('host'));
     }
-
 });
 
 app.get('/game/host.css', function(req, res) {
@@ -1056,13 +926,9 @@ app.get('/game/host.css', function(req, res) {
 });
 
 app.get('/game/join.html', function(req, res) {
-
-    if(req.session.userName != null)
-    {
+    if (req.session.userName != null) {
         res.sendFile(__dirname + '/game/join.html');
-    }
-    else
-    {
+    } else {
         res.redirect(req.protocol + '://' + req.get('host'));
     }
 });
@@ -1076,14 +942,9 @@ app.get('/stats/personal_stats.js', function(req, res) {
 });
 
 app.get('/stats/stats_home.html', function(req, res) {
-
-
-    if(req.session.userName != null)
-    {
+    if (req.session.userName != null) {
         res.sendFile(__dirname + '/stats/stats_home.html');
-    }
-    else
-    {
+    } else {
         res.redirect(req.protocol + '://' + req.get('host'));
     }
 });
@@ -1093,13 +954,9 @@ app.get('/stats/stats_home.css', function(req, res) {
 });
 
 app.get('/stats/hand_history.html', function(req, res) {
-
-    if(req.session.userName != null)
-    {
+    if (req.session.userName != null) {
         res.sendFile(__dirname + '/stats/hand_history.html');
-    }
-    else
-    {
+    } else {
         res.redirect(req.protocol + '://' + req.get('host'));
     }
 });
@@ -1109,15 +966,9 @@ app.get('/stats/hand_history.css', function(req, res) {
 });
 
 app.get('/stats/personal_stats.html', function(req, res) {
-
-
-
-    if(req.session.userName != null)
-    {
+    if (req.session.userName != null) {
         res.sendFile(__dirname + '/stats/personal_stats.html');
-    }
-    else
-    {
+    } else {
         res.redirect(req.protocol + '://' + req.get('host'));
     }
 });
@@ -1127,15 +978,9 @@ app.get('/stats/personal_stats.css', function(req, res) {
 });
 
 app.get('/stats/global_stats.html', function(req, res) {
-
-
-
-    if(req.session.userName != null)
-    {
+    if (req.session.userName != null) {
         res.sendFile(__dirname + '/stats/global_stats.html');
-    }
-    else
-    {
+    } else {
         res.redirect(req.protocol + '://' + req.get('host'));
     }
 });
@@ -1144,19 +989,12 @@ app.get('/stats/global_stats.css', function(req, res) {
     res.sendFile(__dirname + '/stats/global_stats.css');
 });
 
-
-
-
 app.get("/", (req, res) => {
-    if(req.session.userName)
-    {
+    if (req.session.userName) {
         res.redirect(req.protocol + '://' + req.get('host') + '/game/pick_action.html');
-    }
-    else
-    {
+    } else {
         res.sendFile(__dirname + "/index.html");
     }
-
 });
 
 /////////////////////////////////////////////////////////////////////////////
