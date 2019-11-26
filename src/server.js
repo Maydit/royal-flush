@@ -47,23 +47,7 @@ app.use(session({
   }
 }));
 
-// This middleware will check if user's cookie is still saved in browser and user is not set, then automatically log the user out.
-// app.use((req, res, next) => {
-//     if (req.cookies.user_sid && !req.session.user) {
-//         res.clearCookie('user_sid');
-//     }
-//     next();
-// });
 
-// middleware function to check for logged-in users
-// not used
-// var sessionChecker = (req, res, next) => {
-//     if (req.session.user) {
-//         res.redirect(req.protocol + '://' + req.get('host') + '/game/pick_action.html');
-//     } else {
-//         next();
-//     }
-// };
 
 ////////////////////////////////////////////////////////////////////////////////
 // Login and signup
@@ -348,6 +332,7 @@ class Hand {
 ////////////////////////////////////////////////////////////////////////////////
 // Game Stats
 
+//Displays Hand History 
 app.get("/getHandHistory", (req, res) => {
     mongoose.connect(url, function(err,db) {
         var user_db = db.collection("users");
