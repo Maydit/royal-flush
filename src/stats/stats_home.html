@@ -1,60 +1,60 @@
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel= "stylesheet" type="text/css" href = "stats_home.css" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Fugaz+One&display=swap" rel="stylesheet">
-    <title>Stats Home</title>
-  </head>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
 
-  <body style = "background-color: #b8cecd">
-    <div class = "header">
-        <div class = "jumbotron-fluid">
-            <h1 id = "title">  <a href = "../game/pick_action.html">Royal Flush</a>  </h1>
-            <p>"Stats don't bluff"</p>
-            <form method="post" action="/logout">
-                <button type="submit" class="btn btn-danger" id = "logoutButton">Logout</button>
-            </form>
+        <link rel= "stylesheet" type="text/css" href = "stats_home.css" />
+        <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Fugaz+One&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+        <title>Stats Home</title>
+    </head>
+
+    <body style = "background-color: #b8cecd">
+        <div class = "header">
+            <div class = "jumbotron-fluid">
+                <h1 id = "title">  <a href = "../game/pick_action.html">Royal Flush</a>  </h1>
+                <p>"Stats don't bluff"</p>
+                <form method="post" action="/logout">
+                    <button type="submit" class="btn btn-danger" id = "logoutButton">Logout</button>
+                </form>
+            </div>
         </div>
-    </div>
-    <div class="container" >
-        <div class="row">
-            <div class="col-md-6">
-                <div class = "rightText">
-                    <h1>Select an Option</h1>
-                    <div class = "handHistory">
-                        <a href="hand_history.html"> <button type="button" class="btn btn-primary handHistoryButton">View Hand History</button></a>
-                    </div>
-                    <div class = "personalStats">
-                         <a href="personal_stats.html"> <button type="button" class="btn btn-primary personalStatsButton">View Personal Stats</button></a>
-                    </div>
 
+        <div class="container" >
+            <div class="row">
+                <div class="col-md-6">
+                    <div class = "rightText">
+                        <h1>Select an Option</h1>
+
+                        <div class = "handHistory">
+                            <a href="hand_history.html"> <button type="button" class="btn btn-primary handHistoryButton">View Hand History</button></a>
+                        </div>
+
+                        <div class = "personalStats">
+                            <a href="personal_stats.html"> <button type="button" class="btn btn-primary personalStatsButton">View Personal Stats</button></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class = "info">
+                    <h1>Info</h1>
+
+                    <h2>Hand History</h2>
+                    <p>Viewing your hand history allows you to see all previous hands you have played as well as the outcome of those hands!</p>
+
+                    <h2>Personal Stats</h2>
+                    <p>This option allows you to see all of your personal stats for all the games you have played using Royal Flush!</p>
+
+                    <p class = "link"><a href="https://github.com/Maydit/royal-flush">Check out our Github!</a></p>
                 </div>
             </div>
-            <div class = "info">
-                <h1>Info</h1>
-
-                <h2>Hand History</h2>
-                <p>Viewing your hand history allows you to see all previous hands you have played as well as the outcome of those hands!</p>
-
-                <h2>Personal Stats</h2>
-                <p>This option allows you to see all of your personal stats for all the games you have played using Royal Flush!</p>
-
-
-                <p class = "link"><a href="https://github.com/Maydit/royal-flush">Check out our Github!</a></p>
-            </div>
         </div>
-    </div>
-  </body>
+    </body>
 </html>

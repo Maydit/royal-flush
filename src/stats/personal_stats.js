@@ -2,10 +2,10 @@ const App = new Vue({
     el: '#app',
     beforeMount() {
         this.$http.get('http://' + window.location.host + '/getStats').then(response => {
-            console.log(response);
             var statsArr = response.body.split(",");
-            console.log(statsArr);
             document.getElementById("vpip").innerHTML = statsArr[0];
+
+            // Formats the percentages
             if (statsArr[0].charAt(0) != 'N') {
                 document.getElementById("vpip").innerHTML += "%";
             }
