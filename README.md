@@ -10,7 +10,7 @@ Live at [royalflush.herokuapp.com](royalflush.herokuapp.com)
 2. Clone this repository to your local machine.
 3. Open up the node terminal, and from that terminal go to the new royal-flush directory that was just created.
 4. Run the following command from the royal-flush directory (this only needs to be performed once):
->>`npm install`
+>`npm install`
 5. Everytime you would like to start the server from the royal-flush directory, run the the following command:
->>`node src/server.js`
+>`node src/server.js`
 6. Once the server is running, open up your web browser and put localhost:3000 as the URL.
