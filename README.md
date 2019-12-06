@@ -7,7 +7,8 @@ Live at [royalflush.herokuapp.com](royalflush.herokuapp.com)
 # How to Run Locally
 
 1. Install Node.js and npm by going to the [Node.js download page](https://nodejs.org/en/download/) and picking the installer that matches your operating system.
-2. Clone this repository to your local machine.
+2. Clone this repository to your local machine. To do this, open up the Git terminal and go to the directory you would like the project to reside in. Once you are there, run the following command:
+> `git clone https://github.com/Maydit/royal-flush.git`
 3. Open up the node terminal, and from that terminal go to the new royal-flush directory that was just created.
 4. Run the following command from the royal-flush directory (this only needs to be performed once):
 >`npm install`
