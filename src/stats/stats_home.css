@@ -1,37 +1,37 @@
-.jumbotron-fluid h1{
+.jumbotron-fluid h1 {
     text-align: center;
     font-weight: bold;
     font-size: 50px;
     font-family: 'Fugaz One', cursive;
 }
 
-.jumbotron-fluid p{
+.jumbotron-fluid p {
     text-align: center;
     font-size: 20px;
     font-style: italic;
     font-family: 'Nunito', sans-serif;
 }
 
-#logoutButton{
+#logoutButton {
     margin-top: 10px;
     margin-right: 5px;
     float: right;
 }
 
-#title a{
+#title a {
     text-decoration: none;
     color: white;
 }
 
-.header h1{
+.header h1 {
     padding-top: 15px;
 }
 
-.container{
+.container {
     font-family: 'Nunito', sans-serif;
 }
 
-.header{
+.header {
     text-align: center;
    /* background: #1abc9c;*/
     background: #7f99b1;
@@ -41,41 +41,40 @@
     height: 120px;
 }
 
-.handHistoryButton{
+.handHistoryButton {
     width: 300px;
     height: 75px;
 }
 
-.handHistory{
+.handHistory {
     margin-bottom: 75px;
     margin-top: 75px;
 }
 
-.rightText{
+.rightText {
     text-align: center;
     font-family: 'Nunito', sans-serif;
     margin-bottom: 100px;
 }
 
-.personalStatsButton
-{
+.personalStatsButton {
     width: 300px;
     height: 75px;
 
 }
 
-.personalStats{
+.personalStats {
     margin-bottom: 75px;
 }
 
-.globalStatsButton{
+.globalStatsButton {
     width: 300px;
     height: 75px;
     font-size: 5em;
     text-align: center;
 }
 
-.info h1{
+.info h1 {
     margin-bottom: 40px;
     text-align: center;
     border-bottom: thin solid #ccc;
@@ -83,7 +82,7 @@
     font-weight: bold;
 }
 
-.rightText h1{
+.rightText h1 {
     border-bottom: thin solid #ccc;
     border-radius: 4px;
     text-align: center;

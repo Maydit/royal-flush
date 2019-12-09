@@ -1,149 +1,149 @@
-function displayCC(id, targetId){
+function displayCC(id, targetId) {
     var value = document.getElementById(id).value.toUpperCase();
     document.getElementById(targetId).innerHTML = convertToUni(value);
 }
 
 // Converts a string to a unicode card
 function convertToUni(value) {
-    if(value == 'AS'){
+    if (value == 'AS') {
         return "🂡";
-    } else if(value == 'AH'){
+    } else if (value == 'AH') {
         return "🂱";
-    } else if(value == 'AD'){
+    } else if (value == 'AD') {
         return "🃁";
-    } else if(value == 'AC'){
+    } else if (value == 'AC') {
         return "🃑";
     }
 
 
-    else if(value == '2S'){
+    else if (value == '2S') {
         return "🂢";
-    } else if(value == '2H'){
+    } else if (value == '2H') {
         return "🂲";
-    } else if(value == '2D'){
+    } else if (value == '2D') {
         return "🃂";
-    } else if(value == '2C'){
+    } else if (value == '2C') {
         return "🃒";
     }
 
 
-    else if(value == '3S'){
+    else if (value == '3S') {
         return "🂣";
-    } else if(value == '3H'){
+    } else if (value == '3H') {
         return "🂳";
-    } else if(value == '3D'){
+    } else if (value == '3D') {
         return "🃃";
-    } else if(value == '3C'){
+    } else if (value == '3C') {
         return "🃓";
     }
 
 
-    else if(value == '4S'){
+    else if (value == '4S') {
         return "🂤";
-    } else if(value == '4H'){
+    } else if (value == '4H') {
         return "🂴";
-    } else if(value == '4D'){
+    } else if (value == '4D') {
         return "🃄";
-    } else if(value == '4C'){
+    } else if (value == '4C') {
         return "🃔";
     }
 
 
-    else if(value == '5S'){
+    else if (value == '5S') {
         return "🂥";
-    } else if(value == '5H'){
+    } else if (value == '5H') {
         return "🂵";
-    } else if(value == '5D'){
+    } else if (value == '5D') {
         return "🃅";
-    } else if(value == '5C'){
+    } else if (value == '5C') {
         return "🃕";
     }
 
 
-    else if(value == '6S'){
+    else if (value == '6S') {
         return "🂦";
-    } else if(value == '6H'){
+    } else if (value == '6H') {
         return "🂶";
-    } else if(value == '6D'){
+    } else if (value == '6D') {
         return "🃆";
-    } else if(value == '6C'){
+    } else if (value == '6C') {
         return "🃖";
     }
 
 
-    else if(value == '7S'){
+    else if (value == '7S') {
         return "🂧";
-    } else if(value == '7H'){
+    } else if (value == '7H') {
         return "🂷";
-    } else if(value == '7D'){
+    } else if (value == '7D') {
         return "🃇";
-    } else if(value == '7C'){
+    } else if (value == '7C') {
         return "🃗";
     }
 
 
-    else if(value == '8S'){
+    else if (value == '8S') {
         return "🂨";
-    } else if(value == '8H'){
+    } else if (value == '8H') {
         return "🂸";
-    } else if(value == '8D'){
+    } else if (value == '8D') {
         return "🃈";
-    } else if(value == '8C'){
+    } else if (value == '8C') {
         return "🃘";
     }
 
 
-    else if(value == '9S'){
+    else if (value == '9S') {
         return "🂩";
-    } else if(value == '9H'){
+    } else if (value == '9H') {
         return "🂹";
-    } else if(value == '9D'){
+    } else if (value == '9D') {
         return "🃉";
-    } else if(value == '9C'){
+    } else if (value == '9C') {
         return "🃙";
     }
 
 
-    else if(value == 'TS'){
+    else if (value == 'TS') {
         return "🂪";
-    } else if(value == 'TH'){
+    } else if (value == 'TH') {
         return "🂺";
-    } else if(value == 'TD'){
+    } else if (value == 'TD') {
         return "🃊";
-    } else if(value == 'TC'){
+    } else if (value == 'TC') {
         return "🃚";
     }
 
 
-    else if(value == 'JS'){
+    else if (value == 'JS') {
         return "🂫";
-    } else if(value == 'JH'){
+    } else if (value == 'JH') {
         return "🂻";
-    } else if(value == 'JD'){
+    } else if (value == 'JD') {
         return "🃋";
-    } else if(value == 'JC'){
+    } else if (value == 'JC') {
         return "🃛";
     }
 
 
-    else if(value == 'QS'){
+    else if (value == 'QS') {
         return "🂭";
-    } else if(value == 'QH'){
+    } else if (value == 'QH') {
         return "🂽";
-    } else if(value == 'QD'){
+    } else if (value == 'QD') {
         return "🃍";
-    } else if(value == 'QC'){
+    } else if (value == 'QC') {
         return "🃝";
     }
 
 
-    else if(value == 'KS'){
+    else if (value == 'KS') {
         return "🂮";
-    } else if(value == 'KH'){
+    } else if (value == 'KH') {
         return "🂾";
-    } else if(value == 'KD'){
+    } else if (value == 'KD') {
         return "🃎";
-    } else if(value == 'KC'){
+    } else if (value == 'KC') {
         return "🃞";
     } else {
         return "";
