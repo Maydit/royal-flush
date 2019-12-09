@@ -1,4 +1,4 @@
-.header{
+.header {
     text-align: center;
    /* background: #1abc9c;*/
     background: #7f99b1;
@@ -8,62 +8,62 @@
     height: 120px;
 }
 
-#logoutButton{
+#logoutButton {
     margin-top: 10px;
     margin-right: 5px;
     float: right;
 }
 
-#title a{
+#title a {
     text-decoration: none;
     color: white;
 }
 
-.container{
+.container {
     font-family: 'Nunito', sans-serif;
 }
 
-.header h1{
+.header h1 {
     padding-top: 15px;
 }
 
-.info h1{
+.info h1 {
     margin-bottom: 20px;
 }
 
-.info img{
+.info img {
     display: block;
     margin-left: auto;
     margin-right: auto
 }
 
-.info p{
+.info p {
     margin-top: 20px;
 }
 
 
-.jumbotron-fluid h1{
+.jumbotron-fluid h1 {
     text-align: center;
     font-weight: bold;
     font-size: 50px;
     font-family: 'Fugaz One', cursive;
 }
 
-.jumbotron-fluid p{
+.jumbotron-fluid p {
     text-align: center;
     font-size: 20px;
     font-style: italic;
     font-family: 'Nunito', sans-serif;
 }
 
-.rightText{
+.rightText {
     text-align: center;
     font-family: 'Nunito', sans-serif;
 
 
 }
 
-#card1{
+#card1 {
     margin-top: 20px;
     width: 150px;
     margin-right: 16px;
@@ -72,13 +72,13 @@
     font-size: 25px;
 }
 
-#suit1{
+#suit1 {
     width: 150px;
     height: 50px;
     font-size: 25px;
 }
 
-#card2{
+#card2 {
     margin-top: 20px;
     width: 150px;
     margin-right: 16px;
@@ -87,23 +87,23 @@
     font-size: 25px;
 }
 
-#suit2{
+#suit2 {
     width: 150px;
     height: 50px;
     font-size: 25px;
 }
 
-.info{
+.info {
     text-align: center;
 }
 
-.info h1{
+.info h1 {
     border-bottom: thin solid #ccc;
     border-radius: 4px;
     text-align: center;
 }
 
-.select1 h1{
+.select1 h1 {
     border-bottom: thin solid #ccc;
     border-radius: 4px;
     text-align: center;
@@ -113,20 +113,20 @@
     border-bottom: 1px solid black;
 }
 
-.heartEmoji{
+.heartEmoji {
     font-size: 18px;
 }
 
-.suit{
+.suit {
     font-size: 30px;
 }
 
-.submit{
+.submit {
     width: 150px;
     height: 50px;
 }
 
-.select2 element{
+.select2 element {
   font-family: courier;
 }
 

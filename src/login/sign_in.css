@@ -1,26 +1,26 @@
-body{
+body {
     background-color: #b8cecd
 }
 
-.col-md-6{
+.col-md-6 {
     background-color: #b8cecd
 }
 
-.form-group{
+.form-group {
     background-color: #b8cecd
 }
 
-legend{
+legend {
     padding:0px;
     margin:0px;
     float: left;
 }
 
-input{
+input {
     background-color: #E2D4B7;
     float: left;
 }
-.form-group{
+.form-group {
     padding-bottom: 10px;
 }
 
@@ -36,10 +36,10 @@ legend {
    color: #678;
 }
 
-.text-center small{
+.text-center small {
     font-size: 25px;
 }
-.text-center{
+.text-center {
     font-size: 2.5em;
     font-family: 'Nunito', sans-serif;
     font-weight: bolder;
@@ -62,27 +62,27 @@ span.req {
     font-size: 112%;
 }
 
-.rightText{
+.rightText {
     font-family: 'Nunito', sans-serif;
     margin-top: -55px;
 }
 
-.rightText p{
+.rightText p {
     text-align: center;
 }
 
-.rightText h1{
+.rightText h1 {
     text-align: center;
 }
 
-.rightText img{
+.rightText img {
     display: block;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 10px;
 }
 
-.header{
+.header {
     text-align: center;
    /* background: #1abc9c;*/
     background: #7f99b1;
@@ -92,29 +92,29 @@ span.req {
     height: 120px;
 }
 
-.header h1{
+.header h1 {
     padding-top: 15px;
 }
 
-.jumbotron-fluid h1{
+.jumbotron-fluid h1 {
     text-align: center;
     font-weight: bold;
     font-size: 50px;
     font-family: 'Fugaz One', cursive;
 }
 
-.jumbotron-fluid p{
+.jumbotron-fluid p {
     text-align: center;
     font-size: 20px;
     font-style: italic;
     font-family: 'Nunito', sans-serif;
 }
 
-.registerForm{
+.registerForm {
     margin-bottom: 100px;
 }
 
-#title a{
+#title a {
     text-decoration: none;
     color: white;
 }
