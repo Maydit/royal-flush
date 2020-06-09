@@ -16,7 +16,7 @@ var poker = require('./game/pokerCalculations.js');
 // Database connection requirements
 var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectID;
-var url = "mongodb+srv://admin:adminpassword@cluster0-f0kkf.mongodb.net/test?retryWrites=true";
+var url = "mongodb+srv://admin:adminpassword@cluster0-g5jnk.mongodb.net/poker?retryWrites=true&w=majority";
 var db_name = "users";
 var mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
@@ -332,7 +332,7 @@ class Hand {
 ////////////////////////////////////////////////////////////////////////////////
 // Game Stats
 
-//Displays Hand History 
+//Displays Hand History
 app.get("/getHandHistory", (req, res) => {
     mongoose.connect(url, function(err,db) {
         var user_db = db.collection("users");
