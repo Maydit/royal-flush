@@ -695,7 +695,7 @@ io.on('connection', function(socket) {
             dealtCards = "";
         }
 
-        // EDIT: DEAL IN HERE AND SEND WHOLE THING NOT JUST DECK 
+        // EDIT: DEAL IN HERE AND SEND WHOLE THING NOT JUST DECK
 
         io.sockets.to(code).emit('dealAndStart', deck);
     }
@@ -761,14 +761,6 @@ app.get('/game/pick_action.css', function(req, res) {
     res.sendFile(__dirname + '/game/pick_action.css');
 });
 
-app.get('/game/player_game.js', function(req, res) {
-    res.sendFile(__dirname + '/game/player_game.js');
-});
-
-app.get('/game/host_game.js', function(req, res) {
-    res.sendFile(__dirname + '/game/host_game.js');
-});
-
 app.get('/game/card_parser.js', function(req, res) {
     res.sendFile(__dirname + '/game/card_parser.js');
 });
@@ -785,68 +777,12 @@ app.get('/game/in_game.css', function(req, res) {
     res.sendFile(__dirname + '/game/in_game.css');
 });
 
-app.get('/game/player_game.html', function(req, res) {
-    if(req.session.userName != null) {
-        res.sendFile(__dirname + '/game/player_game.html');
-    } else {
-        res.redirect(req.protocol + '://' + req.get('host'));
-    }
-});
-
-app.get('/game/player_game.css', function(req, res) {
-    res.sendFile(__dirname + '/game/player_game.css');
-});
-
-app.get('/game/host_game.html', function(req, res) {
-    if (req.session.userName != null) {
-        res.sendFile(__dirname + '/game/host_game.html');
-    } else {
-        res.redirect(req.protocol + '://' + req.get('host'));
-    }
-});
-
 app.get('/game/in_game.html', function(req, res) {
     if (req.session.userName != null) {
         res.sendFile(__dirname + '/game/in_game.html');
     } else {
         res.redirect(req.protocol + '://' + req.get('host'));
     }
-});
-
-app.get('/game/host_game.css', function(req, res) {
-    res.sendFile(__dirname + '/game/host_game.css');
-});
-
-app.get('/game/host.js', function(req, res) {
-    res.sendFile(__dirname + '/game/host.js');
-});
-
-app.get('/game/join.js', function(req, res) {
-    res.sendFile(__dirname + '/game/join.js');
-});
-
-app.get('/game/host.html', function(req, res) {
-    if (req.session.userName != null) {
-        res.sendFile(__dirname + '/game/host.html');
-    } else {
-        res.redirect(req.protocol + '://' + req.get('host'));
-    }
-});
-
-app.get('/game/host.css', function(req, res) {
-    res.sendFile(__dirname + '/game/host.css');
-});
-
-app.get('/game/join.html', function(req, res) {
-    if (req.session.userName != null) {
-        res.sendFile(__dirname + '/game/join.html');
-    } else {
-        res.redirect(req.protocol + '://' + req.get('host'));
-    }
-});
-
-app.get('/game/join.css', function(req, res) {
-    res.sendFile(__dirname + '/game/join.css');
 });
 
 app.get('/stats/personal_stats.js', function(req, res) {

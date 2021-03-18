@@ -3,7 +3,7 @@ var socket = io();
 // New person joined the game
 socket.on('updatePlayers', function(newPlayer) {
     document.getElementById("players").innerHTML = document.getElementById("players").innerHTML + "<br>" + newPlayer;
-    this.names.push(newPlayer);
+    App.addPlayer(newPlayer);
 });
 
 // New person joined the game
@@ -25,6 +25,9 @@ const App = new Vue({
         numPlayers: 1
     },
     methods: {
+        addPlayer(player) {
+            this.names.push(player);
+        },
         dealCards(deck) {
             this.currentHand = deck[this.position*2] + " " + deck[(this.position*2)+1];
             document.getElementById("currentHand").innerHTML = "Hand: " + this.currentHand;
