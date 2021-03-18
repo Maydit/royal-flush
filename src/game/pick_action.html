@@ -6,12 +6,12 @@
         <meta name="viewport" content="width=device-width,initial-scale=1.0" />
 
         <link rel= "stylesheet" type="text/css" href = "pick_action.css" />
-        <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Fugaz+One&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-        <script src="/socket.io/socket.io.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 
@@ -39,11 +39,12 @@
                     <div class = "rightText">
                         <h1>Select an Option</h1>
                         <div id="app">
-                            <div class = "create">
-                                <a href="host.html"> <button type="button" class="btn btn-primary createButton">Host a Game</button></a>
+                            <div id = "enterCode">
+                                <h4>Enter Code: </h4>
+                                <input type="text" v-model="inputCode" class="form-control">
                             </div>
                             <div class = "host">
-                                <a href="join.html"> <button type="button" class="btn btn-primary hostButton">Join a game</button></a>
+                                <button class = "btn btn-primary" v-on:click="join" id = "joinButton" >Join</button>
                             </div>
                             <div class = "stats">
                                 <a href="../stats/stats_home.html"> <button type="button" class="btn btn-primary statsButton">View Stats</button></a>
@@ -69,19 +70,7 @@
             </div>
         </div>
 
-        <script>
-        const App = new Vue({
-            el: '#app',
-            methods: {
-                go_host() {
-                    window.location.href = "host.html";
-                },
-                join() {
-                    window.location.href = "join.html";
-                }
-            }
-        });
-        </script>
+        <script src="pick_action.js"></script>
 
     </body>
 </html>

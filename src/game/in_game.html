@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+        <link rel= "stylesheet" type="text/css" href = "in_game.css" />
+        <link href="https://fonts.googleapis.com/css?family=Fugaz+One&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
+
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+        <title>In Game</title>
+    </head>
+
+    <body style = "background-color: #b8cecd">
+
+        <div class = "header">
+            <div class = "jumbotron-fluid">
+                <h1 id = "title">  <a href = "pick_action.html">Royal Flush</a>  </h1>
+                <p>"Stats don't bluff"</p>
+
+                <form method="post" action="/logout">
+                    <button type="submit" class="btn btn-danger" id = "logoutButton">Logout</button>
+                </form>
+            </div>
+        </div>
+
+        <div class = "container">
+            <p id="code">CODE: </p>
+            <p id="currentHand">Hand: </p>
+            <p id="action">Action on: N/A</p>
+            <button v-on:click="check" type="button" class="btn btn-primary checkButton">Check</button>
+            <button v-on:click="match" type="button" class="btn btn-primary matchButton">Match</button>
+            <button v-on:click="fold" type="button" class="btn btn-primary foldButton">Fold</button>
+            <button v-on:click="raise" type="button" class="btn btn-primary raiseButton">Raise</button>
+            <input type="number" v-model="raiseAmount" class = "numberInput" placeholder="Number to raise">
+            <h1>Players:</h1>
+            <p id="players"></p>
+        </div>
+
+        <script src="in_game.js"></script>
+
+    </body>
+</html>
