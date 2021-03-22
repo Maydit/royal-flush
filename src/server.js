@@ -648,11 +648,21 @@ io.on('connection', function(socket) {
                 namesLobby: [],
                 stacks: [],
                 cards: [],
+                folded: new Set(),
                 positions: [],
+                // Phase legend - 0: preflop, 1: flop, 2: turn, 3: river
+                phase: 0,
+                // Who's on action
+                action: 0,
+                // Bet structure: _ _ _
+                // Position (from this.positions)
+                // Char indicating bet type: c, m, r, f
+                // Integer indicating raise amount: only if 2nd is 'r'
                 preflopBets: [],
                 flopBets: [],
                 turnBets: [],
                 riverBets: [],
+                amountInPot: [],
                 commCards: "",
                 winner: "",
                 pot: 0
@@ -665,7 +675,11 @@ io.on('connection', function(socket) {
             round.players.push(id);
             round.names.push(name);
             round.stacks.push(1000);
+            round.positions.push(round.players.length - 1);
         } else {
+
+            // CHANGE: no lobby, just if you enter you start as folded
+
             round.playersLobby.push(id);
             round.namesLobby.push(name);
         }
@@ -684,25 +698,114 @@ io.on('connection', function(socket) {
         // First two people, start game
         shuffle(deck);
 
-        // Sets up postitioning and deals cards
+        // Sets up everything
         var round = rooms.get(code);
         var dealtCards = "";
-        for (var i = 0; i < round.players.length; i++) {
-            round.positions.push(i);
+        var i;
+        for (i = 0; i < round.players.length; i++) {
+            // Deal cards
             dealtCards += deck[i*2];
             dealtCards += deck[(i*2)+1];
             round.cards.push(dealtCards);
             dealtCards = "";
+
+            // Set action
+            if (round.positions[i] == 0) {
+                round.action = i;
+            }
+
+            // Initialize pot
+            // NOTE: Must set small and big blind here eventually
+            round.amountInPot[i] = 0;
         }
 
-        // EDIT: DEAL IN HERE AND SEND WHOLE THING NOT JUST DECK
+        // Deals community cards
+        var tempCommCards = "";
+        for (var j = 1; j <= 5; j++) {
+            tempCommCards += deck[i+j];
+        }
+        round.commCards = tempCommCards;
 
-        io.sockets.to(code).emit('dealAndStart', deck);
+        console.log(round);
+
+        io.sockets.to(code).emit('beginRound', round);
     }
 
+    // Someone checked
     socket.on('check', function(code) {
-
+        var round = rooms.get(code);
+        var bet = round.positions[round.action].toString() + "c";
+        addBet(bet, round);
+        postBet(code, round);
     });
+
+    // Someone matched
+    socket.on('match', function(code) {
+        var round = rooms.get(code);
+        var bet = round.positions[round.action].toString() + "m";
+        if (round.phase == 0) {
+            round.amountInPot[round.action] += getRecentRaiseAmount(preflopBets);
+        } else if (round.phase == 1) {
+            round.amountInPot[round.action] += getRecentRaiseAmount(flopBets);
+        }  else if (round.phase == 2) {
+            round.amountInPot[round.action] += getRecentRaiseAmount(turnBets);
+        }  else if (round.phase == 3) {
+            round.amountInPot[round.action] += getRecentRaiseAmount(riverBets);
+        }
+        addBet(bet, round);
+        postBet(code, round);
+    });
+
+    // Someone raised
+    socket.on('raise', function(code, amount) {
+        var round = rooms.get(code);
+        var bet = round.positions[round.action].toString() + "r" + amount.toString();
+        round.amountInPot[round.action] += amount;
+        addBet(bet, round);
+        postBet(code, round);
+    });
+
+    // Someone folded
+    socket.on('fold', function(code) {
+        var round = rooms.get(code);
+        var bet = round.positions[round.action].toString() + "f";
+        addBet(bet, round);
+        postBet(code, round);
+    });
+
+    // Adds a bet to the round based on the current phase
+    function addBet(bet, round) {
+        if (round.phase == 0) {
+            round.preflopBets.push(bet);
+        } else if (round.phase == 1) {
+            round.flopBets.push(bet);
+        }  else if (round.phase == 2) {
+            round.turnBets.push(bet);
+        }  else if (round.phase == 3) {
+            round.riverBets.push(bet);
+        }
+    }
+
+    function getRecentRaiseAmount(bets) {
+        for (var i = bets.length-1; i >= 0; i--) {
+            if (bets[i].charAt(1) == "r") {
+                return parseInt(bets[i].substring(2), 10);
+            }
+        }
+    }
+
+    function postBet(code, round) {
+        // Action moves to next player
+        round.action += 1;
+        if (round.action == round.players.length) {
+            round.action = 0;
+        }
+
+        // Much else needs to be in here
+        // Determine if moving to next phase
+
+        io.sockets.to(code).emit('postBet', round);
+    }
 });
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -33,16 +33,18 @@
         </div>
 
         <div class = "container">
-            <p id="code">CODE: </p>
-            <p id="currentHand">Hand: </p>
-            <p id="action">Action on: N/A</p>
-            <button v-on:click="check" type="button" class="btn btn-primary checkButton">Check</button>
-            <button v-on:click="match" type="button" class="btn btn-primary matchButton">Match</button>
-            <button v-on:click="fold" type="button" class="btn btn-primary foldButton">Fold</button>
-            <button v-on:click="raise" type="button" class="btn btn-primary raiseButton">Raise</button>
-            <input type="number" v-model="raiseAmount" class = "numberInput" placeholder="Number to raise">
-            <h1>Players:</h1>
-            <p id="players"></p>
+            <div id="app">
+                <p id="code">CODE: </p>
+                <p id="currentHand">Hand: </p>
+                <p id="action">Action on: N/A</p>
+                <button v-on:click="check" type="button" class="btn btn-primary checkButton">Check</button>
+                <button v-on:click="match" type="button" class="btn btn-primary matchButton">Match</button>
+                <button v-on:click="fold" type="button" class="btn btn-primary foldButton">Fold</button>
+                <button v-on:click="raise" type="button" class="btn btn-primary raiseButton">Raise</button>
+                <input type="number" v-model="raiseAmount" class = "numberInput" placeholder="Number to raise">
+                <h1>Players:</h1>
+                <p id="players"></p>
+            </div>
         </div>
 
         <script src="in_game.js"></script>
