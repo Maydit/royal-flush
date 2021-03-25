@@ -12,8 +12,8 @@ socket.on('beginRound', function(round) {
 });
 
 // Someone bet
-socket.on('postBet', function(round) {
-    App.postBet(round);
+socket.on('postBet', function(round, bet) {
+    App.postBet(round, bet);
 });
 
 const App = new Vue({
@@ -31,25 +31,27 @@ const App = new Vue({
         beginRound(round) {
             this.roundInfo = round;
             console.log(this.roundInfo);
+            addToLog("Cards dealt!");
             // NOTE: action will eventually be on 2 + small blind
             document.getElementById("action").innerHTML = "Action on " + this.roundInfo.names[this.roundInfo.action];
             document.getElementById("currentHand").innerHTML = "Hand: " + this.roundInfo.cards[index(this.roundInfo.players, this.userId)];
         },
-        postBet(round) {
+        postBet(round, bet) {
             this.roundInfo = round;
             console.log(this.roundInfo);
+            interpretBet(bet, this.roundInfo);
             if (this.roundInfo.phase == 1 && this.roundInfo.flopBets.length == 0) {
                 // Flop just came out
                 document.getElementById("commCards").innerHTML = "Cards on Table: " + this.roundInfo.commCards.substring(0, 6);
-                addToLog("Flop is out");
+                addToLog("Flop is out.");
             } else if (this.roundInfo.phase == 2 && this.roundInfo.turnBets.length == 0) {
                 // Turn just came out
                 document.getElementById("commCards").innerHTML = "Cards on Table: " + this.roundInfo.commCards.substring(0, 8);
-                addToLog("Turn is out");
+                addToLog("Turn is out.");
             } else if (this.roundInfo.phase == 3 && this.roundInfo.riverBets.length == 0) {
                 // Turn just came out
                 document.getElementById("commCards").innerHTML = "Cards on Table: " + this.roundInfo.commCards;
-                addToLog("River is out");
+                addToLog("River is out.");
             }
             document.getElementById("action").innerHTML = "Action on " + this.roundInfo.names[this.roundInfo.action];
         },
@@ -65,7 +67,7 @@ const App = new Vue({
                     addToLog("can't check!");
                 }
             } else {
-                addToLog("not your turn!");
+                addToLog("Not your turn!");
             }
         },
         match() {
@@ -78,7 +80,7 @@ const App = new Vue({
                     addToLog("can't match!");
                 }
             } else {
-                addToLog("not your turn!");
+                addToLog("Not your turn!");
             }
         },
         raise() {
@@ -99,14 +101,14 @@ const App = new Vue({
                 }
                 socket.emit('raise', this.code, raiseInt);
             } else {
-                addToLog("not your turn!");
+                addToLog("Not your turn!");
             }
         },
         fold() {
             if (this.roundInfo.action == index(this.roundInfo.players, this.userId)) {
                 socket.emit('fold', this.code);
             } else {
-                addToLog("not your turn!");
+                addToLog("Not your turn!");
             }
         }
     },
@@ -140,15 +142,6 @@ const App = new Vue({
     }
 });
 
-// Given an array and a string, finds the index of the string in the array
-function index(arr, str) {
-    for (var i = 0; i < arr.length; i++) {
-        if (arr[i] == str) {
-            return i;
-        }
-    }
-}
-
 // Given an array of bets, determines the most recent raise. Returns 0 if there
 // was no raise.
 function findLastRaiseHelper(arr) {
@@ -175,6 +168,36 @@ function findLastRaise(roundInfo) {
     return lastRaise;
 }
 
+// Given a bet structure, turns it into a readable string and adds it to the log
+function interpretBet(bet, roundInfo) {
+    var player = parseInt(bet.substring(0, 1), 10);
+    var playerIndex = index(roundInfo.positions, player);
+    var playerName = roundInfo.names[playerIndex];
+
+    var action;
+    var amount = ".";
+    if (bet.charAt(1) == "c") {
+        action = " checked";
+    } else if (bet.charAt(1) == "m") {
+        action = " matched";
+    } else if (bet.charAt(1) == "f") {
+        action = " folded";
+    } else if (bet.charAt(1) == "r") {
+        amount = " " + bet.substring(2) + ".";
+        action = " raised";
+    }
+
+    addToLog(playerName + action + amount);
+}
+
+// Given an array and an element, finds the index of the string in the array
+function index(arr, element) {
+    for (var i = 0; i < arr.length; i++) {
+        if (arr[i] == element) {
+            return i;
+        }
+    }
+}
 
 // Adds a string to the in game log
 function addToLog(str) {

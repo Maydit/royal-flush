@@ -740,7 +740,7 @@ io.on('connection', function(socket) {
         var round = rooms.get(code);
         var bet = round.positions[round.action].toString() + "c";
         addBet(bet, round);
-        postBet(code, round);
+        postBet(code, round, bet);
     });
 
     // Someone matched
@@ -757,7 +757,7 @@ io.on('connection', function(socket) {
             round.amountInPot[round.action] += getRecentRaiseAmount(round.riverBets);
         }
         addBet(bet, round);
-        postBet(code, round);
+        postBet(code, round, bet);
     });
 
     // Someone raised
@@ -767,7 +767,7 @@ io.on('connection', function(socket) {
         round.amountInPot[round.action] += amount;
         round.cycleEndsAt = round.action;
         addBet(bet, round);
-        postBet(code, round);
+        postBet(code, round, bet);
     });
 
     // Someone folded
@@ -776,7 +776,7 @@ io.on('connection', function(socket) {
         var bet = round.positions[round.action].toString() + "f";
         round.folded.add(round.positions[round.action]);
         addBet(bet, round);
-        postBet(code, round);
+        postBet(code, round, bet);
     });
 
     // Adds a bet to the round based on the current phase
@@ -800,7 +800,7 @@ io.on('connection', function(socket) {
         }
     }
 
-    function postBet(code, round) {
+    function postBet(code, round, bet) {
         // Action moves to next player
         round.action += 1;
         if (round.action == round.players.length) {
@@ -823,7 +823,7 @@ io.on('connection', function(socket) {
             }
         }
 
-        io.sockets.to(code).emit('postBet', round);
+        io.sockets.to(code).emit('postBet', round, bet);
     }
 });
 
