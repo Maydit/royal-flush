@@ -648,12 +648,15 @@ io.on('connection', function(socket) {
                 namesLobby: [],
                 stacks: [],
                 cards: [],
+                // Set of the positions that have folded
                 folded: new Set(),
                 positions: [],
                 // Phase legend - 0: preflop, 1: flop, 2: turn, 3: river
                 phase: 0,
                 // Who's on action
                 action: 0,
+                // Who the round ends on: last person who raised, or the starter
+                cycleEndsAt: 0,
                 // Bet structure: _ _ _
                 // Position (from this.positions)
                 // Char indicating bet type: c, m, r, f
@@ -709,9 +712,10 @@ io.on('connection', function(socket) {
             round.cards.push(dealtCards);
             dealtCards = "";
 
-            // Set action
+            // Set action (which is also where cycle ends)
             if (round.positions[i] == 0) {
                 round.action = i;
+                round.cycleEndsAt = i;
             }
 
             // Initialize pot
@@ -744,13 +748,13 @@ io.on('connection', function(socket) {
         var round = rooms.get(code);
         var bet = round.positions[round.action].toString() + "m";
         if (round.phase == 0) {
-            round.amountInPot[round.action] += getRecentRaiseAmount(preflopBets);
+            round.amountInPot[round.action] += getRecentRaiseAmount(round.preflopBets);
         } else if (round.phase == 1) {
-            round.amountInPot[round.action] += getRecentRaiseAmount(flopBets);
+            round.amountInPot[round.action] += getRecentRaiseAmount(round.flopBets);
         }  else if (round.phase == 2) {
-            round.amountInPot[round.action] += getRecentRaiseAmount(turnBets);
+            round.amountInPot[round.action] += getRecentRaiseAmount(round.turnBets);
         }  else if (round.phase == 3) {
-            round.amountInPot[round.action] += getRecentRaiseAmount(riverBets);
+            round.amountInPot[round.action] += getRecentRaiseAmount(round.riverBets);
         }
         addBet(bet, round);
         postBet(code, round);
@@ -761,6 +765,7 @@ io.on('connection', function(socket) {
         var round = rooms.get(code);
         var bet = round.positions[round.action].toString() + "r" + amount.toString();
         round.amountInPot[round.action] += amount;
+        round.cycleEndsAt = round.action;
         addBet(bet, round);
         postBet(code, round);
     });
@@ -769,6 +774,7 @@ io.on('connection', function(socket) {
     socket.on('fold', function(code) {
         var round = rooms.get(code);
         var bet = round.positions[round.action].toString() + "f";
+        round.folded.add(round.positions[round.action]);
         addBet(bet, round);
         postBet(code, round);
     });
@@ -802,7 +808,20 @@ io.on('connection', function(socket) {
         }
 
         // Much else needs to be in here
+
         // Determine if moving to next phase
+        if (round.folded.size == round.players.length - 1) {
+            // Everyone except one folded
+        }
+
+        if (round.action == round.cycleEndsAt) {
+            // Full cycle made, move to next phase
+            round.phase += 1;
+
+            if (round.phase == 4) {
+                // Round finished, move on to next round
+            }
+        }
 
         io.sockets.to(code).emit('postBet', round);
     }

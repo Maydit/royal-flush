@@ -36,6 +36,7 @@
             <div id="app">
                 <p id="code">CODE: </p>
                 <p id="currentHand">Hand: </p>
+                <p id="commCards">Cards on Table: </p>
                 <p id="action">Action on: N/A</p>
                 <button v-on:click="check" type="button" class="btn btn-primary checkButton">Check</button>
                 <button v-on:click="match" type="button" class="btn btn-primary matchButton">Match</button>
@@ -44,6 +45,7 @@
                 <input type="number" v-model="raiseAmount" class = "numberInput" placeholder="Number to raise">
                 <h1>Players:</h1>
                 <p id="players"></p>
+                <p id="gameLog"></p>
             </div>
         </div>
 

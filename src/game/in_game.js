@@ -38,6 +38,19 @@ const App = new Vue({
         postBet(round) {
             this.roundInfo = round;
             console.log(this.roundInfo);
+            if (this.roundInfo.phase == 1 && this.roundInfo.flopBets.length == 0) {
+                // Flop just came out
+                document.getElementById("commCards").innerHTML = "Cards on Table: " + this.roundInfo.commCards.substring(0, 6);
+                addToLog("Flop is out");
+            } else if (this.roundInfo.phase == 2 && this.roundInfo.turnBets.length == 0) {
+                // Turn just came out
+                document.getElementById("commCards").innerHTML = "Cards on Table: " + this.roundInfo.commCards.substring(0, 8);
+                addToLog("Turn is out");
+            } else if (this.roundInfo.phase == 3 && this.roundInfo.riverBets.length == 0) {
+                // Turn just came out
+                document.getElementById("commCards").innerHTML = "Cards on Table: " + this.roundInfo.commCards;
+                addToLog("River is out");
+            }
             document.getElementById("action").innerHTML = "Action on " + this.roundInfo.names[this.roundInfo.action];
         },
 
@@ -45,60 +58,51 @@ const App = new Vue({
         check() {
             if (this.roundInfo.action == index(this.roundInfo.players, this.userId)) {
                 // Check if 'check' is legal
-                var canCheck;
-                if (this.roundInfo.phase == 0) {
-                    canCheck = noRaise(this.roundInfo.preflopBets);
-                } else if (this.roundInfo.phase == 1) {
-                    canCheck = noRaise(this.roundInfo.flopBets);
-                } else if (this.roundInfo.phase == 2) {
-                    canCheck = noRaise(this.roundInfo.turnBets);
-                } else if (this.roundInfo.phase == 3) {
-                    canCheck = noRaise(this.roundInfo.riverBets);
-                }
-                if (canCheck) {
+                var lastRaise = findLastRaise(this.roundInfo);
+                if (lastRaise == 0) {
                     socket.emit('check', this.code);
                 } else {
-                    console.log("can't check!");
+                    addToLog("can't check!");
                 }
             } else {
-                console.log("not your turn!");
+                addToLog("not your turn!");
             }
         },
         match() {
             if (this.roundInfo.action == index(this.roundInfo.players, this.userId)) {
                 // Check if 'match' is legal
-                var canMatch;
-                if (this.roundInfo.phase == 0) {
-                    canMatch = !(noRaise(this.roundInfo.preflopBets));
-                } else if (this.roundInfo.phase == 1) {
-                    canMatch = !(noRaise(this.roundInfo.flopBets));
-                } else if (this.roundInfo.phase == 2) {
-                    canMatch = !(noRaise(this.roundInfo.turnBets));
-                } else if (this.roundInfo.phase == 3) {
-                    canMatch = !(noRaise(this.roundInfo.riverBets));
-                }
-                if (canMatch) {
+                var lastRaise = findLastRaise(this.roundInfo);
+                if (lastRaise != 0) {
                     socket.emit('match', this.code);
                 } else {
-                    console.log("can't match!");
+                    addToLog("can't match!");
                 }
             } else {
-                console.log("not your turn!");
+                addToLog("not your turn!");
             }
         },
         raise() {
             if (this.roundInfo.action == index(this.roundInfo.players, this.userId)) {
                 var raiseInt = parseInt(this.raiseAmount, 10);
+                if (raiseInt <= 0) {
+                    addToLog("Raise amount must be greater than 0!");
+                    return;
+                }
+                var lastRaise = findLastRaise(this.roundInfo);
+                if (raiseInt <= lastRaise) {
+                    addToLog("Raise amount must be greater than last raise");
+                    return;
+                }
                 socket.emit('raise', this.code, raiseInt);
             } else {
-                console.log("not your turn!");
+                addToLog("not your turn!");
             }
         },
         fold() {
             if (this.roundInfo.action == index(this.roundInfo.players, this.userId)) {
                 socket.emit('fold', this.code);
             } else {
-                console.log("not your turn!");
+                addToLog("not your turn!");
             }
         }
     },
@@ -141,14 +145,34 @@ function index(arr, str) {
     }
 }
 
-// Given an array of bets, determines if any of them are a raise
-function noRaise(arr) {
-    console.log("noraise()");
-    console.log(arr);
-    for (var i = 0; i < arr; i++) {
+// Given an array of bets, determines the most recent raise. Returns 0 if there
+// was no raise.
+function findLastRaiseHelper(arr) {
+    for (var i = arr.length-1; i >= 0; i--) {
         if (arr[i].charAt(1) == "r") {
-            return false;
+            return parseInt(arr[i].substring(2), 10);
         }
     }
-    return true;
+    return 0;
+}
+
+// Given a round, determines the most recent raise based on the phase.
+function findLastRaise(roundInfo) {
+    var lastRaise;
+    if (roundInfo.phase == 0) {
+        lastRaise = findLastRaiseHelper(roundInfo.preflopBets);
+    } else if (roundInfo.phase == 1) {
+        lastRaise = findLastRaiseHelper(roundInfo.flopBets);
+    } else if (roundInfo.phase == 2) {
+        lastRaise = findLastRaiseHelper(roundInfo.turnBets);
+    } else if (roundInfo.phase == 3) {
+        lastRaise = findLastRaiseHelper(roundInfo.riverBets);
+    }
+    return lastRaise;
+}
+
+
+// Adds a string to the in game log
+function addToLog(str) {
+    document.getElementById("gameLog").innerHTML = str + "<br>" + document.getElementById("gameLog").innerHTML;
 }
