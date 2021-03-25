@@ -83,6 +83,10 @@ const App = new Vue({
         },
         raise() {
             if (this.roundInfo.action == index(this.roundInfo.players, this.userId)) {
+                if (!(/^\d+$/.test(this.raiseAmount))) {
+                    addToLog("Invalid raise amount!");
+                    return;
+                }
                 var raiseInt = parseInt(this.raiseAmount, 10);
                 if (raiseInt <= 0) {
                     addToLog("Raise amount must be greater than 0!");
