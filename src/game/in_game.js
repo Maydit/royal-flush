@@ -6,9 +6,9 @@ socket.on('updatePlayers', function(newPlayer) {
     App.addPlayer(newPlayer);
 });
 
-// New person joined the game
-socket.on('beginRound', function(round) {
-    App.beginRound(round);
+// New round starting
+socket.on('beginRound', function(round, winner) {
+    App.beginRound(round, winner);
 });
 
 // Someone bet
@@ -28,13 +28,17 @@ const App = new Vue({
         addPlayer(player) {
             this.names.push(player);
         },
-        beginRound(round) {
+        beginRound(round, winner) {
             this.roundInfo = round;
             console.log(this.roundInfo);
+            if (winner.length > 0) {
+                addToLog(winner + " won the hand!");
+            }
             addToLog("Cards dealt!");
             // NOTE: action will eventually be on 2 + small blind
             document.getElementById("action").innerHTML = "Action on " + this.roundInfo.names[this.roundInfo.action];
             document.getElementById("currentHand").innerHTML = "Hand: " + this.roundInfo.cards[index(this.roundInfo.players, this.userId)];
+            document.getElementById("commCards").innerHTML = "Cards on Table:";
         },
         postBet(round, bet) {
             this.roundInfo = round;

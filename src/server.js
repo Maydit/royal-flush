@@ -215,7 +215,9 @@ class Hand {
     */
 
     // Given 5-7 cards, determine the best 5-card hand.
-    constructor(cardsStr) {
+    constructor(cardsStr, index) {
+        this.index = index;
+
         var cards = [];
         for (var i = 0; i < cardsStr.length; i+=2) {
             var newCard = new Card(cardsStr.substring(i, i+2));
@@ -621,6 +623,20 @@ app.get("/getNames/:code", (req, res) => {
     }
 });
 
+// Given a round, determines who won. Returns index of the winner
+function determineWinner(round) {
+    var allHands = [];
+    var currentHand;
+    for (var i = 0; i < round.players.length; i++) {
+        if (!(round.folded.has(round.positions[i]))) {
+            // Only gets those who didn't fold
+            currentHand = new Hand(round.cards[i] + round.commCards, i);
+            allHands.push(currentHand);
+        }
+    }
+    allHands.sort(poker.handSorter);
+    return allHands[allHands.length-1].index;
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -688,16 +704,11 @@ io.on('connection', function(socket) {
         }
 
         if (round.players.length == 2) {
-            beginRound(code);
+            beginRound(code, "");
         }
     });
 
-    // Tells everyone in the room to start: invoked by the host
-    socket.on('newRound', function(code) {
-        beginRound(code);
-    });
-
-    function beginRound(code) {
+    function beginRound(code, winner) {
         // First two people, start game
         shuffle(deck);
 
@@ -732,7 +743,7 @@ io.on('connection', function(socket) {
 
         console.log(round);
 
-        io.sockets.to(code).emit('beginRound', round);
+        io.sockets.to(code).emit('beginRound', round, winner);
     }
 
     // Someone checked
@@ -820,6 +831,27 @@ io.on('connection', function(socket) {
 
             if (round.phase == 4) {
                 // Round finished, move on to next round
+                // check who won
+                var winnerIndex = determineWinner(round);
+
+                // send to DB
+
+                // Switch positions
+                round.positions.unshift(round.positions[round.positions.length - 1]);
+                round.positions.pop();
+
+                // Reset variables
+                round.cards = [];
+                round.preflopBets = [];
+                round.flopBets = [];
+                round.turnBets = [];
+                round.riverBets = [];
+                round.commCards = "";
+                round.phase = 0;
+
+                beginRound(code, round.names[winnerIndex]);
+
+                return;
             }
         }
 
