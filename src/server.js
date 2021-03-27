@@ -811,6 +811,29 @@ io.on('connection', function(socket) {
         }
     }
 
+    // Performs necessary actions after a round is completed
+    function postRound(code, round) {
+        var winnerIndex = determineWinner(round);
+
+        // send to DB
+
+        // Switch positions
+        round.positions.unshift(round.positions[round.positions.length - 1]);
+        round.positions.pop();
+
+        // Reset variables
+        round.cards = [];
+        round.folded = new Set();
+        round.preflopBets = [];
+        round.flopBets = [];
+        round.turnBets = [];
+        round.riverBets = [];
+        round.commCards = "";
+        round.phase = 0;
+
+        beginRound(code, round.names[winnerIndex]);
+    }
+
     function postBet(code, round, bet) {
         // Action moves to next player
         round.action += 1;
@@ -823,6 +846,8 @@ io.on('connection', function(socket) {
         // Determine if moving to next phase
         if (round.folded.size == round.players.length - 1) {
             // Everyone except one folded
+            postRound(code, round);
+            return;
         }
 
         if (round.action == round.cycleEndsAt) {
@@ -831,26 +856,7 @@ io.on('connection', function(socket) {
 
             if (round.phase == 4) {
                 // Round finished, move on to next round
-                // check who won
-                var winnerIndex = determineWinner(round);
-
-                // send to DB
-
-                // Switch positions
-                round.positions.unshift(round.positions[round.positions.length - 1]);
-                round.positions.pop();
-
-                // Reset variables
-                round.cards = [];
-                round.preflopBets = [];
-                round.flopBets = [];
-                round.turnBets = [];
-                round.riverBets = [];
-                round.commCards = "";
-                round.phase = 0;
-
-                beginRound(code, round.names[winnerIndex]);
-
+                postRound(code, round);
                 return;
             }
         }
