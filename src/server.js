@@ -660,8 +660,6 @@ io.on('connection', function(socket) {
             var emptyRound = {
                 players: [],
                 names: [],
-                playersLobby: [],
-                namesLobby: [],
                 stacks: [],
                 cards: [],
                 // Set of the positions that have folded
@@ -690,26 +688,22 @@ io.on('connection', function(socket) {
         }
 
         var round = rooms.get(code);
-        if (round.players.length < 2) {
-            round.players.push(id);
-            round.names.push(name);
-            round.stacks.push(1000);
-            round.positions.push(round.players.length - 1);
-        } else {
-
-            // CHANGE: no lobby, just if you enter you start as folded
-
-            round.playersLobby.push(id);
-            round.namesLobby.push(name);
+        round.players.push(id);
+        round.names.push(name);
+        round.stacks.push(1000);
+        round.positions.push(round.players.length - 1);
+        if (round.players.length > 2) {
+            // Active game, start out folded
+            round.folded.add(round.players.length - 1);
         }
 
         if (round.players.length == 2) {
+            // Start game with first two people
             beginRound(code, "");
         }
     });
 
     function beginRound(code, winner) {
-        // First two people, start game
         shuffle(deck);
 
         // Sets up everything
@@ -835,10 +829,16 @@ io.on('connection', function(socket) {
     }
 
     function postBet(code, round, bet) {
-        // Action moves to next player
-        round.action += 1;
-        if (round.action == round.players.length) {
-            round.action = 0;
+        // Action moves to next active player
+        var onFolded = true;
+        while (onFolded) {
+            round.action += 1;
+            if (round.action == round.players.length) {
+                round.action = 0;
+            }
+            if (!(round.folded.has(round.positions[round.action]))) {
+                onFolded = false;
+            }
         }
 
         // Much else needs to be in here
