@@ -25,8 +25,8 @@ const App = new Vue({
         roundInfo: {}
     },
     methods: {
+        // Updates all players and their stacks
         updatePlayers(round) {
-            console.log("updating...");
             this.roundInfo = round;
             document.getElementById("players").innerHTML = "";
             for (var i = 0; i < this.roundInfo.names.length; i++) {
@@ -37,6 +37,7 @@ const App = new Vue({
                 document.getElementById("players").innerHTML = document.getElementById("players").innerHTML + "<br>";
             }
         },
+        // New round is initiated
         beginRound(round, winner) {
             this.roundInfo = round;
             console.log(this.roundInfo);
@@ -49,6 +50,7 @@ const App = new Vue({
             document.getElementById("currentHand").innerHTML = "Hand: " + this.roundInfo.cards[index(this.roundInfo.players, this.userId)];
             document.getElementById("commCards").innerHTML = "Cards on Table:";
         },
+        // Activated after someone makes a bet
         postBet(round, bet) {
             this.roundInfo = round;
             console.log(this.roundInfo);
@@ -77,7 +79,7 @@ const App = new Vue({
                 if (lastRaise == 0) {
                     socket.emit('check', this.code);
                 } else {
-                    addToLog("can't check!");
+                    addToLog("Can't check!");
                 }
             } else {
                 addToLog("Not your turn!");
@@ -90,7 +92,7 @@ const App = new Vue({
                 if (lastRaise != 0) {
                     socket.emit('match', this.code);
                 } else {
-                    addToLog("can't match!");
+                    addToLog("Can't match!");
                 }
             } else {
                 addToLog("Not your turn!");
@@ -140,7 +142,6 @@ const App = new Vue({
 				this.userId = response.body;
 
                 socket.emit('gameJoin', this.code, this.username, this.userId);
-
 			});
 		});
     }
