@@ -646,6 +646,20 @@ var rooms = new Map();
 
 // Socket code for host-client connection in game
 io.on('connection', function(socket) {
+    // Adds new player info. Returns the updated round.
+    function addPlayer(code, name, id) {
+        var round = rooms.get(code);
+        round.players.push(id);
+        round.names.push(name);
+        round.stacks.push(1000);
+        round.positions.push(round.players.length - 1);
+        if (round.players.length > 2) {
+            // Active game, start out folded
+            round.folded.add(round.players.length - 1);
+        }
+        return round;
+    }
+
     // Joins the room: invoked by entering in_game
     socket.on('gameJoin', function(code, name, id) {
         // Enter the room
@@ -654,7 +668,13 @@ io.on('connection', function(socket) {
 
         if (rooms.has(code)) {
             // Room exists
-            socket.broadcast.to(code).emit('updatePlayers', name);
+            var round = addPlayer(code, name, id);
+            io.sockets.to(code).emit('updatePlayers', round);
+
+            // Start game if first two people
+            if (round.players.length == 2) {
+                beginRound(code, "");
+            }
         } else {
             // Room doesn't exist: create it now
             var emptyRound = {
@@ -685,21 +705,8 @@ io.on('connection', function(socket) {
                 pot: 0
             };
             rooms.set(code, emptyRound);
-        }
 
-        var round = rooms.get(code);
-        round.players.push(id);
-        round.names.push(name);
-        round.stacks.push(1000);
-        round.positions.push(round.players.length - 1);
-        if (round.players.length > 2) {
-            // Active game, start out folded
-            round.folded.add(round.players.length - 1);
-        }
-
-        if (round.players.length == 2) {
-            // Start game with first two people
-            beginRound(code, "");
+            var round = addPlayer(code, name, id);
         }
     });
 
@@ -811,6 +818,14 @@ io.on('connection', function(socket) {
 
         // send to DB
 
+        // Update stacks
+        var potTotal = 0;
+        for (var i = 0; i < round.names.length; i++) {
+            potTotal += round.amountInPot[i];
+            round.stacks[i] -= round.amountInPot[i];
+        }
+        round.stacks[winnerIndex] += potTotal;
+
         // Switch positions
         round.positions.unshift(round.positions[round.positions.length - 1]);
         round.positions.pop();
@@ -824,6 +839,9 @@ io.on('connection', function(socket) {
         round.riverBets = [];
         round.commCards = "";
         round.phase = 0;
+        for (var i = 0; i < round.amountInPot.length; i++) {
+            round.amountInPot[i] = 0;
+        }
 
         beginRound(code, round.names[winnerIndex]);
     }

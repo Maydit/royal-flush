@@ -1,13 +1,13 @@
 var socket = io();
 
 // New person joined the game
-socket.on('updatePlayers', function(newPlayer) {
-    document.getElementById("players").innerHTML = document.getElementById("players").innerHTML + "<br>" + newPlayer;
-    App.addPlayer(newPlayer);
+socket.on('updatePlayers', function(round) {
+    App.updatePlayers(round);
 });
 
 // New round starting
 socket.on('beginRound', function(round, winner) {
+    App.updatePlayers(round);
     App.beginRound(round, winner);
 });
 
@@ -25,8 +25,17 @@ const App = new Vue({
         roundInfo: {}
     },
     methods: {
-        addPlayer(player) {
-            this.names.push(player);
+        updatePlayers(round) {
+            console.log("updating...");
+            this.roundInfo = round;
+            document.getElementById("players").innerHTML = "";
+            for (var i = 0; i < this.roundInfo.names.length; i++) {
+                document.getElementById("players").innerHTML = document.getElementById("players").innerHTML + this.roundInfo.stacks[i] + " " + this.roundInfo.names[i];
+                if (this.roundInfo.players[i] == this.userId) {
+                    document.getElementById("players").innerHTML = document.getElementById("players").innerHTML + " (you)";
+                }
+                document.getElementById("players").innerHTML = document.getElementById("players").innerHTML + "<br>";
+            }
         },
         beginRound(round, winner) {
             this.roundInfo = round;
@@ -130,16 +139,7 @@ const App = new Vue({
 			this.$http.get('http://' + window.location.host + '/getUserId').then(response => {
 				this.userId = response.body;
 
-                this.$http.get('http://' + window.location.host + '/getNames/' + this.code).then(response => {
-                    this.names = response.body;
-                    for (var i = 0; i < this.names.length; i++) {
-                        document.getElementById("players").innerHTML = document.getElementById("players").innerHTML + "<br>" + this.names[i];
-                    }
-                    this.position = this.names.length;
-                    document.getElementById("players").innerHTML = document.getElementById("players").innerHTML + "<br>" + this.username + " (you)";
-
-                    socket.emit('gameJoin', this.code, this.username, this.userId);
-                });
+                socket.emit('gameJoin', this.code, this.username, this.userId);
 
 			});
 		});
