@@ -633,6 +633,8 @@ io.on('connection', function(socket) {
         round.players.push(id);
         round.names.push(name);
         round.stacks.push(1000);
+        round.amountInPot.push(0);
+        round.phasePot.push(0);
         round.positions.push(round.players.length - 1);
         if (round.players.length > 2) {
             // Active game, start out folded
@@ -664,6 +666,7 @@ io.on('connection', function(socket) {
             // Initialize pot
             // NOTE: Must set small and big blind here eventually
             round.amountInPot[i] = 0;
+            round.phasePot[i] = 0;
         }
 
         // Deals community cards
@@ -676,7 +679,7 @@ io.on('connection', function(socket) {
         io.sockets.to(code).emit('beginRound', round, winner);
     }
 
-    // Invoked by a user betting 
+    // Invoked by a user betting
     function postBet(code, round, bet) {
         // Action moves to next active player
         var onFolded = true;
@@ -703,6 +706,12 @@ io.on('connection', function(socket) {
             // Full cycle made, move to next phase
             round.phase += 1;
 
+            // Put the phasePot into the amountInPot
+            for (var i = 0; i < round.phasePot.length; i++) {
+                round.amountInPot[i] += round.phasePot[i];
+                round.phasePot[i] = 0;
+            }
+
             if (round.phase == 4) {
                 // Round finished, move on to next round
                 postRound(code, round);
@@ -723,7 +732,7 @@ io.on('connection', function(socket) {
         var potTotal = 0;
         for (var i = 0; i < round.names.length; i++) {
             potTotal += round.amountInPot[i];
-            round.stacks[i] -= round.amountInPot[i];
+            potTotal += round.phasePot[i];
         }
         round.stacks[winnerIndex] += potTotal;
 
@@ -742,6 +751,7 @@ io.on('connection', function(socket) {
         round.phase = 0;
         for (var i = 0; i < round.amountInPot.length; i++) {
             round.amountInPot[i] = 0;
+            round.phasePot[i] = 0;
         }
 
         beginRound(code, round.names[winnerIndex]);
@@ -808,7 +818,10 @@ io.on('connection', function(socket) {
                 flopBets: [],
                 turnBets: [],
                 riverBets: [],
+                // amountInPot refers to total, phasePot refers to how much is
+                // in the pot for each phase, like the flop or turn
                 amountInPot: [],
+                phasePot: [],
                 commCards: "",
                 winner: "",
                 pot: 0
@@ -831,14 +844,19 @@ io.on('connection', function(socket) {
     socket.on('match', function(code) {
         var round = rooms.get(code);
         var bet = round.positions[round.action].toString() + "m";
+        round.stacks[round.action] += round.phasePot[round.action];
         if (round.phase == 0) {
-            round.amountInPot[round.action] += getRecentRaiseAmount(round.preflopBets);
+            round.phasePot[round.action] = getRecentRaiseAmount(round.preflopBets);
+            round.stacks[round.action] -= getRecentRaiseAmount(round.preflopBets);
         } else if (round.phase == 1) {
-            round.amountInPot[round.action] += getRecentRaiseAmount(round.flopBets);
+            round.phasePot[round.action] = getRecentRaiseAmount(round.flopBets);
+            round.stacks[round.action] -= getRecentRaiseAmount(round.flopBets);
         }  else if (round.phase == 2) {
-            round.amountInPot[round.action] += getRecentRaiseAmount(round.turnBets);
+            round.phasePot[round.action] = getRecentRaiseAmount(round.turnBets);
+            round.stacks[round.action] -= getRecentRaiseAmount(round.turnBets);
         }  else if (round.phase == 3) {
-            round.amountInPot[round.action] += getRecentRaiseAmount(round.riverBets);
+            round.phasePot[round.action] = getRecentRaiseAmount(round.riverBets);
+            round.stacks[round.action] -= getRecentRaiseAmount(round.riverBets);
         }
         addBet(bet, round);
         postBet(code, round, bet);
@@ -848,7 +866,9 @@ io.on('connection', function(socket) {
     socket.on('raise', function(code, amount) {
         var round = rooms.get(code);
         var bet = round.positions[round.action].toString() + "r" + amount.toString();
-        round.amountInPot[round.action] += amount;
+        round.stacks[round.action] += round.phasePot[round.action];
+        round.phasePot[round.action] = amount;
+        round.stacks[round.action] -= round.phasePot[round.action];
         round.cycleEndsAt = round.action;
         addBet(bet, round);
         postBet(code, round, bet);

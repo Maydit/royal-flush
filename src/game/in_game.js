@@ -13,6 +13,7 @@ socket.on('beginRound', function(round, winner) {
 
 // Someone bet
 socket.on('postBet', function(round, bet) {
+    App.updatePlayers(round);
     App.postBet(round, bet);
 });
 
@@ -107,6 +108,10 @@ const App = new Vue({
                 var raiseInt = parseInt(this.raiseAmount, 10);
                 if (raiseInt <= 0) {
                     addToLog("Raise amount must be greater than 0!");
+                    return;
+                }
+                if (raiseInt > this.roundInfo.stacks[index(this.roundInfo.players, this.userId)]) {
+                    addToLog("You don't have enough money to raise that much!");
                     return;
                 }
                 var lastRaise = findLastRaise(this.roundInfo);
