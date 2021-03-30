@@ -34,10 +34,11 @@
 
         <div class = "container">
             <div id="app">
-                <p id="code">CODE: </p>
+                <p id="codeElement">CODE: </p>
                 <p id="currentHand">Hand: </p>
                 <p id="commCards">Cards on Table: </p>
                 <p id="action">Action on: N/A</p>
+                <p id="pot">Pot: 0</p>
                 <button v-on:click="check" type="button" class="btn btn-primary checkButton">Check</button>
                 <button v-on:click="match" type="button" class="btn btn-primary matchButton">Match</button>
                 <button v-on:click="fold" type="button" class="btn btn-primary foldButton">Fold</button>

@@ -8,12 +8,14 @@ socket.on('updatePlayers', function(round) {
 // New round starting
 socket.on('beginRound', function(round, winner) {
     App.updatePlayers(round);
+    App.updatePot(round);
     App.beginRound(round, winner);
 });
 
 // Someone bet
 socket.on('postBet', function(round, bet) {
     App.updatePlayers(round);
+    App.updatePot(round);
     App.postBet(round, bet);
 });
 
@@ -37,6 +39,15 @@ const App = new Vue({
                 }
                 document.getElementById("players").innerHTML = document.getElementById("players").innerHTML + "<br>";
             }
+        },
+        updatePot(round) {
+            this.roundInfo = round;
+            var totalPot = 0;
+            for (var i = 0; i < this.roundInfo.amountInPot.length; i++) {
+                totalPot += this.roundInfo.amountInPot[i];
+                totalPot += this.roundInfo.phasePot[i];
+            }
+            document.getElementById("pot").innerHTML = "Pot: " + totalPot.toString();
         },
         // New round is initiated
         beginRound(round, winner) {
@@ -136,7 +147,6 @@ const App = new Vue({
         // Obtains the code and joins that room
         var url = window.location.href;
         this.code = url.substring(url.length-4, url.length);
-        document.getElementById("code").innerHTML = "CODE: " + this.code;
 
 		// Sets the variable username
 		this.$http.get('http://' + window.location.host + '/getName').then(response => {
@@ -146,6 +156,7 @@ const App = new Vue({
 			this.$http.get('http://' + window.location.host + '/getUserId').then(response => {
 				this.userId = response.body;
 
+                document.getElementById("codeElement").innerHTML = "CODE: " + this.code;
                 socket.emit('gameJoin', this.code, this.username, this.userId);
 			});
 		});
