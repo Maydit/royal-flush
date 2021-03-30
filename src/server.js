@@ -215,7 +215,9 @@ class Hand {
     */
 
     // Given 5-7 cards, determine the best 5-card hand.
-    constructor(cardsStr) {
+    constructor(cardsStr, index) {
+        this.index = index;
+
         var cards = [];
         for (var i = 0; i < cardsStr.length; i+=2) {
             var newCard = new Card(cardsStr.substring(i, i+2));
@@ -565,15 +567,8 @@ app.get("/getStats", (req, res) => {
     });
 });
 
-
 ////////////////////////////////////////////////////////////////////////////////
-// Game backend
-
-function deepCopyArray(oldArr, newArr) {
-    for (i = 0; i < oldArr.length; i++) {
-        newArr.push(oldArr[i]);
-    }
-}
+// Helper functions
 
 // Gets name of the logged in user
 app.get("/getName", (req, res) => {
@@ -585,243 +580,307 @@ app.get("/getUserId", (req, res) => {
     res.send(req.session.userId);
 });
 
-// Returns all positions to the frontend
-app.get("/getPositions/:code", (req, res) => {
-    var code = req.params.code;
-    var hand = rooms.get(code);
-    res.send(hand.positions);
-});
-
-// Returns all names to the frontend
-app.get("/getNames/:code", (req, res) => {
-    var code = req.params.code;
-    var hand = rooms.get(code);
-    res.send(hand.names);
-});
-
-// Players invoke this when they submit cards
-app.post("/sendCards/:code/:cardsStr/:userId", (req, res) => {
-    // Parse inputs
-    var code = req.params.code;
-    var cardsStr = req.params.cardsStr;
-    var userId = req.params.userId;
-
-    // Store in hand
-    var hand = rooms.get(code);
-    for (var i = 0; i < hand.players.length; i++) {
-        if (hand.players[i] == userId) {
-            hand.cards[i] = cardsStr;
-            break;
-        }
+// Deep copies an array
+function deepCopyArray(oldArr, newArr) {
+    for (i = 0; i < oldArr.length; i++) {
+        newArr.push(oldArr[i]);
     }
-    res.send(true);
-});
-
-// Add a bet to the hand
-app.post("/addBet/:code/:bet/:phase", (req, res) => {
-    // Phase legend:
-    //      0: preflop
-    //      1: flop
-    //      2: turn
-    //      3: river
-
-    // Parse inputs
-    var code = req.params.code;
-    var bet = req.params.bet;
-    var phase = parseInt(req.params.phase, 10);
-
-    var hand = rooms.get(code);
-    if (phase == 0) {
-        hand.preflopBets.push(bet);
-    } else if (phase == 1) {
-        hand.flopBets.push(bet);
-    } else if (phase == 2) {
-        hand.turnBets.push(bet);
-    } else {
-        hand.riverBets.push(bet);
-    }
-    res.send(true);
-});
-
-// For pushing the hand to the database
-app.get("/recordHand/:code/:commCardsStr/:notFolded/:totalPotAmount", (req, res) => {
-    var code = req.params.code;
-    var hand = rooms.get(code);
-    var notFoldedStr = req.params.notFolded;
-    //console.log("DONE!");
-
-    // Add community cards to the hand
-    hand.commCards = req.params.commCardsStr;
-    hand.pot = req.params.totalPotAmount;
-
-    // Check who won
-    var allHands = [];
-    for (var i = 0; i < notFoldedStr.length; i++) {
-        var playerPos = parseInt(notFoldedStr.charAt(i));
-        var currentHand = new Hand(hand.cards[playerPos] + hand.commCards);
-        allHands.push(currentHand);
-    }
-    var sortedHands = Array.from(allHands);
-    sortedHands.sort(poker.handSorter);
-    for (i = 0; i < notFoldedStr.length; i++) {
-        if (sortedHands[sortedHands.length-1].equals(allHands[i])) {
-            hand.winner = parseInt(notFoldedStr.charAt(i));
-        }
-    }
-    console.log(hand);
-
-    var dupHand = {
-        players: [],
-        names: [],
-        stacks: [],
-        cards: [],
-        positions: [],
-        preflopBets: [],
-        flopBets: [],
-        turnBets: [],
-        riverBets: [],
-        commCards: "",
-        winner: "",
-        pot: 0
-    };
-
-    // Create a deep copy of the current hand
-    deepCopyArray(hand.players, dupHand.players);
-    deepCopyArray(hand.names, dupHand.names);
-    deepCopyArray(hand.stacks, dupHand.stacks);
-    deepCopyArray(hand.cards, dupHand.cards);
-    deepCopyArray(hand.positions, dupHand.positions);
-    deepCopyArray(hand.preflopBets, dupHand.preflopBets);
-    deepCopyArray(hand.flopBets, dupHand.flopBets);
-    deepCopyArray(hand.turnBets, dupHand.turnBets);
-    deepCopyArray(hand.riverBets, dupHand.riverBets);
-    dupHand.commCards = hand.commCards;
-    dupHand.winner = hand.winner;
-    dupHand.pot = hand.pot;
-
-    // Send to database
-    MongoClient.connect(url, { useNewUrlParser: true }, (error, client) => {
-        if(error) {
-            throw error;
-        }
-        var hand_id;
-        var database = client.db("test");
-        database.collection("hands").insertOne(dupHand, function(err, res) {
-            if (err) {
-                throw err;
-            } else {
-                hand_id = res.insertedId;
-
-                var user_db = client.db("test");
-                for (i = 0; i < hand.players.length; i++) {
-                    var query =  {_id : new ObjectId(hand.players[i].toString()) };
-                    var new_val = {$push: {hands:hand_id}};
-
-                    user_db.collection("users").updateOne(query, new_val, function(err, res) {
-                        if (err) throw err;
-                    });
-                }
-            }
-        });
-    });
-
-    // Switch positions
-    hand.positions.unshift(hand.positions[hand.positions.length - 1]);
-    hand.positions.pop();
-
-    // Reset variables
-    for (i = 0; i < hand.players.length; i++) {
-        hand.cards[i] = "";
-    }
-    hand.preflopBets = [];
-    hand.flopBets = [];
-    hand.turnBets = [];
-    hand.riverBets = [];
-    hand.commCards = "";
-
-    // Send the winner name, so that the frontend can update stacks
-    res.send(hand.winner.toString());
-});
-
-// Subtracts an amount from a person's stack
-app.post("/updateStacks/:code/:pos/:amount", (req, res) => {
-    var code = req.params.code;
-    var hand = rooms.get(code);
-    var pos = parseInt(req.params.pos);
-    var amount = parseInt(req.params.amount);
-
-    hand.stacks[pos] -= amount;
-    res.send(true);
-});
+}
 
 ////////////////////////////////////////////////////////////////////////////////
-// Room connections
+// Game backend
 
 var rooms = new Map();
+var deck = ["2H", "2D", "2C", "2S", "3H", "3D", "3C", "3S", "4H", "4D", "4C", "4S", "5H", "5D", "5C", "5S", "6H", "6D", "6C", "6S", "7H", "7D", "7C", "7S", "8H", "8D", "8C", "8S", "9H", "9D", "9C", "9S", "TH", "TD", "TC", "TS", "JH", "JD", "JC", "JS", "QH", "QD", "QC", "QS", "KH", "KD", "KC", "KS", "AH", "AD", "AC", "AS"];
+
+// Randomly shuffles an array
+function shuffle(array) {
+    var currentIndex = array.length, temporaryValue, randomIndex;
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+    }
+    return array;
+}
+
 
 // Socket code for host-client connection in game
 io.on('connection', function(socket) {
-    // Creates a room and joins it: invoked by the host
-    socket.on('createRoom', function(code) {
+    // Given a round, determines who won. Returns index of the winner
+    function determineWinner(round) {
+        var allHands = [];
+        var currentHand;
+        for (var i = 0; i < round.players.length; i++) {
+            if (!(round.folded.has(round.positions[i]))) {
+                // Only gets those who didn't fold
+                currentHand = new Hand(round.cards[i] + round.commCards, i);
+                allHands.push(currentHand);
+            }
+        }
+        allHands.sort(poker.handSorter);
+        return allHands[allHands.length-1].index;
+    }
+
+    // Adds new player info. Returns the updated round.
+    function addPlayer(code, name, id) {
+        var round = rooms.get(code);
+        round.players.push(id);
+        round.names.push(name);
+        round.stacks.push(1000);
+        round.amountInPot.push(0);
+        round.phasePot.push(0);
+        round.positions.push(round.players.length - 1);
+        if (round.players.length > 2) {
+            // Active game, start out folded
+            round.folded.add(round.players.length - 1);
+        }
+        return round;
+    }
+
+    function beginRound(code, winner) {
+        shuffle(deck);
+
+        // Sets up everything
+        var round = rooms.get(code);
+        var dealtCards = "";
+        var i;
+        for (i = 0; i < round.players.length; i++) {
+            // Deal cards
+            dealtCards += deck[i*2];
+            dealtCards += deck[(i*2)+1];
+            round.cards.push(dealtCards);
+            dealtCards = "";
+
+            // Set action (which is also where cycle ends)
+            if (round.positions[i] == 0) {
+                round.action = i;
+                round.cycleEndsAt = i;
+            }
+
+            // Initialize pot
+            // NOTE: Must set small and big blind here eventually
+            round.amountInPot[i] = 0;
+            round.phasePot[i] = 0;
+        }
+
+        // Deals community cards
+        var tempCommCards = "";
+        for (var j = 1; j <= 5; j++) {
+            tempCommCards += deck[i+j];
+        }
+        round.commCards = tempCommCards;
+
+        io.sockets.to(code).emit('beginRound', round, winner);
+    }
+
+    // Invoked by a user betting
+    function postBet(code, round, bet) {
+        // Action moves to next active player
+        var onFolded = true;
+        while (onFolded) {
+            round.action += 1;
+            if (round.action == round.players.length) {
+                round.action = 0;
+            }
+            if (!(round.folded.has(round.positions[round.action]))) {
+                onFolded = false;
+            }
+        }
+
+        // Much else needs to be in here
+
+        // Determine if moving to next phase
+        if (round.folded.size == round.players.length - 1) {
+            // Everyone except one folded
+            postRound(code, round);
+            return;
+        }
+
+        if (round.action == round.cycleEndsAt) {
+            // Full cycle made, move to next phase
+            round.phase += 1;
+
+            // Put the phasePot into the amountInPot
+            for (var i = 0; i < round.phasePot.length; i++) {
+                round.amountInPot[i] += round.phasePot[i];
+                round.phasePot[i] = 0;
+            }
+
+            if (round.phase == 4) {
+                // Round finished, move on to next round
+                postRound(code, round);
+                return;
+            }
+        }
+
+        io.sockets.to(code).emit('postBet', round, bet);
+    }
+
+    // Performs necessary actions after a round is completed
+    function postRound(code, round) {
+        var winnerIndex = determineWinner(round);
+
+        // send to DB
+
+        // Update stacks
+        var potTotal = 0;
+        for (var i = 0; i < round.names.length; i++) {
+            potTotal += round.amountInPot[i];
+            potTotal += round.phasePot[i];
+        }
+        round.stacks[winnerIndex] += potTotal;
+
+        // Switch positions
+        round.positions.unshift(round.positions[round.positions.length - 1]);
+        round.positions.pop();
+
+        // Reset variables
+        round.cards = [];
+        round.folded = new Set();
+        round.preflopBets = [];
+        round.flopBets = [];
+        round.turnBets = [];
+        round.riverBets = [];
+        round.commCards = "";
+        round.phase = 0;
+        for (var i = 0; i < round.amountInPot.length; i++) {
+            round.amountInPot[i] = 0;
+            round.phasePot[i] = 0;
+        }
+
+        beginRound(code, round.names[winnerIndex]);
+    }
+
+    // Adds a bet to the round based on the current phase
+    function addBet(bet, round) {
+        if (round.phase == 0) {
+            round.preflopBets.push(bet);
+        } else if (round.phase == 1) {
+            round.flopBets.push(bet);
+        }  else if (round.phase == 2) {
+            round.turnBets.push(bet);
+        }  else if (round.phase == 3) {
+            round.riverBets.push(bet);
+        }
+    }
+
+    // Determines amount of most recent raise
+    function getRecentRaiseAmount(bets) {
+        for (var i = bets.length-1; i >= 0; i--) {
+            if (bets[i].charAt(1) == "r") {
+                return parseInt(bets[i].substring(2), 10);
+            }
+        }
+    }
+
+    // Joins the room: invoked by entering in_game
+    socket.on('gameJoin', function(code, name, id) {
+        // Enter the room
         socket.room = code;
         socket.join(code);
-        var emptyHand = {
-            players: [],
-            names: [],
-            stacks: [],
-            cards: [],
-            positions: [],
-            preflopBets: [],
-            flopBets: [],
-            turnBets: [],
-            riverBets: [],
-            commCards: "",
-            winner: "",
-            pot: 0
-        };
-        rooms.set(code, emptyHand);
-        //console.log("Created room " + code);
-    });
 
-    // Joins a room if the room exists: invoked by a player
-    socket.on('joinRoom', function(code, newName, newId, startStack) {
         if (rooms.has(code)) {
-            socket.room = code;
-            socket.join(code);
-            //console.log("Joined room " + code);
+            // Room exists
+            var round = addPlayer(code, name, id);
+            io.sockets.to(code).emit('updatePlayers', round);
 
-            // Adds player info to the room
-            var hand = rooms.get(code);
-            hand.players.push(newId);
-            hand.names.push(newName);
-            hand.stacks.push(startStack);
-
-            // Sends into to the host and confirmation back to player
-            socket.broadcast.to(code).emit('updatePlayers', newName);
-            socket.emit('joinResult', 'Joined! Wait for the host to begin the game.');
+            // Start game if first two people
+            if (round.players.length == 2) {
+                beginRound(code, "");
+            }
         } else {
-            socket.emit('joinResult', 'ERROR: Room doesn\'t exist');
+            // Room doesn't exist: create it now
+            var emptyRound = {
+                players: [],
+                names: [],
+                stacks: [],
+                cards: [],
+                // Set of the positions that have folded
+                folded: new Set(),
+                positions: [],
+                // Phase legend - 0: preflop, 1: flop, 2: turn, 3: river
+                phase: 0,
+                // Who's on action
+                action: 0,
+                // Who the round ends on: last person who raised, or the starter
+                cycleEndsAt: 0,
+                // Bet structure: _ _ _
+                // Position (from this.positions)
+                // Char indicating bet type: c, m, r, f
+                // Integer indicating raise amount: only if 2nd is 'r'
+                preflopBets: [],
+                flopBets: [],
+                turnBets: [],
+                riverBets: [],
+                // amountInPot refers to total, phasePot refers to how much is
+                // in the pot for each phase, like the flop or turn
+                amountInPot: [],
+                phasePot: [],
+                commCards: "",
+                winner: "",
+                pot: 0
+            };
+            rooms.set(code, emptyRound);
+
+            var round = addPlayer(code, name, id);
         }
     });
 
-    // Tells everyone in the room to start: invoked by the host
-    socket.on('beginGame', function(code) {
-        // Sets up postitioning
-        var hand = rooms.get(code);
-        for (var i = 0; i < hand.players.length; i++) {
-            hand.positions.push(i);
-            hand.cards.push("");
-        }
-
-        socket.broadcast.to(code).emit('startGame', code);
-        socket.emit('startHost', code);
+    // Someone checked
+    socket.on('check', function(code) {
+        var round = rooms.get(code);
+        var bet = round.positions[round.action].toString() + "c";
+        addBet(bet, round);
+        postBet(code, round, bet);
     });
 
-    // Joins the room: invoked by everyone moving from the waiting room to
-    // the game room
-    socket.on('gameJoin', function(code) {
-        socket.room = code;
-        socket.join(code);
+    // Someone matched
+    socket.on('match', function(code) {
+        var round = rooms.get(code);
+        var bet = round.positions[round.action].toString() + "m";
+        round.stacks[round.action] += round.phasePot[round.action];
+        if (round.phase == 0) {
+            round.phasePot[round.action] = getRecentRaiseAmount(round.preflopBets);
+            round.stacks[round.action] -= getRecentRaiseAmount(round.preflopBets);
+        } else if (round.phase == 1) {
+            round.phasePot[round.action] = getRecentRaiseAmount(round.flopBets);
+            round.stacks[round.action] -= getRecentRaiseAmount(round.flopBets);
+        }  else if (round.phase == 2) {
+            round.phasePot[round.action] = getRecentRaiseAmount(round.turnBets);
+            round.stacks[round.action] -= getRecentRaiseAmount(round.turnBets);
+        }  else if (round.phase == 3) {
+            round.phasePot[round.action] = getRecentRaiseAmount(round.riverBets);
+            round.stacks[round.action] -= getRecentRaiseAmount(round.riverBets);
+        }
+        addBet(bet, round);
+        postBet(code, round, bet);
+    });
+
+    // Someone raised
+    socket.on('raise', function(code, amount) {
+        var round = rooms.get(code);
+        var bet = round.positions[round.action].toString() + "r" + amount.toString();
+        round.stacks[round.action] += round.phasePot[round.action];
+        round.phasePot[round.action] = amount;
+        round.stacks[round.action] -= round.phasePot[round.action];
+        round.cycleEndsAt = round.action;
+        addBet(bet, round);
+        postBet(code, round, bet);
+    });
+
+    // Someone folded
+    socket.on('fold', function(code) {
+        var round = rooms.get(code);
+        var bet = round.positions[round.action].toString() + "f";
+        round.folded.add(round.positions[round.action]);
+        addBet(bet, round);
+        postBet(code, round, bet);
     });
 });
 
@@ -881,72 +940,28 @@ app.get('/game/pick_action.css', function(req, res) {
     res.sendFile(__dirname + '/game/pick_action.css');
 });
 
-app.get('/game/player_game.js', function(req, res) {
-    res.sendFile(__dirname + '/game/player_game.js');
-});
-
-app.get('/game/host_game.js', function(req, res) {
-    res.sendFile(__dirname + '/game/host_game.js');
-});
-
 app.get('/game/card_parser.js', function(req, res) {
     res.sendFile(__dirname + '/game/card_parser.js');
 });
 
-app.get('/game/player_game.html', function(req, res) {
-    if(req.session.userName != null) {
-        res.sendFile(__dirname + '/game/player_game.html');
-    } else {
-        res.redirect(req.protocol + '://' + req.get('host'));
-    }
+app.get('/game/pick_action.js', function(req, res) {
+    res.sendFile(__dirname + '/game/pick_action.js');
 });
 
-app.get('/game/player_game.css', function(req, res) {
-    res.sendFile(__dirname + '/game/player_game.css');
+app.get('/game/in_game.js', function(req, res) {
+    res.sendFile(__dirname + '/game/in_game.js');
 });
 
-app.get('/game/host_game.html', function(req, res) {
+app.get('/game/in_game.css', function(req, res) {
+    res.sendFile(__dirname + '/game/in_game.css');
+});
+
+app.get('/game/in_game.html', function(req, res) {
     if (req.session.userName != null) {
-        res.sendFile(__dirname + '/game/host_game.html');
+        res.sendFile(__dirname + '/game/in_game.html');
     } else {
         res.redirect(req.protocol + '://' + req.get('host'));
     }
-});
-
-app.get('/game/host_game.css', function(req, res) {
-    res.sendFile(__dirname + '/game/host_game.css');
-});
-
-app.get('/game/host.js', function(req, res) {
-    res.sendFile(__dirname + '/game/host.js');
-});
-
-app.get('/game/join.js', function(req, res) {
-    res.sendFile(__dirname + '/game/join.js');
-});
-
-app.get('/game/host.html', function(req, res) {
-    if (req.session.userName != null) {
-        res.sendFile(__dirname + '/game/host.html');
-    } else {
-        res.redirect(req.protocol + '://' + req.get('host'));
-    }
-});
-
-app.get('/game/host.css', function(req, res) {
-    res.sendFile(__dirname + '/game/host.css');
-});
-
-app.get('/game/join.html', function(req, res) {
-    if (req.session.userName != null) {
-        res.sendFile(__dirname + '/game/join.html');
-    } else {
-        res.redirect(req.protocol + '://' + req.get('host'));
-    }
-});
-
-app.get('/game/join.css', function(req, res) {
-    res.sendFile(__dirname + '/game/join.css');
 });
 
 app.get('/stats/personal_stats.js', function(req, res) {
