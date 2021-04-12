@@ -8,67 +8,74 @@
         <link rel= "stylesheet" type="text/css" href = "pick_action.css" />
         <link href="https://fonts.googleapis.com/css?family=Fugaz+One&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
 
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
 
         <title>Pick Action</title>
     </head>
 
     <body style = "background-color: #b8cecd">
 
-        <div class = "header">
-            <div class = "jumbotron-fluid">
-                <h1 id = "title">  <a href = "pick_action.html">Royal Flush</a>  </h1>
-                <p>"Stats don't bluff"</p>
 
-                <form method="post" action="/logout">
-                    <button type="submit" class="btn btn-danger" id = "logoutButton">Logout</button>
-                </form>
-
-
+        <nav class="topnav navbar navbar-expand-lg navbar-light  justify-content-between"  style="background-color: #7f99b1;">
+            <a id="logo" class="navbar-brand" href="/game/pick_action.html">Royal Flush</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <a class="nav-link" href="/game/pick_action.html">Join Game</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/stats/hand_history.html">Hand Histories</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/stats/personal_stats.html">Poker Stats</a>
+                </li>
+              </ul>
             </div>
-        </div>
+            <form method="post" action="/logout">
+                <button type="submit" class="btn" id = "logoutButton">Logout</button>
+              </form>
+          </nav>
+
+
+
 
         <div class="container" >
             <div class="row">
-                <div class="col-md-6">
-                    <div class = "rightText">
-                        <h1>Select an Option</h1>
-                        <div id="app">
-                            <div id = "enterCode">
-                                <h4>Enter Code: </h4>
-                                <input type="text" v-model="inputCode" class="form-control">
-                            </div>
-                            <div class = "host">
-                                <button class = "btn btn-primary" v-on:click="join" id = "joinButton" >Join</button>
-                            </div>
-                            <div class = "stats">
-                                <a href="../stats/stats_home.html"> <button type="button" class="btn btn-primary statsButton">View Stats</button></a>
-                            </div>
+                <div class="col-sm">
+ 
+                </div>
+                  <div class="col-sm text-center">
+                    <div id="app">
+                        <div id = "enterCode">
+                            <h4>Join Game</h4>                             
+
+                            <input type="text" v-model="inputCode" class="form-control" placeholder="Game Code">
+                            <span class="tooltip2" data-tooltip="Enter game code specified by host. To start a new game, click on Join without entering a code.">?</span>
+
+                        </div>
+                        <div class = "host">
+                            <button class = "center btn btn-primary" v-on:click="join" id = "joinButton" >Join</button>
                         </div>
                     </div>
-                </div>
-
-                <div class = "info">
-                    <h1>Welcome</h1>
-
-                    <h2>Host a Game</h2>
-                    <p>Select this option if you want to host a game. This means you will be keeping track of all the actions other player do(match, fold, raise, etc) during the course of the game. Once you click this button, you will be given a unqiue code that you can give to other players for them to join your session.</p>
-
-                    <h2>Join a Game</h2>
-                    <p>Select this option if you want to join a game. As a player, you simply input in the two cards you were given and the host will be recording your actions. Once you click this option, you will be prompted to enter a code which the host will give you in order to join a session.</p>
-
-                    <h2>View Stats</h2>
-                    <p> Select this option if you want to view your personal stats or view global stats collected from all users of Royal Flush.</p>
-
-                    <p class = "link"><a href="https://github.com/Maydit/royal-flush">Check out our Github!</a></p>
-                </div>
+                  </div>
+                  <div class="col-sm">
+                    
+                  </div>
             </div>
         </div>
+
+
 
         <script src="pick_action.js"></script>
 
