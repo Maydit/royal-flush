@@ -1,46 +1,44 @@
-.jumbotron-fluid h1 {
-    text-align: center;
-    font-weight: bold;
-    font-size: 50px;
-    font-family: 'Fugaz One', cursive;
+html,
+body {
+  height: 100%;
 }
 
-.jumbotron-fluid p {
-    text-align: center;
-    font-size: 20px;
-    font-style: italic;
+
+
+.topnav a {
+    color: black;
     font-family: 'Nunito', sans-serif;
 }
 
-#logoutButton {
-    margin-top: 10px;
-    margin-right: 5px;
-    float: right;
+.topnav {
+    margin-bottom: 20px;
 }
 
-#title a {
-    text-decoration: none;
-    color: white;
+#logo {
+    font-family: 'Fugaz One', sans-serif;
 }
 
-.header h1 {
-    padding-top: 15px;
-}
 
-.header {
+
+
+
+#wrapper {  
     text-align: center;
-   /* background: #1abc9c;*/
-    background: #7f99b1;
-    color: white;
-    margin-top: -20px;
-    margin-bottom: 50px;
-    height: 120px;
+    margin-bottom: 35px;
+}
+
+
+
+#app {
+    height: 75%;
+    overflow: auto;
 }
 
 .mainTable {
     width: 65%;
     margin: auto;
 }
+
 
 tbody tr {
     line-height: 55px;
@@ -52,3 +50,58 @@ tbody tr {
 thead tr {
     font-size: 30px;
 }
+
+
+td img {
+    display: block;
+    height: 75px;
+    width: 60px;
+}
+
+
+
+
+
+
+/* Tooltip */
+/* Source: http://www.instantshift.com/2018/05/11/create-tooltip-using-css/#:~:text=A%20tooltip%20is%20an%20icon,a%20bubble%20or%20pop%2Dup.&text=In%20the%20above%20image%2C%20the,characters%20your%20password%20must%20include. */
+.tooltip2{
+    position: relative;
+    background: rgba(73, 168, 206, 0.3);
+    padding: 1px 12px;
+    border-radius: 100%;
+    font-size: 18px;
+    cursor: help;
+    color: white;
+    margin-left: 10px;
+    font-weight: 450;
+}
+
+.tooltip2::before, .tooltip2::after{
+    position: absolute;
+    left: 50%;
+    opacity: 0;
+    transition: allease0.3s;
+    }
+
+
+.tooltip2::after{
+    content: attr(data-tooltip);
+    background: rgba(0,0,0,0.3);
+    top: -10px;
+    transform: translateY(-100%);
+    font-size: 14px;
+    margin-left: -150px;
+    width: 300px;
+    border-radius: 10px;
+    color: #fff;
+    padding: 14px;
+} 
+
+
+/* Hover states */
+.tooltip2:hover::before, .tooltip2:hover::after{
+    opacity: 1;
+}
+    
+

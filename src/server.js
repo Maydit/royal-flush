@@ -9,6 +9,7 @@ var session = require('express-session');
 var sjcl = require('sjcl');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(__dirname+'/'));
 var async = require("async");
 
 var poker = require('./game/pokerCalculations.js');
