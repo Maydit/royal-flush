@@ -728,6 +728,59 @@ io.on('connection', function(socket) {
         var winnerIndex = determineWinner(round);
 
         // send to DB
+        var dupRound = {
+            players: [],
+            names: [],
+            stacks: [],
+            cards: [],
+            positions: [],
+            preflopBets: [],
+            flopBets: [],
+            turnBets: [],
+            riverBets: [],
+            commCards: "",
+            winner: "",
+            pot: 0
+        };
+
+        // Create a deep copy of the current hand
+        deepCopyArray(round.players, dupRound.players);
+        deepCopyArray(round.names, dupRound.names);
+        deepCopyArray(round.stacks, dupRound.stacks);
+        deepCopyArray(round.cards, dupRound.cards);
+        deepCopyArray(round.positions, dupRound.positions);
+        deepCopyArray(round.preflopBets, dupRound.preflopBets);
+        deepCopyArray(round.flopBets, dupRound.flopBets);
+        deepCopyArray(round.turnBets, dupRound.turnBets);
+        deepCopyArray(round.riverBets, dupRound.riverBets);
+        dupRound.commCards = round.commCards;
+        dupRound.winner = round.winner;
+        dupRound.pot = round.pot;
+
+        MongoClient.connect(url, { useNewUrlParser: true }, (error, client) => {
+            if(error) {
+                throw error;
+            }
+            var hand_id;
+            var database = client.db("test");
+            database.collection("hands").insertOne(dupRound, function(err, res) {
+                if (err) {
+                    throw err;
+                } else {
+                    hand_id = res.insertedId;
+
+                    var user_db = client.db("test");
+                    for (i = 0; i < round.players.length; i++) {
+                        var query =  {_id : new ObjectId(round.players[i].toString()) };
+                        var new_val = {$push: {hands:hand_id}};
+
+                        user_db.collection("users").updateOne(query, new_val, function(err, res) {
+                            if (err) throw err;
+                        });
+                    }
+                }
+            });
+        });
 
         // Update stacks
         var potTotal = 0;
