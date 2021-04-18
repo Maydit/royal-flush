@@ -72,79 +72,79 @@ function convertToUni(value) {
 
 
     else if (value == '7S') {
-        return '<img src="/assets/playing_cards/7_of_spades" alt="7 of spades"></img>';
+        return '<img src="/assets/playing_cards/7_of_spades.png" alt="7 of spades"></img>';
     } else if (value == '7H') {
-        return '<img src="/assets/playing_cards/7_of_hearts" alt="7 of hearts"></img>';
+        return '<img src="/assets/playing_cards/7_of_hearts.png" alt="7 of hearts"></img>';
     } else if (value == '7D') {
-        return '<img src="/assets/playing_cards/7_of_diamonds" alt="7 of diamonds"></img>';
+        return '<img src="/assets/playing_cards/7_of_diamonds.png" alt="7 of diamonds"></img>';
     } else if (value == '7C') {
-        return '<img src="/assets/playing_cards/7_of_clubs" alt="7 of clubs"></img>';
+        return '<img src="/assets/playing_cards/7_of_clubs.png" alt="7 of clubs"></img>';
     }
 
 
     else if (value == '8S') {
-        return '<img src="/assets/playing_cards/8_of_spades" alt="8 of spades"></img>';
+        return '<img src="/assets/playing_cards/8_of_spades.png" alt="8 of spades"></img>';
     } else if (value == '8H') {
-        return '<img src="/assets/playing_cards/8_of_hearts" alt="8 of hearts"></img>';
+        return '<img src="/assets/playing_cards/8_of_hearts.png" alt="8 of hearts"></img>';
     } else if (value == '8D') {
-        return '<img src="/assets/playing_cards/8_of_diamonds" alt="8 of diamonds"></img>';
+        return '<img src="/assets/playing_cards/8_of_diamonds.png" alt="8 of diamonds"></img>';
     } else if (value == '8C') {
-        return '<img src="/assets/playing_cards/8_of_clubs" alt="8 of clubs"></img>';
+        return '<img src="/assets/playing_cards/8_of_clubs.png" alt="8 of clubs"></img>';
     }
 
 
     else if (value == '9S') {
-        return '<img src="/assets/playing_cards/9_of_spades" alt="9 of spades"></img>';
+        return '<img src="/assets/playing_cards/9_of_spades.png" alt="9 of spades"></img>';
     } else if (value == '9H') {
-        return '<img src="/assets/playing_cards/9_of_hearts" alt="9 of hearts"></img>';
+        return '<img src="/assets/playing_cards/9_of_hearts.png" alt="9 of hearts"></img>';
     } else if (value == '9D') {
-        return '<img src="/assets/playing_cards/9_of_diamonds" alt="9 of diamonds"></img>';
+        return '<img src="/assets/playing_cards/9_of_diamonds.png" alt="9 of diamonds"></img>';
     } else if (value == '9C') {
-        return '<img src="/assets/playing_cards/9_of_clubs" alt="9 of clubs"></img>';
+        return '<img src="/assets/playing_cards/9_of_clubs.png" alt="9 of clubs"></img>';
     }
 
 
     else if (value == 'TS') {
-        return '<img src="/assets/playing_cards/10_of_spades" alt="10 of spades"></img>';
+        return '<img src="/assets/playing_cards/10_of_spades.png" alt="10 of spades"></img>';
     } else if (value == 'TH') {
-        return '<img src="/assets/playing_cards/10_of_hearts" alt="10 of hearts"></img>';
+        return '<img src="/assets/playing_cards/10_of_hearts.png" alt="10 of hearts"></img>';
     } else if (value == 'TD') {
-        return '<img src="/assets/playing_cards/10_of_diamonds" alt="10 of diamonds"></img>';
+        return '<img src="/assets/playing_cards/10_of_diamonds.png" alt="10 of diamonds"></img>';
     } else if (value == 'TC') {
-        return '<img src="/assets/playing_cards/10_of_clubs" alt="10 of clubs"></img>';
+        return '<img src="/assets/playing_cards/10_of_clubs.png" alt="10 of clubs"></img>';
     }
 
 
     else if (value == 'JS') {
-        return '<img src="/assets/playing_cards/jack_of_spades2" alt="jack of spades"></img>';
+        return '<img src="/assets/playing_cards/jack_of_spades2.png" alt="jack of spades"></img>';
     } else if (value == 'JH') {
-        return '<img src="/assets/playing_cards/jack_of_hearts2" alt="jack of hearts"></img>';
+        return '<img src="/assets/playing_cards/jack_of_hearts2.png" alt="jack of hearts"></img>';
     } else if (value == 'JD') {
-        return '<img src="/assets/playing_cards/jack_of_diamonds2" alt="jack of diamonds"></img>';
+        return '<img src="/assets/playing_cards/jack_of_diamonds2.png" alt="jack of diamonds"></img>';
     } else if (value == 'JC') {
-        return '<img src="/assets/playing_cards/jack_of_clubs2" alt="jack of clubs"></img>';
+        return '<img src="/assets/playing_cards/jack_of_clubs2.png" alt="jack of clubs"></img>';
     }
 
 
     else if (value == 'QS') {
-        return '<img src="/assets/playing_cards/queen_of_spades2" alt="queen of spades"></img>';
+        return '<img src="/assets/playing_cards/queen_of_spades2.png" alt="queen of spades"></img>';
     } else if (value == 'QH') {
-        return '<img src="/assets/playing_cards/queen_of_hearts2" alt="queen of hearts"></img>';
+        return '<img src="/assets/playing_cards/queen_of_hearts2.png" alt="queen of hearts"></img>';
     } else if (value == 'QD') {
-        return '<img src="/assets/playing_cards/queen_of_diamonds2" alt="queen of diamonds"></img>';
+        return '<img src="/assets/playing_cards/queen_of_diamonds2.png" alt="queen of diamonds"></img>';
     } else if (value == 'QC') {
-        return '<img src="/assets/playing_cards/queen_of_clubs2" alt="queen of clubs"></img>';
+        return '<img src="/assets/playing_cards/queen_of_clubs2.png" alt="queen of clubs"></img>';
     }
 
 
     else if (value == 'KS') {
-        return '<img src="/assets/playing_cards/king_of_spades2" alt="king of spades"></img>';
+        return '<img src="/assets/playing_cards/king_of_spades2.png" alt="king of spades"></img>';
     } else if (value == 'KH') {
-        return '<img src="/assets/playing_cards/king_of_hearts2" alt="king of hearts"></img>';
+        return '<img src="/assets/playing_cards/king_of_hearts2.png" alt="king of hearts"></img>';
     } else if (value == 'KD') {
-        return '<img src="/assets/playing_cards/king_of_diamonds2" alt="king of diamonds"></img>';
+        return '<img src="/assets/playing_cards/king_of_diamonds2.png" alt="king of diamonds"></img>';
     } else if (value == 'KC') {
-        return '<img src="/assets/playing_cards/king_of_clubs2" alt="king of clubs"></img>';
+        return '<img src="/assets/playing_cards/king_of_clubs2.png" alt="king of clubs"></img>';
     } else {
         return "";
     }
