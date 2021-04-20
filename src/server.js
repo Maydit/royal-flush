@@ -561,6 +561,10 @@ app.get("/getStats", (req, res) => {
 
                 //PSW
                 returnStr += Math.round((won_sd/total_sd) * 100);
+                returnStr += ",";
+
+                //WTS(went to showdown)
+                returnStr += Math.round((total_sd/(pre_flop_total-pre_flop_fold)) * 100);
 
                 res.send(returnStr);
             }
