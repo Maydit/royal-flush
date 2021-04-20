@@ -20,6 +20,7 @@ var ObjectId = require('mongodb').ObjectID;
 var url = "mongodb+srv://admin:adminpassword@cluster0.f0kkf.mongodb.net/test?retryWrites=true&w=majority";
 var db_name = "users";
 var mongoose = require("mongoose");
+const { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } = require("constants");
 mongoose.Promise = global.Promise;
 mongoose.connect(url);
 
@@ -428,6 +429,8 @@ app.get("/getStats", (req, res) => {
         var total_sd = 0;
         var won_sd = 0;
 
+        var winnings = 0;
+
         async.waterfall([
             function getUser(callback) {
                 user_db.findOne({_id: new ObjectId(user_id.toString())},function (err, res) {
@@ -452,6 +455,9 @@ app.get("/getStats", (req, res) => {
 
                             var winner = res.winner;
 
+                            var commitedPot = 0;
+                            var fold = 0;
+
                             for (var x = 0; x < players.length; x++) {
                                 if(players[x] == user_id) {
                                     pos = x;
@@ -461,7 +467,8 @@ app.get("/getStats", (req, res) => {
 
                             order = res.positions[pos];
                             console.log(cards[pos]);
-
+                            
+                            var preflopPot = 0;
                             //pre-flop action
                             for (var x = 0; x < pre_flop.length; x++) {
                                 if (pre_flop[x][0] == order) {
@@ -483,7 +490,8 @@ app.get("/getStats", (req, res) => {
                                     total_actions += 1;
                                 }
                             }
-
+                            
+                            var flopPot = 0;
                             //flop action
                             for (var x = 0; x < flop.length; x++) {
                                 if (flop[x][0] == order) {
@@ -493,7 +501,8 @@ app.get("/getStats", (req, res) => {
                                     total_actions += 1;
                                 }
                             }
-
+                            
+                            var turnPot = 0;
                             //turn action
                             for(var x = 0; x < turn.length; x++) {
                                 if (turn[x][0] == order) {
@@ -506,6 +515,7 @@ app.get("/getStats", (req, res) => {
 
                             var sd_temp = 0;
 
+                            var riverPot = 0;
                             //river action
                             for(var x = 0; x < river.length; x++) {
                                 if (river[x][0] == order) {
