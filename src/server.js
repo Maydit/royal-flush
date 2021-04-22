@@ -428,6 +428,8 @@ app.get("/getStats", (req, res) => {
         var total_sd = 0;
         var won_sd = 0;
 
+        var bestWin = {};
+
         async.waterfall([
             function getUser(callback) {
                 user_db.findOne({_id: new ObjectId(user_id.toString())},function (err, res) {
@@ -439,6 +441,7 @@ app.get("/getStats", (req, res) => {
                 async.each(user, function(each_hand,eachCallback){
                     hand_db.findOne({_id: new ObjectId(each_hand.toString())},function (err,res) {
                         if (res) {
+                            var names = res.names;
                             var players = res.players;
                             var cards = res.cards;
 
@@ -530,6 +533,18 @@ app.get("/getStats", (req, res) => {
                                     won_sd += 1;
                                 }
                             }
+
+                            // bestWin Calculation
+                            for (var x = 0; x < players.length; x++) {
+                                if (names[pos] == winner) {
+                                    if (cards[pos] in bestWin) {
+                                        bestWin[cards[pos]] += 1;
+                                    } else {
+                                        bestWin[cards[pos]] = 0;
+                                    }
+                                }
+                            }
+                    
                         } else {
                             console.log("No hands found");
                         }
@@ -561,6 +576,17 @@ app.get("/getStats", (req, res) => {
 
                 //PSW
                 returnStr += Math.round((won_sd/total_sd) * 100);
+
+                //bestWin
+                var max = 0;
+                var handVal = "";
+                for (const [key, value] of Object.entries(bestWin)) {
+                    if (value > max) {
+                        max = value;
+                        handVal = key; 
+                    }
+                }
+                console.log(handVal);
 
                 res.send(returnStr);
             }
@@ -754,7 +780,7 @@ io.on('connection', function(socket) {
         deepCopyArray(round.turnBets, dupRound.turnBets);
         deepCopyArray(round.riverBets, dupRound.riverBets);
         dupRound.commCards = round.commCards;
-        dupRound.winner = round.winner;
+        dupRound.winner = round.names[winnerIndex];
         dupRound.pot = round.pot;
 
         MongoClient.connect(url, { useNewUrlParser: true }, (error, client) => {
