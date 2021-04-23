@@ -6,145 +6,145 @@ function displayCC(id, targetId) {
 // Converts a string to a unicode card
 function convertToUni(value) {
     if (value == 'AS') {
-        return "🂡";
+        return '<img src="/assets/playing_cards/ace_of_spades.png" alt="ace of spades"></img>';
     } else if (value == 'AH') {
-        return "🂱";
+        return '<img src="/assets/playing_cards/ace_of_hearts.png" alt="ace of hearts"></img>';
     } else if (value == 'AD') {
-        return "🃁";
+        return '<img src="/assets/playing_cards/ace_of_diamonds.png" alt="ace of diamonds"></img>';
     } else if (value == 'AC') {
-        return "🃑";
+        return '<img src="/assets/playing_cards/ace_of_clubs.png" alt="ace of clubs"></img>';
     }
 
 
     else if (value == '2S') {
-        return "🂢";
+        return '<img src="/assets/playing_cards/2_of_spades.png" alt="2 of spades"></img>';
     } else if (value == '2H') {
-        return "🂲";
+        return '<img src="/assets/playing_cards/2_of_hearts.png" alt="2 of hearts"></img>';
     } else if (value == '2D') {
-        return "🃂";
+        return '<img src="/assets/playing_cards/2_of_diamonds.png" alt="2 of diamonds"></img>';
     } else if (value == '2C') {
-        return "🃒";
+        return '<img src="/assets/playing_cards/2_of_clubs.png" alt="2 of clubs"></img>';
     }
 
 
     else if (value == '3S') {
-        return "🂣";
+        return '<img src="/assets/playing_cards/3_of_spades.png" alt="3 of spades"></img>';
     } else if (value == '3H') {
-        return "🂳";
+        return '<img src="/assets/playing_cards/3_of_hearts.png" alt="3 of hearts"></img>';
     } else if (value == '3D') {
-        return "🃃";
+        return '<img src="/assets/playing_cards/3_of_diamonds.png" alt="3 of diamonds"></img>';
     } else if (value == '3C') {
-        return "🃓";
+        return '<img src="/assets/playing_cards/3_of_clubs.png" alt="3 of clubs"></img>';
     }
 
 
     else if (value == '4S') {
-        return "🂤";
+        return '<img src="/assets/playing_cards/4_of_spades.png" alt="4 of spades"></img>';
     } else if (value == '4H') {
-        return "🂴";
+        return '<img src="/assets/playing_cards/4_of_hearts.png" alt="4 of hearts"></img>';
     } else if (value == '4D') {
-        return "🃄";
+        return '<img src="/assets/playing_cards/4_of_diamonds.png" alt="4 of diamonds"></img>';
     } else if (value == '4C') {
-        return "🃔";
+        return '<img src="/assets/playing_cards/4_of_clubs.png" alt="4 of clubs"></img>';
     }
 
 
     else if (value == '5S') {
-        return "🂥";
+        return '<img src="/assets/playing_cards/5_of_spades.png" alt="5 of spades"></img>';
     } else if (value == '5H') {
-        return "🂵";
+        return '<img src="/assets/playing_cards/5_of_hearts.png" alt="5 of hearts"></img>';
     } else if (value == '5D') {
-        return "🃅";
+        return '<img src="/assets/playing_cards/5_of_diamonds.png" alt="5 of diamonds"></img>';
     } else if (value == '5C') {
-        return "🃕";
+        return '<img src="/assets/playing_cards/5_of_clubs.png" alt="5 of clubs"></img>';
     }
 
 
     else if (value == '6S') {
-        return "🂦";
+        return '<img src="/assets/playing_cards/6_of_spades.png" alt="6 of spades"></img>';
     } else if (value == '6H') {
-        return "🂶";
+        return '<img src="/assets/playing_cards/6_of_hearts.png" alt="6 of hearts"></img>';
     } else if (value == '6D') {
-        return "🃆";
+        return '<img src="/assets/playing_cards/6_of_diamonds.png" alt="6 of diamonds"></img>';
     } else if (value == '6C') {
-        return "🃖";
+        return '<img src="/assets/playing_cards/6_of_clubs.png" alt="6 of clubs"></img>';
     }
 
 
     else if (value == '7S') {
-        return "🂧";
+        return '<img src="/assets/playing_cards/7_of_spades.png" alt="7 of spades"></img>';
     } else if (value == '7H') {
-        return "🂷";
+        return '<img src="/assets/playing_cards/7_of_hearts.png" alt="7 of hearts"></img>';
     } else if (value == '7D') {
-        return "🃇";
+        return '<img src="/assets/playing_cards/7_of_diamonds.png" alt="7 of diamonds"></img>';
     } else if (value == '7C') {
-        return "🃗";
+        return '<img src="/assets/playing_cards/7_of_clubs.png" alt="7 of clubs"></img>';
     }
 
 
     else if (value == '8S') {
-        return "🂨";
+        return '<img src="/assets/playing_cards/8_of_spades.png" alt="8 of spades"></img>';
     } else if (value == '8H') {
-        return "🂸";
+        return '<img src="/assets/playing_cards/8_of_hearts.png" alt="8 of hearts"></img>';
     } else if (value == '8D') {
-        return "🃈";
+        return '<img src="/assets/playing_cards/8_of_diamonds.png" alt="8 of diamonds"></img>';
     } else if (value == '8C') {
-        return "🃘";
+        return '<img src="/assets/playing_cards/8_of_clubs.png" alt="8 of clubs"></img>';
     }
 
 
     else if (value == '9S') {
-        return "🂩";
+        return '<img src="/assets/playing_cards/9_of_spades.png" alt="9 of spades"></img>';
     } else if (value == '9H') {
-        return "🂹";
+        return '<img src="/assets/playing_cards/9_of_hearts.png" alt="9 of hearts"></img>';
     } else if (value == '9D') {
-        return "🃉";
+        return '<img src="/assets/playing_cards/9_of_diamonds.png" alt="9 of diamonds"></img>';
     } else if (value == '9C') {
-        return "🃙";
+        return '<img src="/assets/playing_cards/9_of_clubs.png" alt="9 of clubs"></img>';
     }
 
 
     else if (value == 'TS') {
-        return "🂪";
+        return '<img src="/assets/playing_cards/10_of_spades.png" alt="10 of spades"></img>';
     } else if (value == 'TH') {
-        return "🂺";
+        return '<img src="/assets/playing_cards/10_of_hearts.png" alt="10 of hearts"></img>';
     } else if (value == 'TD') {
-        return "🃊";
+        return '<img src="/assets/playing_cards/10_of_diamonds.png" alt="10 of diamonds"></img>';
     } else if (value == 'TC') {
-        return "🃚";
+        return '<img src="/assets/playing_cards/10_of_clubs.png" alt="10 of clubs"></img>';
     }
 
 
     else if (value == 'JS') {
-        return "🂫";
+        return '<img src="/assets/playing_cards/jack_of_spades2.png" alt="jack of spades"></img>';
     } else if (value == 'JH') {
-        return "🂻";
+        return '<img src="/assets/playing_cards/jack_of_hearts2.png" alt="jack of hearts"></img>';
     } else if (value == 'JD') {
-        return "🃋";
+        return '<img src="/assets/playing_cards/jack_of_diamonds2.png" alt="jack of diamonds"></img>';
     } else if (value == 'JC') {
-        return "🃛";
+        return '<img src="/assets/playing_cards/jack_of_clubs2.png" alt="jack of clubs"></img>';
     }
 
 
     else if (value == 'QS') {
-        return "🂭";
+        return '<img src="/assets/playing_cards/queen_of_spades2.png" alt="queen of spades"></img>';
     } else if (value == 'QH') {
-        return "🂽";
+        return '<img src="/assets/playing_cards/queen_of_hearts2.png" alt="queen of hearts"></img>';
     } else if (value == 'QD') {
-        return "🃍";
+        return '<img src="/assets/playing_cards/queen_of_diamonds2.png" alt="queen of diamonds"></img>';
     } else if (value == 'QC') {
-        return "🃝";
+        return '<img src="/assets/playing_cards/queen_of_clubs2.png" alt="queen of clubs"></img>';
     }
 
 
     else if (value == 'KS') {
-        return "🂮";
+        return '<img src="/assets/playing_cards/king_of_spades2.png" alt="king of spades"></img>';
     } else if (value == 'KH') {
-        return "🂾";
+        return '<img src="/assets/playing_cards/king_of_hearts2.png" alt="king of hearts"></img>';
     } else if (value == 'KD') {
-        return "🃎";
+        return '<img src="/assets/playing_cards/king_of_diamonds2.png" alt="king of diamonds"></img>';
     } else if (value == 'KC') {
-        return "🃞";
+        return '<img src="/assets/playing_cards/king_of_clubs2.png" alt="king of clubs"></img>';
     } else {
         return "";
     }

@@ -1,3 +1,49 @@
+html,
+body {
+  height: 100%;
+}
+
+/* HEADER */
+.jumbotron-fluid h1 {
+    margin-top: 10px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 50px;
+    font-family: 'Fugaz One', cursive;
+}
+
+.jumbotron-fluid p {
+    text-align: center;
+    font-size: 20px;
+    font-style: italic;
+    font-family: 'Nunito', sans-serif;
+}
+
+.header h1 {
+    padding-top: 15px;
+}
+
+#title a {
+    text-decoration: none;
+    color: white;
+}
+
+
+.header {
+    text-align: center;
+    background: #7f99b1;
+    color: white;
+    margin-top: -20px;
+    margin-bottom: 50px;
+    height: 120px;
+
+}
+
+
+
+/* HEADER */
+
+
 .col-md-6 {
     background-color: #b8cecd;
 }
@@ -13,101 +59,41 @@ legend {
     font-weight: bolder;
 }
 
+.loginHeader {
+    padding-bottom: 10px;
+    border-bottom: 1px solid black;
+    margin-bottom: 20px;
+}
+
 .text-center {
-    font-size: 3em;
     font-family: 'Nunito', sans-serif;
 }
 
 input {
-    background-color: #7f99b1;
-    float: left;
+    background-color: #b8cecd;
 }
-.form-group {
-    padding-bottom: 10px;
-}
-
 
 .margin-bottom {
     margin-bottom:15px;
 }
 
 fieldset {
-    padding: 20px;
     padding-left: 40px;
-    background:  #7f99b1;
+    background:  #b8cecd;
 }
-legend {
-   color: #678;
-}
+
 .form-control {
     width: 95%;
 }
 
 label {
-    margin-top: 10px;
+    margin-top: 5px;
 }
 
 label small {
     color: #678 !important;
 }
-span.req {
-    color:maroon;
-    font-size: 112%;
-}
 
-.rightText {
-    font-family: 'Nunito', sans-serif;
-    margin-top: -55px;
-    text-align: center;
-}
-
-.rightText p {
-    text-align: center;
-}
-
-.rightText h1 {
-    text-align: center;
-}
-
-.rightText img {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 10px;
-}
-
-.header {
-    text-align: center;
-    background:  #7f99b1;
-    color: white;
-    margin-top: -20px;
-    margin-bottom: 50px;
-    height: 120px;
-
-}
-
-.header h1 {
-    padding-top: 15px;
-
-}
-
-.jumbotron-fluid h1 {
-    text-align: center;
-    font-weight: bold;
-    font-size: 50px;
-    font-family: 'Fugaz One', cursive;
-}
-
-.jumbotron-fluid p {
-    text-align: center;
-    font-size: 20px;
-    font-style: italic;
-    font-family: 'Nunito', sans-serif;
-}
-
-.loginBlock {
-    width:50%;
-}
 
 .loginForm {
     padding-bottom: 100px;

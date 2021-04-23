@@ -14,8 +14,7 @@
         <script src="/socket.io/socket.io.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-
-        <title>Homepage</title>
+        <title>Royal Flush</title>
     </head>
 
     <body style = "background-color: #b8cecd">
@@ -29,36 +28,89 @@
 
         <div class="container" >
             <div class="row">
+
+                <div class = "col-md-6">
+                    <div class = "info">
+                        <h1 class = "sectionHeader">Welcome</h1>
+                        <h2 class = "subHeader">About</h2>
+                        <p>Do you enjoy poker with your friends? Ever wanted to keep track of who wins and loses and prove to them definitively that you’re the best among them? Royal Flush allows you and your friends to play live poker within our app! At the end of each game, our state-of-the-art algorthims calculates and displays your poker statistics for you to see!</p>
+                        <br>
+                        <p>You can tell how many hands you win on average, your betting tendencies, and many other kinds of statistics to compare them with friends, improve your game, and have fun playing face to face poker.</p>
+
+                        <p class = "link"><a href="https://github.com/justinchen673/royal-flush">Check out our Github!</a></p>
+                    </div>
+                </div>
+
+                <div class = "col-md-2">
+                </div>
+                
                 <div class="col-md-6">
                     <div class = "rightText">
-                        <h1 class = "sectionHeader">Select an Option</h1>
-                        <div id="app">
+                        <h1 class = "sectionHeader">Register</h1>
+
+                        <div class = "registerForm">
+                            <form action="/register" method="post" id="fileForm" role="form">
+                                <fieldset><legend class="text-center">Registration Form <span class="req"><small> (required *)  </small></span></legend>
+    
+                                    <div class="form-group">
+                                        <label for="firstname"><span class="req">* </span> First name: </label>
+                                        <input class="form-control" type="text" name="firstname" id = "firstname" onkeyup = "name_check();" required />
+                                        <span id="errFirst" class="errFirst"></span>
+                                    </div>
+    
+                                    <div class="form-group">
+                                        <label for="lastname"><span class="req">* </span> Last name: </label>
+                                        <input class="form-control" type="text" name="lastname" id = "lastname" onkeyup = "name_check();" required />
+                                        <span id="errLast" class="errLast"></span>
+                                    </div>
+    
+                                    <div class="form-group">
+                                        <label for="email"><span class="req">* </span> Email Address: </label>
+                                        <input class="form-control" required type="text" name="email" id = "email"  onkeyup="email_check();" />
+                                        <div class="status" id="status"></div>
+                                    </div>
+    
+                                    <div class="form-group">
+                                        <label for="password" ><span class="req">* </span> Password: </label>
+                                        <input required name="password" type="password" class="form-control inputpass" minlength="4" maxlength="16"  id="pass1" onkeyup="pass_check()"/> </p>
+                                        <label for="password"><span class="req">* </span> Password Confirm: </label>
+                                        <input required name="password_2" type="password" class="form-control inputpass" minlength="4" maxlength="16" placeholder="Passwords must match" onkeyup="pass_check()" id="pass2" />
+                                        <span id="confirmMessage" class="confirmMessage"></span>
+                                    </div>
+    
+                                </fieldset>
+    
+                                <div class="form-group" style = "margin-top: 20px;">
+                                    <input class="btn btn-success" type="submit" name="submit_reg" value="Register" id="submit_reg" disabled>
+                                </div>
+    
+                            </form>
+                        </div>
+
+                        <a href="login/login.html">Already have an account? Log in!</a>
+
+
+                        <!-- <div id="app">
                             <div class = "login">
                                 <a href="login/login.html"> <button type="button" class="btn btn-primary loginButton">Login</button></a>
                             </div>
                             <div class = "register">
                                 <a href="login/sign_in.html"> <button type="button" class="btn btn-primary registerButton">Register</button></a>
                             </div>
-                        </div>
+                        </div> -->
+
+
+
+
+
                     </div>
                 </div>
 
-                <div class = "col-md-2">
-                </div>
-
-                <div class = "col-md-6">
-                    <div class = "info">
-                        <h1 class = "sectionHeader">Welcome</h1>
-                        <h2 class = "subHeader">About</h2>
-                        <p>Do you enjoy poker with your friends? Ever wanted to keep track of who wins and loses and prove to them definitively that you’re the best among them? Our app allows you to record your live poker games simply and easily, then gives you personal statistics on them. You can use our lightweight design to enter poker hands and results with either your mobile device or on our website. You can tell how many hands you win on average, your betting tendencies, and many other kinds of statistics to compare them with friends, improve your game, and have fun playing face to face poker.</p>
-
-                        <p class = "link"><a href="https://github.com/Maydit/royal-flush">Check out our Github!</a></p>
-                    </div>
-                </div>
+  
             </div>
         </div>
 
-        <script>
+        <!-- <script>
         const App = new Vue({
             el: '#app',
             methods: {
@@ -70,7 +122,9 @@
                 }
             }
         });
-        </script>
+        </script> -->
+
+        <script src="login/login.js"></script>
 
     </body>
 </html>

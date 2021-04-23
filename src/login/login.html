@@ -7,18 +7,19 @@
 
         <link rel= "stylesheet" type="text/css" href = "login.css" />
         <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link href="https://fonts.googleapis.com/css?family=Fugaz+One&display=swap" rel="stylesheet">
 
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
         <title>Login</title>
     </head>
 
     <body style = "background-color: #b8cecd">
-
         <div class = "header">
             <div class = "jumbotron-fluid">
                 <h1>Royal Flush</h1>
@@ -27,6 +28,47 @@
         </div>
 
         <div class="container" >
+            <div class="row">
+                <div class="col-sm">
+ 
+                </div>
+
+
+
+                <div class="col-sm text-center">
+                    <div class = "loginForm">
+                        <form action="/login" method="post" id="fileForm" role="form">
+
+                            <fieldset>
+                                <h2 class = "loginHeader">Login<span class="req"></span></h2>
+                                <div class="form-group">
+                                    <label for="email"> Email Address: </label>
+                                    <input class="form-control" required type="text" name="email" id = "email" onkeyup="email_check_login()" />
+                                    <div class="status" id="status"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password" > Password: </label>
+                                    <input required name="password" type="password" class="form-control inputpass" minlength="4" maxlength="16"  id="pass1" /> </p>
+                                </div>
+                            </fieldset>
+
+                            <div class="form-group" style = "margin-top: 20px;">
+                                <input class="btn btn-primary" type="submit" name="submit_reg" value="Login" id="submit_reg" disabled>
+                            </div>
+
+                        </form><!-- ends register form -->
+                    </div>
+                </div>
+
+
+
+                <div class="col-sm">
+                    
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="container" >
             <div class="row">
 
 
@@ -54,16 +96,9 @@
                     </div>
                 </div>
 
-<!--                 <div class = "col-md-6">
-                    <div class="rightText">
-                        <h1 class="page-header">Info</h1>
-                        <p>A live poker tracking app to optimize your playstyle</p>
-                        <p>"Stats don't bluff"</p>
-                        <p><a href="https://github.com/Maydit/royal-flush">Check out our Github!</a></p>
-                    </div>
-                </div> -->
 
-        </div>
+
+        </div> -->
 
         <script src="login.js"></script>
 
