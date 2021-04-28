@@ -59,6 +59,37 @@ body {
     background-color: #FFF5B2;
 }
 
+.stat1 {
+    border: 1.5px solid black;
+    margin-top: 25px;
+    padding-bottom: 20%;
+
+    position: relative;
+  /*  background-color: #FCB9B2;*/
+  background-color: blueviolet;
+}
+
+.stat2 {
+    border: 1.5px solid black;
+    margin-top: 25px;
+    padding-bottom: 20%;
+    position: relative;
+    margin-bottom: 30px;
+  /*  background-color: #FCB9B2;*/
+  background-color: lightgray;
+}
+
+.stat3 {
+    border: 1.5px solid black;
+    margin-top: 25px;
+    padding-bottom: 20%;
+    position: relative;
+  /*  background-color: #FCB9B2;*/
+  background-color: orange;
+}
+
+
+
 .lText {
   /*  margin: auto;*/
     text-align: center;
@@ -100,3 +131,6 @@ body {
 h1 {
     text-align: center;
 }
+
+
+
