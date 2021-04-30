@@ -595,6 +595,7 @@ app.get("/getStats", (req, res) => {
 
                 //Total Winnings
                 returnStr += winnings;
+                returnStr += ",";
 
                 //bestWin
                 var max = 0;
@@ -606,6 +607,7 @@ app.get("/getStats", (req, res) => {
                     }
                 }
                 console.log(handVal);
+                returnStr += handVal;
 
                 res.send(returnStr);
             }
