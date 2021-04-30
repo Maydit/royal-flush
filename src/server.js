@@ -536,7 +536,7 @@ app.get("/getStats", (req, res) => {
 
                             if (sd_temp > 0) {
                                 total_sd += 1;
-                                if (winner == pos) {
+                                if (winner == name) {
                                     won_sd += 1;
                                 }
                             }
