@@ -775,7 +775,7 @@ io.on('connection', function(socket) {
         deepCopyArray(round.turnBets, dupRound.turnBets);
         deepCopyArray(round.riverBets, dupRound.riverBets);
         dupRound.commCards = round.commCards;
-        dupRound.winner = round.winner;
+        dupRound.winner = round.names[winnerIndex];
         dupRound.pot = round.pot;
 
         MongoClient.connect(url, { useNewUrlParser: true }, (error, client) => {
