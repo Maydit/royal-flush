@@ -20,5 +20,5 @@ EXPOSE 3000
 CMD [ "node", "/usr/royal-flush/src/server.js" ]
 
 # RUN docker pull eekor/royalflush
-# RUN docker run --publish 3000:3000 royalflush
+# RUN docker run --publish 3000:3000 eekor/royalflush
 # Open up your web browser and put localhost:3000 as the URL.
