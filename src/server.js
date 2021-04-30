@@ -430,6 +430,7 @@ app.get("/getStats", (req, res) => {
         var won_sd = 0;
 
         var winnings = 0;
+        var bestWin = {};
 
         async.waterfall([
             function getUser(callback) {
@@ -442,8 +443,10 @@ app.get("/getStats", (req, res) => {
                 async.each(user, function(each_hand,eachCallback){
                     hand_db.findOne({_id: new ObjectId(each_hand.toString())},function (err,res) {
                         if (res) {
+                            var names = res.names;
                             var players = res.players;
                             var cards = res.cards;
+                            var playerNames = res.names;
 
                             var pre_flop = res.preflopBets;
                             var flop = res.flopBets;
@@ -455,8 +458,7 @@ app.get("/getStats", (req, res) => {
 
                             var winner = res.winner;
 
-                            var commitedPot = 0;
-                            var fold = 0;
+                            var pot = res.pot;
 
                             for (var x = 0; x < players.length; x++) {
                                 if(players[x] == user_id) {
@@ -465,10 +467,11 @@ app.get("/getStats", (req, res) => {
                                 }
                             }
 
+                            var name = playerNames[pos]
+
                             order = res.positions[pos];
                             console.log(cards[pos]);
                             
-                            var preflopPot = 0;
                             //pre-flop action
                             for (var x = 0; x < pre_flop.length; x++) {
                                 if (pre_flop[x][0] == order) {
@@ -491,7 +494,6 @@ app.get("/getStats", (req, res) => {
                                 }
                             }
                             
-                            var flopPot = 0;
                             //flop action
                             for (var x = 0; x < flop.length; x++) {
                                 if (flop[x][0] == order) {
@@ -502,7 +504,6 @@ app.get("/getStats", (req, res) => {
                                 }
                             }
                             
-                            var turnPot = 0;
                             //turn action
                             for(var x = 0; x < turn.length; x++) {
                                 if (turn[x][0] == order) {
@@ -515,7 +516,6 @@ app.get("/getStats", (req, res) => {
 
                             var sd_temp = 0;
 
-                            var riverPot = 0;
                             //river action
                             for(var x = 0; x < river.length; x++) {
                                 if (river[x][0] == order) {
@@ -540,6 +540,22 @@ app.get("/getStats", (req, res) => {
                                     won_sd += 1;
                                 }
                             }
+
+                            if (winner == name) {
+                                winnings += pot; 
+                            }
+                            
+                            // bestWin Calculation
+                            for (var x = 0; x < players.length; x++) {
+                                if (names[pos] == winner) {
+                                    if (cards[pos] in bestWin) {
+                                        bestWin[cards[pos]] += 1;
+                                    } else {
+                                        bestWin[cards[pos]] = 0;
+                                    }
+                                }
+                            }
+                    
                         } else {
                             console.log("No hands found");
                         }
@@ -575,6 +591,23 @@ app.get("/getStats", (req, res) => {
 
                 //WTS(went to showdown)
                 returnStr += Math.round((total_sd/(pre_flop_total-pre_flop_fold)) * 100);
+                returnStr += ",";
+
+                //Total Winnings
+                returnStr += winnings;
+                returnStr += ",";
+
+                //bestWin
+                var max = 0;
+                var handVal = "";
+                for (const [key, value] of Object.entries(bestWin)) {
+                    if (value > max) {
+                        max = value;
+                        handVal = key; 
+                    }
+                }
+                console.log(handVal);
+                returnStr += handVal;
 
                 res.send(returnStr);
             }
@@ -768,7 +801,7 @@ io.on('connection', function(socket) {
         deepCopyArray(round.turnBets, dupRound.turnBets);
         deepCopyArray(round.riverBets, dupRound.riverBets);
         dupRound.commCards = round.commCards;
-        dupRound.winner = round.winner;
+        dupRound.winner = round.names[winnerIndex];
         dupRound.pot = round.pot;
 
         MongoClient.connect(url, { useNewUrlParser: true }, (error, client) => {
