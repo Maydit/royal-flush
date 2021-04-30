@@ -20,6 +20,7 @@ var ObjectId = require('mongodb').ObjectID;
 var url = "mongodb+srv://admin:adminpassword@cluster0.f0kkf.mongodb.net/test?retryWrites=true&w=majority";
 var db_name = "users";
 var mongoose = require("mongoose");
+const { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } = require("constants");
 mongoose.Promise = global.Promise;
 mongoose.connect(url);
 
@@ -428,6 +429,9 @@ app.get("/getStats", (req, res) => {
         var total_sd = 0;
         var won_sd = 0;
 
+        var winnings = 0;
+        var bestWin = {};
+
         async.waterfall([
             function getUser(callback) {
                 user_db.findOne({_id: new ObjectId(user_id.toString())},function (err, res) {
@@ -439,8 +443,10 @@ app.get("/getStats", (req, res) => {
                 async.each(user, function(each_hand,eachCallback){
                     hand_db.findOne({_id: new ObjectId(each_hand.toString())},function (err,res) {
                         if (res) {
+                            var names = res.names;
                             var players = res.players;
                             var cards = res.cards;
+                            var playerNames = res.names;
 
                             var pre_flop = res.preflopBets;
                             var flop = res.flopBets;
@@ -452,6 +458,8 @@ app.get("/getStats", (req, res) => {
 
                             var winner = res.winner;
 
+                            var pot = res.pot;
+
                             for (var x = 0; x < players.length; x++) {
                                 if(players[x] == user_id) {
                                     pos = x;
@@ -459,9 +467,11 @@ app.get("/getStats", (req, res) => {
                                 }
                             }
 
+                            var name = playerNames[pos]
+
                             order = res.positions[pos];
                             console.log(cards[pos]);
-
+                            
                             //pre-flop action
                             for (var x = 0; x < pre_flop.length; x++) {
                                 if (pre_flop[x][0] == order) {
@@ -483,7 +493,7 @@ app.get("/getStats", (req, res) => {
                                     total_actions += 1;
                                 }
                             }
-
+                            
                             //flop action
                             for (var x = 0; x < flop.length; x++) {
                                 if (flop[x][0] == order) {
@@ -493,7 +503,7 @@ app.get("/getStats", (req, res) => {
                                     total_actions += 1;
                                 }
                             }
-
+                            
                             //turn action
                             for(var x = 0; x < turn.length; x++) {
                                 if (turn[x][0] == order) {
@@ -530,6 +540,22 @@ app.get("/getStats", (req, res) => {
                                     won_sd += 1;
                                 }
                             }
+
+                            if (winner == name) {
+                                winnings += pot; 
+                            }
+                            
+                            // bestWin Calculation
+                            for (var x = 0; x < players.length; x++) {
+                                if (names[pos] == winner) {
+                                    if (cards[pos] in bestWin) {
+                                        bestWin[cards[pos]] += 1;
+                                    } else {
+                                        bestWin[cards[pos]] = 0;
+                                    }
+                                }
+                            }
+                    
                         } else {
                             console.log("No hands found");
                         }
@@ -561,6 +587,27 @@ app.get("/getStats", (req, res) => {
 
                 //PSW
                 returnStr += Math.round((won_sd/total_sd) * 100);
+                returnStr += ",";
+
+                //WTS(went to showdown)
+                returnStr += Math.round((total_sd/(pre_flop_total-pre_flop_fold)) * 100);
+                returnStr += ",";
+
+                //Total Winnings
+                returnStr += winnings;
+                returnStr += ",";
+
+                //bestWin
+                var max = 0;
+                var handVal = "";
+                for (const [key, value] of Object.entries(bestWin)) {
+                    if (value > max) {
+                        max = value;
+                        handVal = key; 
+                    }
+                }
+                console.log(handVal);
+                returnStr += handVal;
 
                 res.send(returnStr);
             }

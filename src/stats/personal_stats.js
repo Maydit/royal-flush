@@ -21,6 +21,9 @@ const App = new Vue({
             if (statsArr[3].charAt(0) != 'N') {
                 document.getElementById("psw").innerHTML += "%";
             }
+            document.getElementById("wts").innerHTML = statsArr[4] += "%";
+            document.getElementById("tw").innerHTML = statsArr[5];
+            document.getElementById("bh").innerHTML = statsArr[6];
         });
     }
 });
