@@ -18,4 +18,4 @@ Live at [royalflush.herokuapp.com](royalflush.herokuapp.com)
 
 # [Code Of Conduct](https://github.com/justinchen673/royal-flush/blob/testingScripts/Contributor%20Code%20of%20Conduct.md)
 
-# [How to Run The Demo/Testing Script] (https://github.com/justinchen673/royal-flush/blob/testingScripts/runningTesting.md)
+# [How to Run The Demo/Testing Script](https://github.com/justinchen673/royal-flush/blob/testingScripts/runningTesting.md)
