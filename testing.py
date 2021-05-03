@@ -59,7 +59,7 @@ class User:
         assert(self.driver.find_element_by_id("submit_reg").is_enabled())
         self.driver.find_element_by_id("submit_reg").click()
     def logout(self):
-        pass
+        self.driver.find_elements_by_id("logoutButton").click()
     def createGame(self):
         self.driver.find_element_by_id("joinButton").click()
         time.sleep(2)
@@ -103,7 +103,7 @@ class User:
     def getLog(self):
         logText=self.driver.find_element_by_id("gameLog").text
         logText=logText.split('\n')
-        return logText[0]
+        return logText
     def getAction(self):
         action=self.driver.find_element_by_id("action").text
         action=action.split()
@@ -119,6 +119,8 @@ class User:
         else:
             self.cardsOnTable=[]
         return self.cardsOnTable
+    def getBalance(self):
+        pass
 
 class Poker:
     def __init__(self,userArr):
@@ -132,8 +134,9 @@ class Poker:
         return True
     def checkWinner(self):
         for player in self.players:
-            if player.getLog() =="{} {} won the hand!".format(player.firstName,player.lastName):
-                return True
+            if len(player.getLog())>1:
+                if player.getLog()[1] =="{} {} won the hand!".format(player.firstName,player.lastName):
+                    return True
         return False
     def chooseAction(self,player,action="random"):
         
@@ -157,12 +160,14 @@ class Poker:
     def chooseValidAction(self,player):
         invalidMoves=["Not your turn!", "Can't Check!", "Can't Match!","Raise amount must be greater than last raise"]
         self.chooseAction(player)
-        while player.getLog() in invalidMoves:
+        while player.getLog()[0] in invalidMoves:
             self.chooseAction(player)
     def simulateGame(self):
-        #have everyone match to start 
+        #simulate a singular game
+        #everyone checks at first 
         for player in self.players:
-            player.match()
+            player.check()
+
         while not self.checkWinner():
             for player in self.players:
                 if player.getAction() == [player.firstName,player.lastName]:
@@ -189,7 +194,10 @@ if __name__ == "__main__":
     jinnthon.joinGame(andy.gameCode)
 
     game= Poker([andy,fred,jeff,jinnthon])
-    game.simulateGame()
+    gameCount=50
+    for i in range(gameCount):
+        print("Game {}\n".format(i))
+        game.simulateGame()
 
 
 
