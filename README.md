@@ -17,3 +17,5 @@ Live at [royalflush.herokuapp.com](royalflush.herokuapp.com)
 6. Once the server is running, open up your web browser and put localhost:3000 as the URL.
 
 # [Code Of Conduct](https://github.com/justinchen673/royal-flush/blob/testingScripts/Contributor%20Code%20of%20Conduct.md)
+
+# [How to Run The Demo/Testing Script]ttps://github.com/justinchen673/royal-flush/blob/testingScripts/runningTesting.md)
