@@ -14,8 +14,10 @@ from pokereval.hand_evaluator import HandEvaluator
 
 globalRankTranslation = {'1':1,'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'10':10,'J':11,'Q':12,'K':13,'A':14}
 globalSuitTranslation = {'S':1,'H':2,'D':3,'C':4}
+
+
 def interceptor(request):
-    del request.headers['Referer']  # Delete the header first
+    del request.headers['Referer']
     request.headers['Referer'] = 'some_referer'
 class User: 
     def __init__(self,firstName, lastName, email, password):
@@ -58,52 +60,48 @@ class User:
         self.driver.find_element_by_id("pass2").send_keys(self.password)
         assert(self.driver.find_element_by_id("submit_reg").is_enabled())
         self.driver.find_element_by_id("submit_reg").click()
+
     def logout(self):
         self.driver.find_elements_by_id("logoutButton").click()
+
     def createGame(self):
         self.driver.find_element_by_id("joinButton").click()
         time.sleep(2)
         self.gameCode=self.driver.find_element_by_id("codeElement").text
         self.gameCode=self.gameCode.split()[1]
         self.isHost=True
+
     def joinGame(self,gameCode=random.randint(1000,5000)):
         self.driver.find_element_by_class_name("form-control").send_keys(gameCode)
         self.driver.find_element_by_id("joinButton").click()
         self.gameCode=gameCode
         time.sleep(2)
+
     def check(self):
-       # self.driver.find_element_by_class_name("btn btn-primary checkButton").click()
         self.driver.find_element_by_xpath('//button[text()="Check"]').click()
-        logText=self.driver.find_element_by_id("gameLog").text
-        logText=logText.split('\n')
-        #assert(logText[0] == '{} {} checked.'.format(self.firstName,self.lastName))
+
     def match(self):
         self.driver.find_element_by_xpath('//button[text()="Match"]').click()
-        logText=self.driver.find_element_by_id("gameLog").text
-        logText=logText.split('\n')
-        #assert(logText[0] == '{} {} matched.'.format(self.firstName,self.lastName))
+
         
     def fold(self):
         self.driver.find_element_by_xpath('//button[text()="Fold"]').click()
-        logText=self.driver.find_element_by_id("gameLog").text
-        logText=logText.split('\n')
-        #assert(logText[0] == '{} {} folded.'.format(self.firstName,self.lastName))
-        self.inGame=False 
+
     def raiseAmnt(self,amount):
         self.driver.find_element_by_class_name("numberInput").send_keys(str(amount))
         self.driver.find_element_by_xpath('//button[text()="Raise"]').click()
         self.driver.find_element_by_class_name("numberInput").clear()
-        logText=self.driver.find_element_by_id("gameLog").text
-        logText=logText.split('\n')
-        #assert(logText[0] == '{} {} raised {}.'.format(self.firstName,self.lastName,amount))
+
     def getHand(self):
         self.hand=self.driver.find_element_by_id("currentHand").text
         self.hand= self.hand.split()[1]
         self.hand=self.hand.split()
+
     def getLog(self):
         logText=self.driver.find_element_by_id("gameLog").text
         logText=logText.split('\n')
         return logText
+
     def getAction(self):
         action=self.driver.find_element_by_id("action").text
         action=action.split()
@@ -111,6 +109,7 @@ class User:
             return["N/A"]
         else:
             return [action[2],action[3]]
+        
     def getBoard(self):
         self.cardsOnTable=self.driver.find_element_by_id("commCards").text
         if(len(self.cardsOnTable)>15):
@@ -119,12 +118,25 @@ class User:
         else:
             self.cardsOnTable=[]
         return self.cardsOnTable
+
     def getBalance(self):
-        pass
+        player=self.driver.find_element_by_id("players").text
+        playerBalance=player.split('\n')
+        for person in playerBalance:
+            personInfo=person.split()
+            if personInfo[-1] == "(you)" and personInfo[1]==self.firstName and personInfo[2]== self.lastName:
+                self.balance=int(personInfo[0])
+                assert(self.balance >=0)
+                return self.balance
+        raise ValueError("No balance found!")
+    
+    def printLoginInfo(self):
+        print("Username: {}\n Password:{}".format(self.email,self.password))
 
 class Poker:
     def __init__(self,userArr):
         self.players=userArr
+
     def checkSync(self):
         #check if every user sees the same board
         hostBoard = self.players[0].getBoard()
@@ -132,14 +144,15 @@ class Poker:
             if hostBoard != player.getBoard():
                 return False 
         return True
+
     def checkWinner(self):
         for player in self.players:
             if len(player.getLog())>1:
                 if player.getLog()[1] =="{} {} won the hand!".format(player.firstName,player.lastName):
                     return True
         return False
+
     def chooseAction(self,player,action="random"):
-        
         translation={"check":0,"match":1,"fold":2,"raise":3}
         if action=="random":
             action=random.randint(0,3)
@@ -156,12 +169,14 @@ class Poker:
         elif action==2:
             player.fold()
         elif action==3:
-            player.raiseAmnt(random.randint(0,50))
+            player.raiseAmnt(random.randint(0,player.getBalance()))
+
     def chooseValidAction(self,player):
         invalidMoves=["Not your turn!", "Can't Check!", "Can't Match!","Raise amount must be greater than last raise"]
         self.chooseAction(player)
         while player.getLog()[0] in invalidMoves:
             self.chooseAction(player)
+
     def simulateGame(self):
         #simulate a singular game
         #everyone checks at first 
@@ -172,14 +187,12 @@ class Poker:
             for player in self.players:
                 if player.getAction() == [player.firstName,player.lastName]:
                     self.chooseValidAction(player)
+    
+    def printPlayers(self):
+        for player in self.players:
+            player.printLoginInfo()
         
         
-
-
-        
-
-
-
 if __name__ == "__main__":
     #Using random to create accounts that are not repeats, needs to be fixed once database is fixed
     n= random.random()
@@ -194,10 +207,11 @@ if __name__ == "__main__":
     jinnthon.joinGame(andy.gameCode)
 
     game= Poker([andy,fred,jeff,jinnthon])
-    gameCount=50
+    gameCount=5
     for i in range(gameCount):
         print("Game {}\n".format(i))
         game.simulateGame()
 
+    game.printPlayers()
 
 
