@@ -15,7 +15,15 @@ Live at [royalflush.herokuapp.com](royalflush.herokuapp.com)
 5. Everytime you would like to start the server from the royal-flush directory, run the the following command:
 >`node src/server.js`
 6. Once the server is running, open up your web browser and put localhost:3000 as the URL.
+# How to Run Through Docker
+
+1. Install docker by going to the [Docker download page](https://docs.docker.com/get-started/) and picking the installer that matches your operating system.
+2. Once docker is set up, run the following commands
+> `docker pull eekor/royalflush`
+> `docker run --publish 3000:3000 eekor/royalflush`
+3. Once the container is successfully running, open up your web browser and put localhost:3000 as the URL.
 
 # [Code Of Conduct](https://github.com/justinchen673/royal-flush/blob/testingScripts/Contributor%20Code%20of%20Conduct.md)
 
 # [How to Run The Demo/Testing Script](https://github.com/justinchen673/royal-flush/blob/testingScripts/runningTesting.md)
+
