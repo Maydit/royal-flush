@@ -62,7 +62,8 @@ class User:
         self.driver.find_element_by_id("submit_reg").click()
 
     def logout(self):
-        self.driver.find_elements_by_id("logoutButton").click()
+        self.driver.find_element_by_id("logoutButton").click()
+        self.driver.quit()
 
     def createGame(self):
         self.driver.find_element_by_id("joinButton").click()
@@ -131,7 +132,7 @@ class User:
         raise ValueError("No balance found!")
     
     def printLoginInfo(self):
-        print("Username: {}\n Password:{}".format(self.email,self.password))
+        print("Username: {}\nPassword:{}".format(self.email,self.password))
 
 class Poker:
     def __init__(self,userArr):
@@ -169,7 +170,7 @@ class Poker:
         elif action==2:
             player.fold()
         elif action==3:
-            player.raiseAmnt(random.randint(0,player.getBalance()))
+            player.raiseAmnt(random.randint(0,player.getBalance()//10))
 
     def chooseValidAction(self,player):
         invalidMoves=["Not your turn!", "Can't Check!", "Can't Match!","Raise amount must be greater than last raise"]
@@ -189,8 +190,14 @@ class Poker:
                     self.chooseValidAction(player)
     
     def printPlayers(self):
+        for i in range(len(self.players)):
+            print("Player {} info".format(i))
+            self.players[i].printLoginInfo()
+
+    def endGame(self):
         for player in self.players:
-            player.printLoginInfo()
+            player.logout()
+        del self.players
         
         
 if __name__ == "__main__":
@@ -213,5 +220,7 @@ if __name__ == "__main__":
         game.simulateGame()
 
     game.printPlayers()
+    game.endGame()
+    del game
 
 
