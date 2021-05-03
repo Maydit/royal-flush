@@ -6,10 +6,10 @@
 Download your favorite python version [here](https://www.python.org/downloads/)
 follow the instructions to get python added to the PATH on your system. 
 
-after downloading python, install the following packages. 
-[selenium](https://selenium-python.readthedocs.io/installation.html)
-[seleniumwire](https://pypi.org/project/selenium-wire/) 
-[webdriver manager](https://pypi.org/project/webdriver-manager/)
+after downloading python, install the following packages:
+1) [selenium](https://selenium-python.readthedocs.io/installation.html)
+2) [seleniumwire](https://pypi.org/project/selenium-wire/) 
+3) [webdriver manager](https://pypi.org/project/webdriver-manager/)
 
 # Running the script 
 
