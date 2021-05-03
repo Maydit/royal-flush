@@ -6,6 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import requests
 from bs4 import BeautifulSoup
+import random
 import os 
 import time
 from pokereval.card import Card
@@ -26,6 +27,8 @@ class User:
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
         options.add_argument('--ignore-certificate-errors')
         options.add_argument('--incognito')
+        #remove headless option if you want to see the program work live 
+        #options.add_argument('--headless')
         options.add_argument('user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36"')
         self.driver =webdriver.Chrome(ChromeDriverManager().install(), options=options)
         self.driver.request_interceptor = interceptor
@@ -34,15 +37,8 @@ class User:
         wait(self.driver,15).until(EC.url_changes(curURL))
 
         self.driver.maximize_window()
-        try:
-            self.register()
-            self.login()
-        except:
-            #curURL=self.driver.current_url
-            #self.driver.back()
-            #wait(self.driver,15).until(EC.url_changes(curURL))
-            #self.login()
-            pass
+        self.register()
+        self.login()
     
     def login(self):
         curURL=self.driver.current_url
@@ -52,15 +48,6 @@ class User:
         self.driver.find_element_by_id("pass1").send_keys(self.password)
         assert(self.driver.find_element_by_id("submit_reg").is_enabled())
         self.driver.find_element_by_id("submit_reg").click()
-        for request in self.driver.requests:
-            if request.response:
-                print(
-                    request.url,
-                    request.response.status_code,
-                    request.response.headers['Content-Type']
-                )
-        self.driver.wait_for_request(timeout=10)
-        time.sleep(10)
 
 
     def register(self):
@@ -76,66 +63,133 @@ class User:
     def createGame(self):
         self.driver.find_element_by_id("joinButton").click()
         time.sleep(2)
-        self.gameCode=self.driver.find_element_by_id("codeElement").getText()
+        self.gameCode=self.driver.find_element_by_id("codeElement").text
         self.gameCode=self.gameCode.split()[1]
         self.isHost=True
-    def joinGame(self,gameCode):
+    def joinGame(self,gameCode=random.randint(1000,5000)):
         self.driver.find_element_by_class_name("form-control").send_keys(gameCode)
         self.driver.find_element_by_id("joinButton").click()
+        self.gameCode=gameCode
         time.sleep(2)
     def check(self):
-        self.driver.find_element_by_class_name("btn btn-primary checkButton").click()
-        logText=self.driver.find_element_by_id("gameLog").getText()
+       # self.driver.find_element_by_class_name("btn btn-primary checkButton").click()
+        self.driver.find_element_by_xpath('//button[text()="Check"]').click()
+        logText=self.driver.find_element_by_id("gameLog").text
         logText=logText.split('\n')
-        assert(logText[0] == '{} {} checked.'.format(self.firstName,self.lastName))
+        #assert(logText[0] == '{} {} checked.'.format(self.firstName,self.lastName))
     def match(self):
-        self.driver.find_element_by_class_name("btn btn-primary matchButton").click()
-        logText=self.driver.find_element_by_id("gameLog").getText()
+        self.driver.find_element_by_xpath('//button[text()="Match"]').click()
+        logText=self.driver.find_element_by_id("gameLog").text
         logText=logText.split('\n')
-        assert(logText[0] == '{} {} matched.'.format(self.firstName,self.lastName))
+        #assert(logText[0] == '{} {} matched.'.format(self.firstName,self.lastName))
         
     def fold(self):
-        self.driver.find_element_by_class_name("btn btn-primary foldButton").click()
-        logText=self.driver.find_element_by_id("gameLog").getText()
+        self.driver.find_element_by_xpath('//button[text()="Fold"]').click()
+        logText=self.driver.find_element_by_id("gameLog").text
         logText=logText.split('\n')
-        assert(logText[0] == '{} {} folded.'.format(self.firstName,self.lastName))
+        #assert(logText[0] == '{} {} folded.'.format(self.firstName,self.lastName))
+        self.inGame=False 
     def raiseAmnt(self,amount):
         self.driver.find_element_by_class_name("numberInput").send_keys(str(amount))
-        self.driver.find_element_by_class_name("btn btn-primary raiseButton").click()
-        logText=self.driver.find_element_by_id("gameLog").getText()
+        self.driver.find_element_by_xpath('//button[text()="Raise"]').click()
+        self.driver.find_element_by_class_name("numberInput").clear()
+        logText=self.driver.find_element_by_id("gameLog").text
         logText=logText.split('\n')
-        assert(logText[0] == '{} {} raised {}.'.format(self.firstName,self.lastName,amount))
+        #assert(logText[0] == '{} {} raised {}.'.format(self.firstName,self.lastName,amount))
     def getHand(self):
-        self.hand=self.driver.find_element_by_id("currentHand").getText()
+        self.hand=self.driver.find_element_by_id("currentHand").text
         self.hand= self.hand.split()[1]
         self.hand=self.hand.split()
+    def getLog(self):
+        logText=self.driver.find_element_by_id("gameLog").text
+        logText=logText.split('\n')
+        return logText[0]
+    def getAction(self):
+        action=self.driver.find_element_by_id("action").text
+        action=action.split()
+        if action[-1]=="N/A":
+            return["N/A"]
+        else:
+            return [action[2],action[3]]
     def getBoard(self):
-        self.cardsOnTable=self.driver.find_element_by_id("commCards").getText()
+        self.cardsOnTable=self.driver.find_element_by_id("commCards").text
         if(len(self.cardsOnTable)>15):
             self.cardsOnTable= self.hand.split()[3]
             self.cardsOnTable=self.hand.split()
         else:
             self.cardsOnTable=[]
+        return self.cardsOnTable
 
 class Poker:
     def __init__(self,userArr):
-        pass
+        self.players=userArr
     def checkSync(self):
         #check if every user sees the same board
-        pass
+        hostBoard = self.players[0].getBoard()
+        for player in self.players:
+            if hostBoard != player.getBoard():
+                return False 
+        return True
     def checkWinner(self):
-        #check who wins!
-        pass
-    def checkAllUsersInGame(self):
-        pass
+        for player in self.players:
+            if player.getLog() =="{} {} won the hand!".format(player.firstName,player.lastName):
+                return True
+        return False
+    def chooseAction(self,player,action="random"):
+        
+        translation={"check":0,"match":1,"fold":2,"raise":3}
+        if action=="random":
+            action=random.randint(0,3)
+        else:
+            action=action.lower().strip()
+            if action not in translation:
+                raise RuntimeError("invalid action "+action)
+            else:
+                action=translation[action]
+        if action==0:
+            player.check()   
+        elif action==1:
+            player.match()
+        elif action==2:
+            player.fold()
+        elif action==3:
+            player.raiseAmnt(random.randint(0,50))
+    def chooseValidAction(self,player):
+        invalidMoves=["Not your turn!", "Can't Check!", "Can't Match!","Raise amount must be greater than last raise"]
+        self.chooseAction(player)
+        while player.getLog() in invalidMoves:
+            self.chooseAction(player)
+    def simulateGame(self):
+        #have everyone match to start 
+        for player in self.players:
+            player.match()
+        while not self.checkWinner():
+            for player in self.players:
+                if player.getAction() == [player.firstName,player.lastName]:
+                    self.chooseValidAction(player)
+        
+        
+
+
+        
 
 
 
 if __name__ == "__main__":
-    andy= User("Andy","C","andy154544@gmail.com","1234")
-    fred=User("Fred","L","fred124124@gmail.com","1234")
-    jeff = User("Jeff","M","jeff1241224@gmail.com","1234")
-    jinnthon = User("Jinny","H","Jin124124@f.com","1234")
+    #Using random to create accounts that are not repeats, needs to be fixed once database is fixed
+    n= random.random()
+    andy= User("Andy","C","andy"+str(n)+"@gmail.com","1234")
+    fred=User("Fred","L","fred"+str(n)+"@gmail.com","1234")
+    jeff = User("Jeff","M","jeff"+str(n)+"@gmail.com","1234")
+    jinnthon = User("Jinny","H","Jin"+str(n)+"@f.com","1234")
+
+    andy.joinGame()
+    fred.joinGame(andy.gameCode)
+    jeff.joinGame(andy.gameCode)
+    jinnthon.joinGame(andy.gameCode)
+
+    game= Poker([andy,fred,jeff,jinnthon])
+    game.simulateGame()
 
 
-    
+
